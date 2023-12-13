@@ -46,15 +46,23 @@ mainSection : MAIN_SEQUENCE;
 FRACTION : INT '/' INT;
 SIGNED_INT : '-'? INT;
 INT : [0-9]+; // TODO : Fix digit grammar
+
 VELOCITY_SYMBOL : 'ppp' | 'pp' | 'p' | 'mp' | 'm' | 'mf' | 'f' | 'ff' | 'fff'
-                 | '---' | '--' | '-' | 'x' | '+' | '++' | '+++';
-INSTRUMENT : 'VIOLIN' | 'PIANO' | 'DRUMS'; // TODO : add more instruments: https://en.wikipedia.org/wiki/General_MIDI#Program_change_events
-NOTE : [A-G] '#'? [0-8]; // TODO : check notes (https://en.wikipedia.org/wiki/Scientific_pitch_notation)
-    // TODO : add flat notes
-PERCUSSION : 'KICK' | 'HIGH-HAT'; // TODO : add more percussions (https://en.wikipedia.org/wiki/General_MIDI#Percussion)
-CLIP_NAME : 'CHORUS' | 'COUPLET-A'; // TODO : handle ALL CLIP NAMES
+                 | '---' | '--' | '-' | 'x' | '+' | '++' | '+++' | 'default';
+
+INSTRUMENT : 'PIANO' | 'HARP' | 'VIOLIN' | 'CELLO' | 'FLUTE' | 'TRUMPET' | 'SAXOPHONE' | 'GUITAR' | 'BASS' | 'DRUMS';
+
+NOTE : [A-G] ( '#' | 'b' )? [0-9];
+
+PERCUSSION : 'BASS_DRUM' | 'SNARE_DRUM' | 'CLOSED_HI_HAT' | 'OPEN_HI_HAT' | 'CRASH_CYMBAL' | 'RIDE_CYMBAL'
+            | 'TAMBOURINE' | 'COWBELL' | 'CLAP' | 'MARACAS' | 'HIGH_BONGO' | 'LOW_BONGO' | 'MUTE_HIGH_CONGA'
+            | 'OPEN_HIGH_CONGA' | 'LOW_CONGA' | 'HIGH_TIMBALE' | 'LOW_TIMBALE' | 'HIGH_AGOGO' | 'LOW_AGOGO'
+            | 'CABASA' | 'SHORT_WHISTLE' | 'LONG_WHISTLE' | 'SHORT_GUIRO' | 'LONG_GUIRO' | 'CLAVES'
+            | 'HIGH_WOOD_BLOCK' | 'LOW_WOOD_BLOCK' | 'MUTE_CUICA' | 'OPEN_CUICA' | 'MUTE_TRIANGLE' | 'OPEN_TRIANGLE';
+
+CLIP_NAME : [A-Z][A-Z0-9-]*;
+
 MAIN_SEQUENCE : 'CHORUS x2 COUPLET-A CHORUS'; // TODO : handle ALL SEQUENCES
+
 WS : [ \t\r\n]+ -> skip;
 LINE_COMMENT : '//' ~[\r\n]* -> skip;
-
-
