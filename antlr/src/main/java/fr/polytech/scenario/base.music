@@ -1,23 +1,24 @@
-signature 3/4 #(default 4/4)
-bpm 120 # 1+
-# velocity available: ppp pp p mp m mf f ff fff
-# velocity syntax2: --- -- - x + ++ +++
-# volume 100
-# velocity default
+signature 3/4 //(default 4/4)
+bpm 120 // must be at least 1
+// velocity available: ppp pp p mp m mf f ff fff
+// velocity syntax2: --- -- - x + ++ +++
+// volume 100
+// velocity default
 
 Instruments:
 	VIOLIN volume 100
 	PIANO volume 90
-	DRUMS volume 95 # %
+	DRUMS volume 95 // %
 
+clip CHORUS:
 bar [
-	# LINEAR| tempo +20
-	volume 95 (1-100 € N (%))
+	// LINEAR| tempo +20
+	volume 95 // (1-100 € N (%))
 	ppp
 
 	track VIOLIN pp
-	     A4 ppp (1/16), C5 f 1/16 // quadruple croche # par défaut, une note par temps
-		 F4	# duration 1 // noire par default
+	     A4 ppp (1/16), C5 f (1/16) // quadruple croche // par défaut, une note par temps
+		 F#4	// duration 1 // noire par default
 
 	track PIANO f
 
@@ -26,4 +27,11 @@ bar [
 		KICK | C5
 		HIGH-HAT | F#4
 
-] repeat x2;
+]
+
+clip COUPLET-A []
+
+// MAIN
+CHORUS x2
+// COUPLET-A
+// CHORUS
