@@ -16,12 +16,11 @@ bar [
 	volume 95 // (1-100 € N (%))
 	ppp
 
-	track VIOLIN pp
+	track VIOLIN // pp -> child are pp by default: not supported yet
 	     A4 ppp (1/16), C5 f (1/16) // quadruple croche // par défaut, une note par temps
 		 F#4	// duration 1 // noire par default
 
-	track PIANO f
-
+	// track PIANO
 
 	track DRUMS
 		KICK | C5
@@ -29,7 +28,8 @@ bar [
 
 ]
 
-clip COUPLET-A []
+// clip COUPLET-A: // add a clip
+
 
 // MAIN
 CHORUS x2
