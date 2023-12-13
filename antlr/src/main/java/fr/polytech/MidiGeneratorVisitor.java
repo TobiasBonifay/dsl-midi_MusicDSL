@@ -139,14 +139,7 @@ public class MidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
                 if (fractionParts.length == 2) return (long) resolution * Integer.parseInt(fractionParts[0]) / Integer.parseInt(fractionParts[1]);
                 throw new IllegalArgumentException("Invalid fraction format: " + duration);
             }
-            return switch (Integer.parseInt(duration)) {
-                case 1 -> resolution; // Whole note
-                case 2 -> resolution / 2; // Half note
-                case 4 -> resolution / 4; // Quarter note
-                case 8 -> resolution / 8; // Eighth note
-                case 16 -> resolution / 16; // Sixteenth note
-                default -> throw new IllegalArgumentException("Unknown duration value: " + duration);
-            };
+            return (long) resolution * Integer.parseInt(duration);
         } catch (NumberFormatException e) {
             LOGGER.error("NumberFormatException for duration: {}", duration, e);
             return resolution;
