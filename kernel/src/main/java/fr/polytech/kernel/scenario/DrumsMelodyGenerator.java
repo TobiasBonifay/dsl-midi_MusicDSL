@@ -29,12 +29,20 @@ public class DrumsMelodyGenerator {
         final DrumTrack drumTrack = new DrumTrack("Drums");
         createDrumsSequence().forEach(drumTrack::addDrumHit);
 
-        final Bar bar1 = new Bar("Bar 1");
+        final Track violinTrack = new Track("Violin", MidiInstrument.VIOLIN);
+        createPianoSequence().forEach(violinTrack::addNote);
+
+        final Bar bar1 = new Bar("Bar 1", 0);
         bar1.addTrack(pianoTrack);
         bar1.addTrack(drumTrack);
 
+        final Bar bar2 = new Bar("Bar 2", 480 * 17);
+        bar2.addTrack(violinTrack);
+        bar2.addTrack(drumTrack);
+
         Clip clip1 = new Clip("Chorus");
         clip1.addBar(bar1);
+        clip1.addBar(bar2);
 
         app.addClip(clip1);
         app.generateMidi();

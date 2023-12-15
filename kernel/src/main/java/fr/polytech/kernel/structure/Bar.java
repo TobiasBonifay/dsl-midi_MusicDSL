@@ -16,22 +16,28 @@ public class Bar {
         LoggingSetup.setupLogger(LOGGER);
     }
     private final String name;
+    private final long startTick;
     private final List<Track> tracks = new ArrayList<>();
 
-    public Bar(String name) {
+    public Bar(String name, long startTick) {
         this.name = name;
+        this.startTick = startTick;
     }
 
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("            Generating MIDI for bar " + name);
         for (Track track : tracks) {
             LOGGER.info("                Generating MIDI for track " + track.name());
-            midiGenerator.getTrackManager().newTrack();
+            midiGenerator.getTrackManager().newTrack(this);
             track.generateMidi(midiGenerator);
         }
     }
 
     public void addTrack(Track track) {
         tracks.add(track);
+    }
+
+    public long startTick() {
+        return startTick;
     }
 }

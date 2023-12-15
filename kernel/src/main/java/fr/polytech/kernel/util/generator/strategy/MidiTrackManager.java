@@ -1,5 +1,6 @@
 package fr.polytech.kernel.util.generator.strategy;
 
+import fr.polytech.kernel.structure.Bar;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,9 +22,9 @@ public class MidiTrackManager {
         this.currentTick = 0;
     }
 
-    public void newTrack() {
+    public void newTrack(Bar bar) {
         this.currentTrack = sequence.createTrack();
-        this.currentTick = 0;
+        this.currentTick = bar.startTick();
     }
 
     public void addMidiEvent(MidiEvent event) {
