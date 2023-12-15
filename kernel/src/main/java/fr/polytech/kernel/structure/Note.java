@@ -14,6 +14,6 @@ public record Note(String pitch, int duration, Velocity velocity) {
 
     @Override
     public String toString() {
-        return "%s%s%s".formatted(pitch, duration != 1 ? " / duration " + duration : " / ", velocity);
+        return "%s %s %s".formatted(pitch, duration != 1 ? "/ duration " + duration + " /" : " / ", velocity);
     }
 }
