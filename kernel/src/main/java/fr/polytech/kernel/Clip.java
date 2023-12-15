@@ -1,24 +1,22 @@
 package fr.polytech.kernel;
 
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Track;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Clip {
-
-    String name;
-
-    private List<Bar> bars = new ArrayList<>();
+    private final String name;
+    private final List<Bar> bars = new ArrayList<>();
 
     public Clip(String name) {
         this.name = name;
     }
 
+    public String name() {
+        return name;
+    }
+
     public void generateMidi() {
-        for (Bar bar : bars) {
-            bar.generateMidi();
-        }
+        bars.forEach(Bar::generateMidi);
     }
 
     public void addBar(Bar bar) {

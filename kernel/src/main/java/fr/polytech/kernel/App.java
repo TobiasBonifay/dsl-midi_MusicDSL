@@ -35,7 +35,7 @@ public class App {
      */
     public static Track currentTrack;
 
-    private List<Clip> clips = new ArrayList<>();
+    private final List<Clip> clips = new ArrayList<>();
 
     public App(String name) {
         this.name = name;
@@ -52,9 +52,7 @@ public class App {
     }
 
     public void generateMidi() throws IOException {
-        for (Clip clip : clips) {
-            clip.generateMidi();
-        }
+        clips.forEach(Clip::generateMidi);
         //replace space with underscore
         String pathName = name.replaceAll(" ", "_");
         MidiSystem.write(sequence, 1, new java.io.File(pathName + ".midi"));

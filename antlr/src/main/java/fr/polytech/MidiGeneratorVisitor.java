@@ -61,6 +61,7 @@ public class MidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
     /**
      * Create a new visitor that generates a MIDI sequence.
      *
+     *
      * @throws InvalidMidiDataException if the MIDI sequence cannot be created
      */
     public MidiGeneratorVisitor() throws InvalidMidiDataException {
