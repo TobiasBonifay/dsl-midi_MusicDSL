@@ -2,7 +2,7 @@ package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
-import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
+import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class Track {
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("                    -> Generating MIDI for track " + name + " with instrument " + instrument);
         midiGenerator.setInstrumentForTrack(this.instrument.instrumentNumber);
-        for (Note note : notes) midiGenerator.addNoteToTrack(note);
+        for (Note note : notes) midiGenerator.addMidiEventToTrack(note, MidiGenerator.INSTRUMENT_CHANNEL);
     }
 
     public void addNote(Note note) {

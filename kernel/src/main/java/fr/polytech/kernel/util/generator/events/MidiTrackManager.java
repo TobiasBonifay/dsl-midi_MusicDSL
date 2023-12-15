@@ -1,4 +1,4 @@
-package fr.polytech.kernel.util.generator.strategy;
+package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.structure.Bar;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package fr.polytech.kernel.structure.drums;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Track;
-import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
+import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class DrumTrack extends Track {
         LOGGER.info("                   -> Generating MIDI for drum track " + name().toUpperCase());
         drumHits.forEach(drumHit -> {
             try {
-                midiGenerator.addDrumHitToTrack(drumHit);
+                midiGenerator.addMidiEventToTrack(drumHit, MidiGenerator.DRUM_CHANNEL);
             } catch (InvalidMidiDataException e) {
                 LOGGER.severe("Error generating MIDI for drum hit: " + e.getMessage());
             }

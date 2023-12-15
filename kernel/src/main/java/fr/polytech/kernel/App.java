@@ -2,8 +2,8 @@ package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.Clip;
-import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
-import fr.polytech.kernel.util.generator.strategy.MidiTrackManager;
+import fr.polytech.kernel.util.generator.events.MidiGenerator;
+import fr.polytech.kernel.util.generator.events.MidiTrackManager;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
