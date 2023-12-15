@@ -7,13 +7,15 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
+import java.util.logging.Logger;
 
 /**
  * A simple MIDI generation strategy.
  */
 public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
 
-    private static final int DRUM_CHANNEL = 10;
+    private static final Logger LOGGER = Logger.getLogger(SimpleMidiGenerationStrategy.class.getName());
+    private static final int DRUM_CHANNEL = 9;
     private static final int INSTRUMENT_CHANNEL = 0;
 
     @Override
@@ -26,6 +28,8 @@ public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
 
         midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, INSTRUMENT_CHANNEL, midiNote, midiVelocity), currentTick));
         midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, INSTRUMENT_CHANNEL, midiNote, 0), currentTick + midiDuration));
+
+        LOGGER.info("Adding note to track: " + note + " with velocity " + midiVelocity + " and duration " + midiDuration);
     }
 
     @Override
@@ -39,5 +43,7 @@ public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
         midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, DRUM_CHANNEL, midiNote, 0), trackManager.getCurrentTick() + (long) trackManager.getSequence().getResolution()));
 
         trackManager.setCurrentTick(trackManager.getCurrentTick() + (long) trackManager.getSequence().getResolution());
+
+        LOGGER.info("Adding drum hit to track: " + drumHit + " with velocity " + midiVelocity);
     }
 }

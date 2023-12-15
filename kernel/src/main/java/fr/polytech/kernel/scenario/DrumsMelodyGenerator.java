@@ -10,18 +10,20 @@ import fr.polytech.kernel.structure.drums.DrumHit;
 import fr.polytech.kernel.structure.drums.DrumTrack;
 import fr.polytech.kernel.util.Velocity;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
+import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
 
+import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class DrumsMelodyGenerator {
-    public static void main(String[] args) throws IOException, MidiGenerationException {
+    public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App("Drums");
 
-        final Track pianoTrack = new Track("Piano");
+        final Track pianoTrack = new Track("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO);
         createPianoSequence().forEach(pianoTrack::addNote);
 
         final DrumTrack drumTrack = new DrumTrack("Drums");

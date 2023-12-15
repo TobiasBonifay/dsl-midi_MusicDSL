@@ -9,13 +9,14 @@ import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.Velocity;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
 
+import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class MoonlightMelodyGenerator {
 
-    public static void main(String[] args) throws IOException, MidiGenerationException {
+    public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App("Moonlight");
 
         final Track piano = new Track("Piano");

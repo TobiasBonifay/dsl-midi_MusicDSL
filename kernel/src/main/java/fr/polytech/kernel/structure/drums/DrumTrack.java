@@ -25,6 +25,7 @@ public class DrumTrack extends Track {
 
     @Override
     public void generateMidi(MidiGenerator midiGenerator) {
+        LOGGER.info("Generating MIDI for drum track " + name());
         drumHits.forEach(drumHit -> {
             try {
                 midiGenerator.addDrumHitToTrack(drumHit);

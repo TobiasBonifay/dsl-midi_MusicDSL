@@ -43,8 +43,12 @@ public class App {
         clips.add(clip);
     }
 
-    public void generateMidi() throws IOException {
-        clips.forEach(clip -> clip.generateMidi(midiGenerator));
+    public void generateMidi() throws IOException, InvalidMidiDataException {
+        LOGGER.info("Generating MIDI for app " + name);
+        for (Clip clip : clips) {
+            LOGGER.info("    Generating MIDI for clip " + clip.name());
+            clip.generateMidi(midiGenerator);
+        }
 
         // Retrieve the Sequence from MidiTrackManager
         Sequence sequence = midiGenerator.getTrackManager().getSequence();

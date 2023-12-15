@@ -21,7 +21,7 @@ public class MidiTrackManager {
         this.currentTick = 0;
     }
 
-    public void newTrack() throws InvalidMidiDataException {
+    public void newTrack() {
         this.currentTrack = sequence.createTrack();
         this.currentTick = 0;
     }

@@ -1,8 +1,11 @@
 package fr.polytech.kernel.util.dictionnaries;
 
+import lombok.Getter;
+
 /**
  * Enumeration of standard MIDI drum sounds.
  */
+@Getter
 public enum DrumSound {
     ACCOUSTIC_BASS_DRUM(35),
     BASS_DRUM_1(36),
@@ -54,7 +57,4 @@ public enum DrumSound {
         this.midiNote = midiNote;
     }
 
-    public int getMidiNote() {
-        return midiNote;
-    }
 }
