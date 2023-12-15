@@ -11,7 +11,7 @@ public class CustomLogFormatter extends Formatter {
         String color = determineColor(message);
 
         return record.getSourceClassName().substring(record.getSourceClassName().lastIndexOf('.') + 1)
-                + " " + color + message + LogColor.ANSI_RESET + System.lineSeparator();
+                + " " + color + message + LogColor.ANSI_RESET.getColor() + System.lineSeparator();
     }
 
     private String advanceMatching(String message) {
@@ -26,24 +26,24 @@ public class CustomLogFormatter extends Formatter {
         if (index2 != -1) {
             // MidiGenerator                     ~ Setting instrument for track: VIOLIN which is 40 in MIDI.
             // color the instrument name which is before which is as an uppercase word abd reset color after
-            return message.substring(0, index2) + LogColor.ANSI_YELLOW + message.substring(index2, index2 + 8)
-                    + LogColor.ANSI_CYAN + message.substring(index2 + 8);
+            return message.substring(0, index2) + LogColor.ANSI_YELLOW.getColor() + message.substring(index2, index2 + 8)
+                    + LogColor.ANSI_CYAN.getColor() + message.substring(index2 + 8);
         }
 
-        return message.substring(0, index + 1) + LogColor.ANSI_RESET + message.substring(index + 1);
+        return message.substring(0, index + 1) + LogColor.ANSI_RESET.getColor() + message.substring(index + 1);
     }
 
     private String determineColor(String message) {
         if (message.contains("Note")) {
-            return LogColor.ANSI_GREEN;
+            return LogColor.ANSI_GREEN.getColor();
         } else if (message.contains("Track")) {
-            return LogColor.ANSI_PURPLE;
+            return LogColor.ANSI_PURPLE.getColor();
         } else if (message.contains("Clip")) {
-            return LogColor.ANSI_YELLOW;
+            return LogColor.ANSI_YELLOW.getColor();
         } else if (message.contains("Bar")) {
-            return LogColor.ANSI_CYAN;
+            return LogColor.ANSI_CYAN.getColor();
         } else {
-            return LogColor.ANSI_BLUE;
+            return LogColor.ANSI_BLUE.getColor();
         }
     }
 }

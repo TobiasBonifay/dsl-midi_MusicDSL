@@ -16,6 +16,7 @@ public class Track {
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     private final String name;
     private final List<Note> notes = new ArrayList<>();
     private final MidiInstrument instrument;

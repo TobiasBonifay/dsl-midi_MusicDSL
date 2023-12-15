@@ -20,6 +20,7 @@ public class MidiGenerator {
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     @Getter
     private final MidiTrackManager trackManager;
     private final MidiGenerationStrategy strategy;
@@ -49,10 +50,7 @@ public class MidiGenerator {
 
     public void setInstrumentForTrack(int instrumentProgramNumber) throws InvalidMidiDataException {
         LOGGER.info("                    ~ Setting instrument for track: %s which is %d in MIDI.".formatted(MidiInstrument.midiOf(instrumentProgramNumber), instrumentProgramNumber));
-        MidiEvent programChange = new MidiEvent(
-                new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentProgramNumber, 0),
-                trackManager.getCurrentTick()
-        );
+        MidiEvent programChange = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentProgramNumber, 0), trackManager.getCurrentTick());
         trackManager.addMidiEvent(programChange);
     }
 }

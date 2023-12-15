@@ -22,10 +22,14 @@ public class MidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
     public static final String DEFAULT_DURATION_OF_NOTE = "1";
     public static final int DEFAULT_BPM = 140;
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(MidiGeneratorVisitor.class);
 
-    /** The MIDI sequence being written to. */
+    /**
+     * The MIDI sequence being written to.
+     */
     private final Sequence sequence;
 
     /**
@@ -60,7 +64,6 @@ public class MidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
 
     /**
      * Create a new visitor that generates a MIDI sequence.
-     *
      *
      * @throws InvalidMidiDataException if the MIDI sequence cannot be created
      */
@@ -137,7 +140,8 @@ public class MidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
         try {
             if (duration.startsWith("(") && duration.endsWith(")")) {
                 String[] fractionParts = duration.substring(1, duration.length() - 1).split("/");
-                if (fractionParts.length == 2) return (long) resolution * Integer.parseInt(fractionParts[0]) / Integer.parseInt(fractionParts[1]);
+                if (fractionParts.length == 2)
+                    return (long) resolution * Integer.parseInt(fractionParts[0]) / Integer.parseInt(fractionParts[1]);
                 throw new IllegalArgumentException("Invalid fraction format: " + duration);
             }
             return (long) resolution * Integer.parseInt(duration);

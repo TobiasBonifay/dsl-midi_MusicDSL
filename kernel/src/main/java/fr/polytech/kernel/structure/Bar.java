@@ -15,6 +15,7 @@ public class Bar {
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     private final String name;
     private final long startTick;
     private final List<Track> tracks = new ArrayList<>();

@@ -16,17 +16,13 @@ import java.util.logging.Logger;
 
 public class App {
 
-    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
-
-    private final MidiGenerator midiGenerator;
-
-    private final String name;
-
     /**
      * The number of pulses per quarter note.
      */
     public final static int resolution = 480;
-
+    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
+    private final MidiGenerator midiGenerator;
+    private final String name;
     private final List<Clip> clips = new ArrayList<>();
 
     public App(String name) throws MidiGenerationException {

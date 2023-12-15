@@ -14,11 +14,14 @@ public class Clip {
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     private final String name;
     private final List<Bar> bars = new ArrayList<>();
+
     public Clip(String name) {
         this.name = name;
     }
+
     public String name() {
         return name;
     }

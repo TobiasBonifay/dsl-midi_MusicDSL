@@ -18,6 +18,7 @@ public class DrumTrack extends Track {
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     private final List<DrumHit> drumHits = new ArrayList<>();
 
     public DrumTrack(String name) {

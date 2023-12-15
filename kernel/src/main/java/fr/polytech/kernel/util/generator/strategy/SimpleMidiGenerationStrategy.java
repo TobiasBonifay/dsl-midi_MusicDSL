@@ -1,6 +1,5 @@
 package fr.polytech.kernel.util.generator.strategy;
 
-import fr.polytech.kernel.logs.ColorLogger;
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.drums.DrumHit;
@@ -16,13 +15,13 @@ import java.util.logging.Logger;
  */
 public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
 
-    private static final Logger ORIGINAL_LOGGER = Logger.getLogger(SimpleMidiGenerationStrategy.class.getName());
-    private static final ColorLogger LOGGER = new ColorLogger(ORIGINAL_LOGGER);
-    static {
-        LoggingSetup.setupLogger(ORIGINAL_LOGGER);
-    }
+    private static final Logger LOGGER = Logger.getLogger(SimpleMidiGenerationStrategy.class.getName());
     private static final int DRUM_CHANNEL = 9;
     private static final int INSTRUMENT_CHANNEL = 0;
+
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
 
     @Override
     public void addNoteToTrack(Note note, long currentTick, MidiTrackManager trackManager) throws InvalidMidiDataException {

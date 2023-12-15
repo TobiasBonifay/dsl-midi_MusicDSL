@@ -23,24 +23,24 @@ public class DrumsMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App("Drums");
 
+        // Create tracks
         final Track pianoTrack = new Track("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO);
-        createPianoSequence().forEach(pianoTrack::addNote);
-
         final DrumTrack drumTrack = new DrumTrack("Drums");
-        createDrumsSequence().forEach(drumTrack::addDrumHit);
-
         final Track violinTrack = new Track("Violin", MidiInstrument.VIOLIN);
+
+        // Add notes to tracks
+        createPianoSequence().forEach(pianoTrack::addNote);
+        createDrumsSequence().forEach(drumTrack::addDrumHit);
         createPianoSequence().forEach(violinTrack::addNote);
 
+        // Create bars
+        final Clip clip1 = new Clip("Chorus");
         final Bar bar1 = new Bar("Bar 1", 0);
+        final Bar bar2 = new Bar("Bar 2", 480 * 17);
         bar1.addTrack(pianoTrack);
         bar1.addTrack(drumTrack);
-
-        final Bar bar2 = new Bar("Bar 2", 480 * 17);
         bar2.addTrack(violinTrack);
         bar2.addTrack(drumTrack);
-
-        Clip clip1 = new Clip("Chorus");
         clip1.addBar(bar1);
         clip1.addBar(bar2);
 
@@ -49,12 +49,7 @@ public class DrumsMelodyGenerator {
     }
 
     private static List<DrumHit> createDrumsSequence() {
-        return Stream.of(
-                DrumFactory.createDrumHit(DrumSound.BASS_DRUM),
-                DrumFactory.createDrumHit(DrumSound.SNARE_DRUM),
-                DrumFactory.createDrumHit(DrumSound.BASS_DRUM),
-                DrumFactory.createDrumHit(DrumSound.SNARE_DRUM)
-        ).toList();
+        return Stream.of(DrumFactory.createDrumHit(DrumSound.BASS_DRUM), DrumFactory.createDrumHit(DrumSound.SNARE_DRUM), DrumFactory.createDrumHit(DrumSound.BASS_DRUM), DrumFactory.createDrumHit(DrumSound.SNARE_DRUM)).toList();
     }
 
     private static List<Note> createPianoSequence() {
