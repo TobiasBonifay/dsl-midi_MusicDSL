@@ -1,5 +1,6 @@
 package fr.polytech.kernel.structure;
 
+import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -10,6 +11,10 @@ import java.util.logging.Logger;
 public class Bar {
 
     private static final Logger LOGGER = Logger.getLogger(Bar.class.getName());
+
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
     private final String name;
     private final List<Track> tracks = new ArrayList<>();
 

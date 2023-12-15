@@ -1,5 +1,6 @@
 package fr.polytech.kernel.structure.drums;
 
+import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
 
@@ -13,6 +14,10 @@ import java.util.logging.Logger;
  */
 public class DrumTrack extends Track {
     private static final Logger LOGGER = Logger.getLogger(DrumTrack.class.getName());
+
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
     private final List<DrumHit> drumHits = new ArrayList<>();
 
     public DrumTrack(String name) {

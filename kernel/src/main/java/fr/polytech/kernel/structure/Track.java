@@ -1,5 +1,6 @@
 package fr.polytech.kernel.structure;
 
+import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
 
@@ -11,6 +12,10 @@ import java.util.logging.Logger;
 public class Track {
 
     private static final Logger LOGGER = Logger.getLogger(Track.class.getName());
+
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
     private final String name;
     private final List<Note> notes = new ArrayList<>();
     private final MidiInstrument instrument;

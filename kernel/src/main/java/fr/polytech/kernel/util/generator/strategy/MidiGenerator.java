@@ -1,5 +1,6 @@
 package fr.polytech.kernel.util.generator.strategy;
 
+import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.drums.DrumHit;
 import lombok.Getter;
@@ -15,6 +16,9 @@ import java.util.logging.Logger;
 public class MidiGenerator {
     private static final Logger LOGGER = Logger.getLogger(MidiGenerator.class.getName());
 
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
     @Getter
     private final MidiTrackManager trackManager;
     private final MidiGenerationStrategy strategy;

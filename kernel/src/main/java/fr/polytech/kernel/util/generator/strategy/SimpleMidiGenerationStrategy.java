@@ -1,5 +1,6 @@
 package fr.polytech.kernel.util.generator.strategy;
 
+import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.drums.DrumHit;
 
@@ -15,6 +16,10 @@ import java.util.logging.Logger;
 public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
 
     private static final Logger LOGGER = Logger.getLogger(SimpleMidiGenerationStrategy.class.getName());
+
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
     private static final int DRUM_CHANNEL = 9;
     private static final int INSTRUMENT_CHANNEL = 0;
 
