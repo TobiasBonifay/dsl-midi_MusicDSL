@@ -3,6 +3,7 @@ package fr.polytech.kernel.util.generator.strategy;
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.drums.DrumHit;
+import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -47,7 +48,7 @@ public class MidiGenerator {
     }
 
     public void setInstrumentForTrack(int instrumentProgramNumber) throws InvalidMidiDataException {
-        LOGGER.info("                    ~ Setting instrument for track: " + instrumentProgramNumber);
+        LOGGER.info("                    ~ Setting instrument for track: %s which is %d in MIDI.".formatted(MidiInstrument.midiOf(instrumentProgramNumber), instrumentProgramNumber));
         MidiEvent programChange = new MidiEvent(
                 new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentProgramNumber, 0),
                 trackManager.getCurrentTick()

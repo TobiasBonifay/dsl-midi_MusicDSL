@@ -142,4 +142,13 @@ public enum MidiInstrument {
     MidiInstrument(int instrumentNumber) {
         this.instrumentNumber = instrumentNumber;
     }
+
+    public static String midiOf(int instrumentProgramNumber) {
+        for (MidiInstrument instrument : MidiInstrument.values()) {
+            if (instrument.instrumentNumber == instrumentProgramNumber) {
+                return instrument.name();
+            }
+        }
+        return "Unknown instrument";
+    }
 }

@@ -1,5 +1,6 @@
 package fr.polytech.kernel.util.generator.strategy;
 
+import fr.polytech.kernel.logs.ColorLogger;
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.drums.DrumHit;
@@ -15,10 +16,10 @@ import java.util.logging.Logger;
  */
 public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
 
-    private static final Logger LOGGER = Logger.getLogger(SimpleMidiGenerationStrategy.class.getName());
-
+    private static final Logger ORIGINAL_LOGGER = Logger.getLogger(SimpleMidiGenerationStrategy.class.getName());
+    private static final ColorLogger LOGGER = new ColorLogger(ORIGINAL_LOGGER);
     static {
-        LoggingSetup.setupLogger(LOGGER);
+        LoggingSetup.setupLogger(ORIGINAL_LOGGER);
     }
     private static final int DRUM_CHANNEL = 9;
     private static final int INSTRUMENT_CHANNEL = 0;
@@ -33,8 +34,6 @@ public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
 
         midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, INSTRUMENT_CHANNEL, midiNote, midiVelocity), currentTick));
         midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, INSTRUMENT_CHANNEL, midiNote, 0), currentTick + midiDuration));
-
-        LOGGER.info("Adding note to track: " + note + " with velocity " + midiVelocity + " and duration " + midiDuration);
     }
 
     @Override
@@ -48,7 +47,5 @@ public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
         midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, DRUM_CHANNEL, midiNote, 0), trackManager.getCurrentTick() + (long) trackManager.getSequence().getResolution()));
 
         trackManager.setCurrentTick(trackManager.getCurrentTick() + (long) trackManager.getSequence().getResolution());
-
-        LOGGER.info("Adding drum hit to track: " + drumHit + " with velocity " + midiVelocity);
     }
 }

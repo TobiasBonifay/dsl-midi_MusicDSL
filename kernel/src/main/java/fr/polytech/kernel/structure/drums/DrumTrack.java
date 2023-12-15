@@ -30,7 +30,7 @@ public class DrumTrack extends Track {
 
     @Override
     public void generateMidi(MidiGenerator midiGenerator) {
-        LOGGER.info("Generating MIDI for drum track " + name());
+        LOGGER.info("                   -> Generating MIDI for drum track " + name().toUpperCase());
         drumHits.forEach(drumHit -> {
             try {
                 midiGenerator.addDrumHitToTrack(drumHit);
