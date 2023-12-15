@@ -1,6 +1,6 @@
 package fr.polytech.kernel.structure;
 
-import fr.polytech.kernel.util.generator.MidiGenerator;
+import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package fr.polytech.kernel;
 
 import fr.polytech.kernel.structure.Clip;
-import fr.polytech.kernel.util.generator.MidiGenerator;
-import fr.polytech.kernel.util.generator.SimpleMidiGenerationStrategy;
+import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
+import fr.polytech.kernel.util.generator.strategy.SimpleMidiGenerationStrategy;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;

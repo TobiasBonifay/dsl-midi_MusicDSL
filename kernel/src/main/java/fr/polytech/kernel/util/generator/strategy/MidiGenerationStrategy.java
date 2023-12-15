@@ -1,4 +1,4 @@
-package fr.polytech.kernel.util.generator;
+package fr.polytech.kernel.util.generator.strategy;
 
 import fr.polytech.kernel.structure.Note;
 
