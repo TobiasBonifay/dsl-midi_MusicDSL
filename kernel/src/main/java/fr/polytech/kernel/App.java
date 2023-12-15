@@ -1,13 +1,12 @@
 package fr.polytech.kernel;
 
 import fr.polytech.kernel.structure.Clip;
+import fr.polytech.kernel.util.exceptions.MidiGenerationException;
 import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
 import fr.polytech.kernel.util.generator.strategy.SimpleMidiGenerationStrategy;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Track;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,30 +25,15 @@ public class App {
      */
     public final static int resolution = 480;
 
-    /**
-     * The current tick (static to be accessed by Note class).
-     */
-    public static long currentTick = 0L;
-
-    /**
-     * The sequence.
-     */
-    public static Sequence sequence;
-
-    /**
-     * The current track (static to be accessed by Note class).
-     */
-    public static Track currentTrack;
-
     private final List<Clip> clips = new ArrayList<>();
 
-    public App(String name) {
+    public App(String name) throws MidiGenerationException {
         this.name = name;
         try {
-            this.midiGenerator = new MidiGenerator(480, new SimpleMidiGenerationStrategy());
+            this.midiGenerator = new MidiGenerator(resolution, new SimpleMidiGenerationStrategy());
         } catch (InvalidMidiDataException e) {
             LOGGER.severe("Error creating MIDI generator");
-            throw new RuntimeException(e); // Consider a custom exception
+            throw new MidiGenerationException("Failed to add note to track", e);
         }
     }
 
