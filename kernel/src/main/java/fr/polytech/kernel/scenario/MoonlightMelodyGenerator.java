@@ -1,6 +1,7 @@
 package fr.polytech.kernel.scenario;
 
 import fr.polytech.kernel.App;
+import fr.polytech.kernel.MidiGenerationException;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Note;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 
 public class MoonlightMelodyGenerator {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, MidiGenerationException {
         final App app = new App("Moonlight");
 
         final Track piano = new Track("Piano");
