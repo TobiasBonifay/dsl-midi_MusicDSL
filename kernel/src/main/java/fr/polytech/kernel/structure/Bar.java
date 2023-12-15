@@ -29,7 +29,7 @@ public class Bar {
         LOGGER.info("            Generating MIDI for bar " + name);
         for (Track track : tracks) {
             LOGGER.info("                Generating MIDI for track " + track.name());
-            midiGenerator.getTrackManager().newTrack(this);
+            midiGenerator.trackManager().newTrack(this);
             track.generateMidi(midiGenerator);
         }
     }
