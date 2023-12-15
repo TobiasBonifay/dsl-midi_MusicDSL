@@ -1,6 +1,8 @@
 package fr.polytech.kernel;
 
 import fr.polytech.kernel.structure.Clip;
+import fr.polytech.kernel.util.generator.MidiGenerator;
+import fr.polytech.kernel.util.generator.SimpleMidiGenerationStrategy;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
@@ -15,7 +17,9 @@ public class App {
 
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    private String name;
+    private final MidiGenerator midiGenerator;
+
+    private final String name;
 
     /**
      * The number of pulses per quarter note.
@@ -42,10 +46,10 @@ public class App {
     public App(String name) {
         this.name = name;
         try {
-            sequence = new Sequence(Sequence.PPQ, resolution);
-            currentTrack = sequence.createTrack();
+            this.midiGenerator = new MidiGenerator(480, new SimpleMidiGenerationStrategy());
         } catch (InvalidMidiDataException e) {
-            LOGGER.severe("Error creating sequence");
+            LOGGER.severe("Error creating MIDI generator");
+            throw new RuntimeException(e); // Consider a custom exception
         }
     }
 
@@ -54,10 +58,10 @@ public class App {
     }
 
     public void generateMidi() throws IOException {
-        clips.forEach(Clip::generateMidi);
-        //replace space with underscore
-        String pathName = name.replaceAll(" ", "_");
-        MidiSystem.write(sequence, 1, new java.io.File(pathName + ".midi"));
-    }
+        clips.forEach(clip -> clip.generateMidi(midiGenerator));
 
+        // Replace space with underscore for the file name
+        String pathName = name.replaceAll(" ", "_");
+        MidiSystem.write(midiGenerator.getSequence(), 1, new java.io.File(pathName + ".midi"));
+    }
 }

@@ -1,5 +1,7 @@
 package fr.polytech.kernel.structure;
 
+import fr.polytech.kernel.util.generator.MidiGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +17,8 @@ public class Clip {
         return name;
     }
 
-    public void generateMidi() {
-        bars.forEach(Bar::generateMidi);
+    public void generateMidi(MidiGenerator midiGenerator) {
+        bars.forEach(bar -> bar.generateMidi(midiGenerator));
     }
 
     public void addBar(Bar bar) {

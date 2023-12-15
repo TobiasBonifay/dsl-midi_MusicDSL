@@ -5,6 +5,7 @@ import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.util.Velocity;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +31,6 @@ public class MoonlightMelodyGenerator {
     }
 
     private static List<Note> createNoteSequence() {
-        return Stream.of(new Note[]{new Note("C3", 1), new Note("C3", 1), new Note("C3", 1), new Note("D3", 1), new Note("E3", 2), new Note("D3", 2), new Note("C3", 1), new Note("E3", 1), new Note("D3", 1), new Note("D3", 1), new Note("C3", 1)}).toList();
+        return Stream.of(new Note[]{new Note("C3", 1, Velocity.FF), new Note("C3", 1, Velocity.FF), new Note("C3", 1, Velocity.FF), new Note("D3", 1, Velocity.FF), new Note("E3", 2, Velocity.FF), new Note("D3", 2, Velocity.FF), new Note("C3", 1, Velocity.FF), new Note("E3", 1, Velocity.FF), new Note("D3", 1, Velocity.FF), new Note("D3", 1, Velocity.FF), new Note("C3", 1, Velocity.FF)}).toList();
     }
 }

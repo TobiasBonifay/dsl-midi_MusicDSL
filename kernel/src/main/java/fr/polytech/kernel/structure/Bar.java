@@ -1,7 +1,10 @@
 package fr.polytech.kernel.structure;
 
+import fr.polytech.kernel.util.generator.MidiGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Bar {
     private final String name;
@@ -15,8 +18,8 @@ public class Bar {
         return name;
     }
 
-    public void generateMidi() {
-        tracks.forEach(Track::generateMidi);
+    public void generateMidi(MidiGenerator midiGenerator) {
+        tracks.forEach(track -> track.generateMidi(midiGenerator));
     }
 
     public void addTrack(Track track) {
