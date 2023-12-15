@@ -1,20 +1,43 @@
 package fr.polytech.kernel.util.generator.strategy;
 
 import fr.polytech.kernel.structure.Note;
+import fr.polytech.kernel.structure.drums.DrumHit;
 
-import javax.sound.midi.*;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiEvent;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Track;
 
 /**
  * A simple MIDI generation strategy.
  */
 public class SimpleMidiGenerationStrategy implements MidiGenerationStrategy {
 
-    @Override
-    public void addNoteToTrack(Note note, long currentTick, Track midiTrack, Sequence sequence) throws InvalidMidiDataException {
-        int midiVelocity = note.velocity().slightlyRandomizedValue();
-        long midiDuration = (long) sequence.getResolution() * note.duration();
+    private static final int DRUM_CHANNEL = 10;
+    private static final int INSTRUMENT_CHANNEL = 0;
 
-        midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, note.getMidiNote(), midiVelocity), currentTick));
-        midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, note.getMidiNote(), 0), currentTick + midiDuration));
+    @Override
+    public void addNoteToTrack(Note note, long currentTick, MidiTrackManager trackManager) throws InvalidMidiDataException {
+        int midiNote = note.getMidiNote();
+        int midiVelocity = note.velocity().slightlyRandomizedValue();
+        long midiDuration = (long) trackManager.getSequence().getResolution() * note.duration();
+
+        Track midiTrack = trackManager.getCurrentTrack();
+
+        midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, INSTRUMENT_CHANNEL, midiNote, midiVelocity), currentTick));
+        midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, INSTRUMENT_CHANNEL, midiNote, 0), currentTick + midiDuration));
+    }
+
+    @Override
+    public void addDrumHitToTrack(DrumHit drumHit, long currentTick, MidiTrackManager trackManager) throws InvalidMidiDataException {
+        int midiNote = drumHit.sound().getMidiNote();
+        int midiVelocity = 100;
+
+        Track midiTrack = trackManager.getCurrentTrack();
+
+        midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, DRUM_CHANNEL, midiNote, midiVelocity), trackManager.getCurrentTick()));
+        midiTrack.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, DRUM_CHANNEL, midiNote, 0), trackManager.getCurrentTick() + (long) trackManager.getSequence().getResolution()));
+
+        trackManager.setCurrentTick(trackManager.getCurrentTick() + (long) trackManager.getSequence().getResolution());
     }
 }

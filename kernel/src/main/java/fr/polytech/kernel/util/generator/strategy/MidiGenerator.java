@@ -1,27 +1,21 @@
 package fr.polytech.kernel.util.generator.strategy;
 
 import fr.polytech.kernel.structure.Note;
+import fr.polytech.kernel.structure.drums.DrumHit;
 import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Track;
 
 /**
  * Handles the generation of MIDI events using different strategies.
  */
 public class MidiGenerator {
-
     @Getter
-    private final Sequence sequence;
-    private final Track midiTrack;
+    private final MidiTrackManager trackManager;
     private final MidiGenerationStrategy strategy;
-    private long currentTick;
 
-    public MidiGenerator(int resolution, MidiGenerationStrategy strategy) throws InvalidMidiDataException {
-        this.sequence = new Sequence(Sequence.PPQ, resolution);
-        this.midiTrack = sequence.createTrack();
-        this.currentTick = 0;
+    public MidiGenerator(MidiTrackManager trackManager, MidiGenerationStrategy strategy) {
+        this.trackManager = trackManager;
         this.strategy = strategy;
     }
 
@@ -32,8 +26,12 @@ public class MidiGenerator {
      * @throws InvalidMidiDataException If there is an error creating MIDI data.
      */
     public void addNoteToTrack(Note note) throws InvalidMidiDataException {
-        strategy.addNoteToTrack(note, currentTick, midiTrack, sequence);
-        currentTick += (long) sequence.getResolution() * note.duration();
+        strategy.addNoteToTrack(note, trackManager.getCurrentTick(), trackManager);
+        trackManager.setCurrentTick(trackManager.getCurrentTick() + (long) trackManager.getSequence().getResolution() * note.duration());
+    }
 
+    public void addDrumHitToTrack(DrumHit drumHit) throws InvalidMidiDataException {
+        strategy.addDrumHitToTrack(drumHit, trackManager.getCurrentTick(), trackManager);
+        trackManager.setCurrentTick(trackManager.getCurrentTick() + (long) trackManager.getSequence().getResolution());
     }
 }

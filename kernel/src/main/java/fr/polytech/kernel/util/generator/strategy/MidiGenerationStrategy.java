@@ -1,10 +1,9 @@
 package fr.polytech.kernel.util.generator.strategy;
 
 import fr.polytech.kernel.structure.Note;
+import fr.polytech.kernel.structure.drums.DrumHit;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Track;
 
 /**
  * Represents a strategy to generate a MIDI file.
@@ -13,5 +12,7 @@ import javax.sound.midi.Track;
  * Making this an interface instead of an abstract class allows us to use the default implementation of addNoteToTrack
  */
 public interface MidiGenerationStrategy {
-    void addNoteToTrack(Note note, long currentTick, Track midiTrack, Sequence sequence) throws InvalidMidiDataException;
+    void addNoteToTrack(Note note, long currentTick, MidiTrackManager trackManager) throws InvalidMidiDataException;
+
+    void addDrumHitToTrack(DrumHit drumHit, long currentTick, MidiTrackManager trackManager) throws InvalidMidiDataException;
 }

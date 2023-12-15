@@ -3,10 +3,12 @@ package fr.polytech.kernel;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.util.generator.strategy.MidiGenerator;
+import fr.polytech.kernel.util.generator.strategy.MidiTrackManager;
 import fr.polytech.kernel.util.generator.strategy.SimpleMidiGenerationStrategy;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,7 @@ public class App {
     public App(String name) throws MidiGenerationException {
         this.name = name;
         try {
-            this.midiGenerator = new MidiGenerator(resolution, new SimpleMidiGenerationStrategy());
+            this.midiGenerator = new MidiGenerator(new MidiTrackManager(resolution), new SimpleMidiGenerationStrategy());
         } catch (InvalidMidiDataException e) {
             LOGGER.severe("Error creating MIDI generator");
             throw new MidiGenerationException("Failed to add note to track", e);
@@ -44,8 +46,11 @@ public class App {
     public void generateMidi() throws IOException {
         clips.forEach(clip -> clip.generateMidi(midiGenerator));
 
+        // Retrieve the Sequence from MidiTrackManager
+        Sequence sequence = midiGenerator.getTrackManager().getSequence();
+
         // Replace space with underscore for the file name
         String pathName = name.replaceAll(" ", "_");
-        MidiSystem.write(midiGenerator.getSequence(), 1, new java.io.File(pathName + ".midi"));
+        MidiSystem.write(sequence, 1, new java.io.File(pathName + ".midi"));
     }
 }
