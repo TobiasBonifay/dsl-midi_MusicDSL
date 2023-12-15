@@ -1,5 +1,7 @@
 package fr.polytech.kernel;
 
+import fr.polytech.kernel.structure.Clip;
+
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;

@@ -1,4 +1,4 @@
-package fr.polytech.kernel;
+package fr.polytech.kernel.structure;
 
 import java.util.ArrayList;
 import java.util.List;

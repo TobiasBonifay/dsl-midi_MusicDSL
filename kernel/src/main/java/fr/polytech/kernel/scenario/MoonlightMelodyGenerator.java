@@ -1,6 +1,10 @@
 package fr.polytech.kernel.scenario;
 
-import fr.polytech.kernel.*;
+import fr.polytech.kernel.App;
+import fr.polytech.kernel.structure.Bar;
+import fr.polytech.kernel.structure.Clip;
+import fr.polytech.kernel.structure.Note;
+import fr.polytech.kernel.structure.Track;
 
 import java.io.IOException;
 import java.util.List;

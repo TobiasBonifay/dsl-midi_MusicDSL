@@ -1,4 +1,6 @@
-package fr.polytech.kernel;
+package fr.polytech.kernel.structure;
+
+import fr.polytech.kernel.util.Velocity;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;

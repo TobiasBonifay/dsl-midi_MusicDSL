@@ -1,4 +1,4 @@
-package fr.polytech.kernel;
+package fr.polytech.kernel.util;
 
 
 public enum Velocity {
