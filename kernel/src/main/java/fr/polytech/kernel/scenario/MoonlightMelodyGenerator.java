@@ -1,6 +1,7 @@
 package fr.polytech.kernel.scenario;
 
 import fr.polytech.kernel.App;
+import fr.polytech.kernel.MidiGenerationException;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Note;
