@@ -14,7 +14,7 @@ public class Notes {
         note = IntStream.rangeClosed(0, 8).boxed().flatMap(octave -> Stream.concat(Stream.of(notes).map(note -> Map.entry(note + octave, 12 * octave + Stream.of(notes).toList().indexOf(note) + 12)), enharmonicEquivalents.entrySet().stream().map(entry -> Map.entry(entry.getKey() + octave, 12 * octave + Stream.of(notes).toList().indexOf(entry.getValue()) + 12)))).distinct().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public static int getMidiNote(String note) {
+    public static int parseNote(String note) {
         try {
             return Notes.note.get(note);
         } catch (NullPointerException e) {
