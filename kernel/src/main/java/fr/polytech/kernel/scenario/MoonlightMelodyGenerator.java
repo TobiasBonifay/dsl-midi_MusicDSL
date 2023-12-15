@@ -1,12 +1,12 @@
 package fr.polytech.kernel.scenario;
 
 import fr.polytech.kernel.App;
+import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.Velocity;
-import fr.polytech.kernel.util.exceptions.MidiGenerationException;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
 
 import java.io.IOException;
