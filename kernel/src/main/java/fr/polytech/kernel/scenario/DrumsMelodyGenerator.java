@@ -27,6 +27,8 @@ public class DrumsMelodyGenerator {
         final Track pianoTrack = new Track("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO);
         final DrumTrack drumTrack = new DrumTrack("Drums");
         final Track violinTrack = new Track("Violin", MidiInstrument.VIOLIN);
+        violinTrack.setDynamic(Dynamic.PP); // should work
+        violinTrack.setVolume(50); // should work
 
         // Add notes to tracks
         createPianoSequence().forEach(pianoTrack::addNote);
@@ -39,12 +41,15 @@ public class DrumsMelodyGenerator {
         final Bar bar2 = new Bar("Bar 2", 480 * 17);
         bar1.addTrack(pianoTrack);
         bar1.addTrack(drumTrack);
-        bar1.setVolume(50);
+        bar1.setVolume(60); // should set the volume of all tracks in the bar to 50% by default except if they override
         bar2.addTrack(violinTrack);
         bar2.addTrack(drumTrack);
         clip1.addBar(bar1);
         clip1.addBar(bar2);
 
+        app.withDefaultDynamic(Dynamic.MF);
+        app.withDefaultVolume(100);
+        app.withDefaultTempo(120);
         app.addClip(clip1);
         app.generateMidi();
     }

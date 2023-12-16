@@ -4,6 +4,7 @@ import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
+import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;
@@ -21,7 +22,10 @@ public class Track {
     private final String name;
     private final List<Note> notes = new ArrayList<>();
     private final MidiInstrument instrument;
+    @Setter
     private int volume = 100;
+    @Setter
+    private Dynamic dynamic;
 
     public Track(String name) {
         this(name, MidiInstrument.VIOLIN); // to recognize the default constructor
@@ -51,9 +55,5 @@ public class Track {
     public void addNote(Note note, Dynamic dynamic) {
         notes.add(note);
         // notes.setDynamic(dynamic);
-    }
-
-    public void setVolume(int volume) {
-        this.volume = volume;
     }
 }

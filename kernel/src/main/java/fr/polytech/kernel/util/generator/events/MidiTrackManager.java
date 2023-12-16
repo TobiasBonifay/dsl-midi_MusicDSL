@@ -1,6 +1,7 @@
 package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.structure.Bar;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,9 +17,9 @@ public class MidiTrackManager {
     @Setter
     private long currentTick;
 
-    public MidiTrackManager(int resolution) throws InvalidMidiDataException {
-        this.sequence = new Sequence(Sequence.PPQ, resolution);
-        this.currentTrack = sequence.createTrack(); // Default track
+    public MidiTrackManager() throws InvalidMidiDataException {
+        this.sequence = new Sequence(Sequence.PPQ, 480);
+        this.currentTrack = sequence.createTrack();
         this.currentTick = 0;
     }
 
@@ -29,5 +30,37 @@ public class MidiTrackManager {
 
     public void addMidiEvent(MidiEvent event) {
         currentTrack.add(event);
+    }
+
+    public void setTimeSignature(int numerator, int denominator) {
+        try {
+            currentTrack.add(new MidiEvent(new javax.sound.midi.MetaMessage(0x58, new byte[]{(byte) numerator, (byte) denominator, 24, 8}, 4), currentTick));
+        } catch (InvalidMidiDataException e) {
+            System.err.println("Error setting time signature " + numerator + "/" + denominator + e.getMessage());
+        }
+    }
+
+    public void setDefaultDynamic(Dynamic dynamic) {
+        try {
+            currentTrack.add(new MidiEvent(new javax.sound.midi.MetaMessage(0x7F, new byte[]{(byte) dynamic.slightlyRandomizedValue()}, 1), currentTick));
+        } catch (InvalidMidiDataException e) {
+            System.err.println("Error setting default dynamic " + dynamic + e.getMessage());
+        }
+    }
+
+    public void setDefaultVolume(int volume) {
+        try {
+            currentTrack.add(new MidiEvent(new javax.sound.midi.MetaMessage(0x7F, new byte[]{(byte) volume}, 1), currentTick));
+        } catch (InvalidMidiDataException e) {
+            System.err.println("Error setting default volume " + volume + e.getMessage());
+        }
+    }
+
+    public void setDefaultTempo(int tempo) {
+        try {
+            currentTrack.add(new MidiEvent(new javax.sound.midi.MetaMessage(0x51, new byte[]{(byte) (tempo >> 16), (byte) (tempo >> 8), (byte) tempo}, 3), currentTick));
+        } catch (InvalidMidiDataException e) {
+            System.err.println("Error setting default tempo " + tempo + e.getMessage());
+        }
     }
 }

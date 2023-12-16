@@ -2,6 +2,8 @@ package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.Clip;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
+import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
 
@@ -15,19 +17,21 @@ import java.util.logging.Logger;
 
 public class App {
 
-    /**
-     * The number of pulses per quarter note.
-     */
-    public final static int resolution = 480;
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private final MidiGenerator midiGenerator;
     private final String name;
     private final List<Clip> clips = new ArrayList<>();
+    private final MidiTrackManager trackManager;
+    private Dynamic defaultDynamic;
+    private int defaultVolume;
+    private int defaultTempo;
+    private TimeSignature defaultTimeSignature;
 
     public App(String name) throws MidiGenerationException {
         this.name = name;
         try {
-            this.midiGenerator = new MidiGenerator(new MidiTrackManager(resolution));
+            this.trackManager = new MidiTrackManager();
+            this.midiGenerator = new MidiGenerator(trackManager);
         } catch (InvalidMidiDataException e) {
             LOGGER.severe("Error creating MIDI generator");
             throw new MidiGenerationException("Failed to add note to track", e);
@@ -42,7 +46,7 @@ public class App {
         LOGGER.info("Generating MIDI for app " + name);
         for (Clip clip : clips) {
             LOGGER.info("    Generating MIDI for clip " + clip.name());
-            clip.generateMidi(midiGenerator);
+            clip.generateMidi(midiGenerator, defaultDynamic, defaultVolume, defaultTempo, defaultTimeSignature);
         }
 
         // Retrieve the Sequence from MidiTrackManager
@@ -51,5 +55,21 @@ public class App {
         // Replace space with underscore for the file name
         String pathName = name.replaceAll(" ", "_");
         MidiSystem.write(sequence, 1, new java.io.File(pathName + ".midi"));
+    }
+
+    public void withDefaultDynamic(Dynamic dynamic) {
+        this.defaultDynamic = dynamic;
+    }
+
+    public void withDefaultVolume(int volume) {
+        this.defaultVolume = volume;
+    }
+
+    public void withDefaultTempo(int tempo) {
+        this.defaultTempo = tempo;
+    }
+
+    public void withTimeSignature(int numerator, int denominator) {
+        this.defaultTimeSignature = new TimeSignature(numerator, denominator);
     }
 }

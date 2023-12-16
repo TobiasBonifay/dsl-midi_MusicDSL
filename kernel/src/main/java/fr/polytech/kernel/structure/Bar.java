@@ -1,6 +1,8 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
+import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -25,7 +27,7 @@ public class Bar {
         this.startTick = startTick;
     }
 
-    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
+    public void generateMidi(MidiGenerator midiGenerator, Dynamic dynamic, int volume, int tempo, TimeSignature timeSignature) throws InvalidMidiDataException {
         LOGGER.info("            Generating MIDI for bar " + name);
         for (Track track : tracks) {
             LOGGER.info("                Generating MIDI for track " + track.name());
