@@ -48,8 +48,7 @@ public class Track {
         for (Note note : notes) {
             final Dynamic noteDynamic;
             if (note.hasDynamic()) {
-                noteDynamic = note.dynamic();
-                LOGGER.info("                            -> Note " + note + " has dynamic " + noteDynamic);
+                noteDynamic = note.dynamic(); // TODO: every note seems to have a dynamic, so this is always used
             } else {
                 LOGGER.info("                            -> Note " + note + " has no dynamic, using track dynamic " + defaultDynamic);
                 noteDynamic = this.defaultDynamic;

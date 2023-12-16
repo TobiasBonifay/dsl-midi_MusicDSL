@@ -48,11 +48,9 @@ public class DrumsMelodyGenerator {
         clip1.addBar(bar1);
         clip1.addBar(bar2);
 
-        // app.withDefaultDynamic(Dynamic.MF);
-        // app.withDefaultVolume(100);
-        // app.withDefaultTempo(120);
         app.addClip(clip1);
         app.setGlobalTimeSignature(new TimeSignature(3, 4));
+        // app.setGlobalTempo(120);
         app.generateMidi();
     }
 
