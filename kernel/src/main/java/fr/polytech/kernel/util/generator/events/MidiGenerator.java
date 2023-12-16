@@ -34,4 +34,9 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         MidiEvent programChange = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentProgramNumber, 0), trackManager.getCurrentTick());
         trackManager.addMidiEvent(programChange);
     }
+
+    public void setTrackVolume(int volume) throws InvalidMidiDataException {
+        MidiEvent volumeControl = new MidiEvent(new ShortMessage(ShortMessage.CONTROL_CHANGE, 0, 7, volume), trackManager.getCurrentTick());
+        trackManager.addMidiEvent(volumeControl);
+    }
 }

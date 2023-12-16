@@ -6,7 +6,7 @@ import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.Track;
-import fr.polytech.kernel.util.Velocity;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -34,6 +34,6 @@ public class MoonlightMelodyGenerator {
     }
 
     private static List<Note> createNoteSequence() {
-        return Stream.of("C3", "C3", "C3", "D3", "E3", "D3", "C3", "E3", "D3", "D3", "C3").map(pitch -> NoteFactory.createNote(pitch, 1, Velocity.FF)).toList();
+        return Stream.of("C3", "C3", "C3", "D3", "E3", "D3", "C3", "E3", "D3", "D3", "C3").map(pitch -> NoteFactory.createNote(pitch, 1, Dynamic.FF, 100)).toList();
     }
 }

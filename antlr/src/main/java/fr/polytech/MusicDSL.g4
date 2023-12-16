@@ -3,12 +3,12 @@ grammar MusicDSL;
 // Parser Rules
 musicComposition : globalSettings instrumentsSection clipSection mainSection;
 
-globalSettings : signature? bpm? volume? velocity?;
+globalSettings : signature? bpm? volume? dynamic?;
 
 signature : 'signature' FRACTION;
 bpm : 'bpm' INT;
 volume : 'volume' INT;
-velocity : 'velocity' VELOCITY_SYMBOL;
+dynamic : 'dynamic' VELOCITY_SYMBOL;
 // TODO : add patch
 
 // ----------------- INSTRUMENT -----------------

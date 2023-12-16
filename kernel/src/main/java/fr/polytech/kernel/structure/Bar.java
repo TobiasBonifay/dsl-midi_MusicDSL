@@ -41,4 +41,8 @@ public class Bar {
     public long startTick() {
         return startTick;
     }
+
+    public void setVolume(int volume) {
+        tracks.forEach(track -> track.setVolume(volume));
+    }
 }

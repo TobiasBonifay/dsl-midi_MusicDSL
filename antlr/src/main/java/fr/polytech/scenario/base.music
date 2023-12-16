@@ -1,9 +1,7 @@
 // signature 3/4 //(default 4/4)
 // bpm 120 // must be at least 1
 volume 100
-// velocity available: ppp pp p mp m mf f ff fff
-// velocity syntax2: --- -- - x + ++ +++
-// velocity default
+// dynamic available: ppp pp p mp m mf f ff fff // dynamic syntax2: --- -- - x + ++ +++
 
 Instruments:
 	VIOLIN // volume 100
@@ -35,3 +33,5 @@ bar [
 CHORUS x2
 // COUPLET-A
 // CHORUS
+
+// Timeline: CHORUS <- pp, TRUC <- ff, CHORUS, TRANSITION, VERSE, CHORUS

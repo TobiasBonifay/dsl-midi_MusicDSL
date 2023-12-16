@@ -8,8 +8,8 @@ import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.structure.drums.DrumHit;
 import fr.polytech.kernel.structure.drums.DrumTrack;
-import fr.polytech.kernel.util.Velocity;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
@@ -39,6 +39,7 @@ public class DrumsMelodyGenerator {
         final Bar bar2 = new Bar("Bar 2", 480 * 17);
         bar1.addTrack(pianoTrack);
         bar1.addTrack(drumTrack);
+        bar1.setVolume(50);
         bar2.addTrack(violinTrack);
         bar2.addTrack(drumTrack);
         clip1.addBar(bar1);
@@ -49,10 +50,11 @@ public class DrumsMelodyGenerator {
     }
 
     private static List<DrumHit> createDrumsSequence() {
-        return Stream.of(DrumFactory.createDrumHit(DrumSound.BASS_DRUM), DrumFactory.createDrumHit(DrumSound.SNARE_DRUM), DrumFactory.createDrumHit(DrumSound.BASS_DRUM), DrumFactory.createDrumHit(DrumSound.SNARE_DRUM)).toList();
+        return Stream.of(DrumFactory.createDrumHit(DrumSound.KICK_DRUM), DrumFactory.createDrumHit(DrumSound.SNARE), DrumFactory.createDrumHit(DrumSound.KICK_DRUM), DrumFactory.createDrumHit(DrumSound.SNARE)).toList();
     }
 
     private static List<Note> createPianoSequence() {
-        return Stream.of("C3", "C3", "C3", "D3", "E3", "D3", "C3", "E3", "D3", "D3", "C3").map(pitch -> NoteFactory.createNote(pitch, 2, Velocity.FF)).toList();
+        return Stream.of("C3", "C3", "C3", "D3", "E3", "D3", "C3", "E3", "D3", "D3", "C3")
+                .map(pitch -> NoteFactory.createNote(pitch, 2, Dynamic.FF, 100)).toList();
     }
 }
