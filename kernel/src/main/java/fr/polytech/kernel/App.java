@@ -27,6 +27,7 @@ public class App {
 
     public App(String name) throws MidiGenerationException {
         this.name = name;
+        // this.globalTimeSignature = new TimeSignature(4, 4);
         try {
             this.trackManager = new MidiTrackManager();
             this.midiGenerator = new MidiGenerator(trackManager);

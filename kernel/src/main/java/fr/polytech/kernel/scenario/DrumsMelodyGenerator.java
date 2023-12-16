@@ -39,7 +39,7 @@ public class DrumsMelodyGenerator {
         // Create bars
         final Clip clip1 = new Clip("Chorus");
         final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4));
-        final Bar bar2 = new Bar("Bar 2", new TimeSignature(4, 4));
+        final Bar bar2 = new Bar("Bar 2", new TimeSignature(3, 8));
         bar1.addTrack(pianoTrack);
         bar1.addTrack(drumTrack);
         //  bar1.setVolume(60); // should set the volume of all tracks in the bar to 50% by default except if they override
@@ -52,6 +52,7 @@ public class DrumsMelodyGenerator {
         // app.withDefaultVolume(100);
         // app.withDefaultTempo(120);
         app.addClip(clip1);
+        app.setGlobalTimeSignature(new TimeSignature(3, 4));
         app.generateMidi();
     }
 

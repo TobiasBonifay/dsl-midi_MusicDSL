@@ -22,7 +22,7 @@ public class Bar {
     @Setter
     private long startTick;
     private final List<Track> tracks = new ArrayList<>();
-    private TimeSignature timeSignature;
+    private final TimeSignature timeSignature;
 
 
     public Bar(String name, TimeSignature timeSignature) {
@@ -33,7 +33,7 @@ public class Bar {
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("            Generating MIDI for bar " + name);
         for (Track track : tracks) {
-            LOGGER.info("                Generating MIDI for track " + track.name());
+            LOGGER.info("                Generating MIDI for track " + track.name() + " with time signature " + timeSignature);
             midiGenerator.trackManager().newTrack(this);
             midiGenerator.trackManager().setTimeSignature(timeSignature);
             track.generateMidi(midiGenerator);
