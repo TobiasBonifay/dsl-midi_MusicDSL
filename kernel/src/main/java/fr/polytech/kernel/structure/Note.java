@@ -12,7 +12,7 @@ import static fr.polytech.kernel.util.Notes.parseNote;
 /**
  * Represents a musical note with its properties.
  */
-public record Note(String pitch, int duration, Dynamic dynamic, double volume) implements MidiEventGeneratable {
+public record Note(String pitch, int duration, Dynamic dynamic, int volume) implements MidiEventGeneratable {
     public int getMidiNote() {
         return parseNote(pitch);
     }
@@ -36,6 +36,11 @@ public record Note(String pitch, int duration, Dynamic dynamic, double volume) i
         return "%s %s %s".formatted(pitch, duration != 1 ? "/ duration " + duration + " /" : " / ", dynamic);
     }
 
-    public void setVolume(int volume) {
+    public boolean hasDynamic() {
+        return dynamic != null;
+    }
+
+    public Note with(Dynamic newDynamic, int newVolume) {
+        return new Note(this.pitch, this.duration, newDynamic, newVolume);
     }
 }

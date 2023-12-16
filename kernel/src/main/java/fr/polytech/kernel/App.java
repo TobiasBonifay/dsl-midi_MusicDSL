@@ -2,10 +2,10 @@ package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.Clip;
-import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
+import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
@@ -22,10 +22,8 @@ public class App {
     private final String name;
     private final List<Clip> clips = new ArrayList<>();
     private final MidiTrackManager trackManager;
-    private Dynamic defaultDynamic;
-    private int defaultVolume;
-    private int defaultTempo;
-    private TimeSignature defaultTimeSignature;
+    @Setter
+    private TimeSignature globalTimeSignature;
 
     public App(String name) throws MidiGenerationException {
         this.name = name;
@@ -43,10 +41,11 @@ public class App {
     }
 
     public void generateMidi() throws IOException, InvalidMidiDataException {
-        LOGGER.info("Generating MIDI for app " + name);
+        LOGGER.info("Generating MIDI for app " + name + " with default time signature " + globalTimeSignature);
+        trackManager.setTimeSignature(globalTimeSignature);
         for (Clip clip : clips) {
             LOGGER.info("    Generating MIDI for clip " + clip.name());
-            clip.generateMidi(midiGenerator, defaultDynamic, defaultVolume, defaultTempo, defaultTimeSignature);
+            clip.generateMidi(midiGenerator);
         }
 
         // Retrieve the Sequence from MidiTrackManager
@@ -55,21 +54,5 @@ public class App {
         // Replace space with underscore for the file name
         String pathName = name.replaceAll(" ", "_");
         MidiSystem.write(sequence, 1, new java.io.File(pathName + ".midi"));
-    }
-
-    public void withDefaultDynamic(Dynamic dynamic) {
-        this.defaultDynamic = dynamic;
-    }
-
-    public void withDefaultVolume(int volume) {
-        this.defaultVolume = volume;
-    }
-
-    public void withDefaultTempo(int tempo) {
-        this.defaultTempo = tempo;
-    }
-
-    public void withTimeSignature(int numerator, int denominator) {
-        this.defaultTimeSignature = new TimeSignature(numerator, denominator);
     }
 }

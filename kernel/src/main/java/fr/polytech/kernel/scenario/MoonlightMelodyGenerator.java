@@ -7,6 +7,7 @@ import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
+import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -22,7 +23,7 @@ public class MoonlightMelodyGenerator {
         final Track piano = new Track("Piano");
         createNoteSequence().forEach(piano::addNote);
 
-        final Bar bar1 = new Bar("Bar 1", 0);
+        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4));
         bar1.addTrack(piano);
 
         Clip clip1 = new Clip("Chorus");

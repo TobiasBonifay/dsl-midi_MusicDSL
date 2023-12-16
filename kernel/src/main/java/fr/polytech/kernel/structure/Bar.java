@@ -1,9 +1,9 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
-import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
+import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;
@@ -19,19 +19,23 @@ public class Bar {
     }
 
     private final String name;
-    private final long startTick;
+    @Setter
+    private long startTick;
     private final List<Track> tracks = new ArrayList<>();
+    private TimeSignature timeSignature;
 
-    public Bar(String name, long startTick) {
+
+    public Bar(String name, TimeSignature timeSignature) {
         this.name = name;
-        this.startTick = startTick;
+        this.timeSignature = timeSignature;
     }
 
-    public void generateMidi(MidiGenerator midiGenerator, Dynamic dynamic, int volume, int tempo, TimeSignature timeSignature) throws InvalidMidiDataException {
+    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("            Generating MIDI for bar " + name);
         for (Track track : tracks) {
             LOGGER.info("                Generating MIDI for track " + track.name());
             midiGenerator.trackManager().newTrack(this);
+            midiGenerator.trackManager().setTimeSignature(timeSignature);
             track.generateMidi(midiGenerator);
         }
     }
@@ -44,7 +48,7 @@ public class Bar {
         return startTick;
     }
 
-    public void setVolume(int volume) {
-        tracks.forEach(track -> track.setVolume(volume));
+    public long calculateEndTick() {
+        return tracks.stream().mapToLong(Track::calculateEndTick).max().orElse(0);
     }
 }

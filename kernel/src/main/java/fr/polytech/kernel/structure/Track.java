@@ -23,9 +23,9 @@ public class Track {
     private final List<Note> notes = new ArrayList<>();
     private final MidiInstrument instrument;
     @Setter
-    private int volume = 100;
+    private int defaultVolume;
     @Setter
-    private Dynamic dynamic;
+    private Dynamic defaultDynamic;
 
     public Track(String name) {
         this(name, MidiInstrument.VIOLIN); // to recognize the default constructor
@@ -34,6 +34,8 @@ public class Track {
     public Track(String name, MidiInstrument instrument) {
         this.name = name;
         this.instrument = instrument;
+        this.defaultDynamic = Dynamic.MF;
+        this.defaultVolume = 100;
     }
 
     public String name() {
@@ -43,17 +45,29 @@ public class Track {
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("                    -> Generating MIDI for track " + name + " with instrument " + instrument);
         midiGenerator.setInstrumentForTrack(this.instrument.instrumentNumber);
-        midiGenerator.setTrackVolume(volume);
-        for (Note note : notes) midiGenerator.addMidiEventToTrack(note, MidiGenerator.INSTRUMENT_CHANNEL);
+        for (Note note : notes) {
+            final Dynamic noteDynamic;
+            if (note.hasDynamic()) {
+                noteDynamic = note.dynamic();
+                LOGGER.info("                            -> Note " + note + " has dynamic " + noteDynamic);
+            } else {
+                LOGGER.info("                            -> Note " + note + " has no dynamic, using track dynamic " + defaultDynamic);
+                noteDynamic = this.defaultDynamic;
+            }
+            int noteVolume = note.volume() > 0 ? note.volume() : defaultVolume;
+            midiGenerator.addMidiEventToTrack(note.with(noteDynamic, noteVolume), MidiGenerator.INSTRUMENT_CHANNEL);
+        }
     }
 
     public void addNote(Note note) {
-        notes.add(note);
-        // notes.setDynamic(DEFAULT_DYNAMIC);
+        notes.add(note.with(defaultDynamic, defaultVolume));
     }
 
-    public void addNote(Note note, Dynamic dynamic) {
-        notes.add(note);
-        // notes.setDynamic(dynamic);
+    public void addNote(Note note, Dynamic dynamic, int volume) {
+        notes.add(note.with(dynamic, volume));
+    }
+
+    public long calculateEndTick() {
+        return notes.stream().mapToLong(Note::duration).sum();
     }
 }
