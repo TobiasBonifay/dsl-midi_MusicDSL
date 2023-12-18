@@ -23,7 +23,7 @@ public class MoonlightMelodyGenerator {
         final Track piano = new Track("Piano");
         createNoteSequence().forEach(piano::addNote);
 
-        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4));
+        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120);
         bar1.addTrack(piano);
 
         Clip clip1 = new Clip("Chorus");

@@ -33,9 +33,9 @@ public class Bar {
     }
 
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("            Generating MIDI for bar " + name);
+        LOGGER.info("            Generating MIDI for bar " + name + " with time signature " + timeSignature + " and tempo " + tempo);
         for (Track track : tracks) {
-            LOGGER.info("                Generating MIDI for track " + track.name() + " with time signature " + timeSignature);
+            LOGGER.info("                Generating MIDI for track " + track.name());
             midiGenerator.trackManager().newTrack(this);
             midiGenerator.trackManager().setTimeSignature(timeSignature);
             midiGenerator.trackManager().setTempo(tempo);
