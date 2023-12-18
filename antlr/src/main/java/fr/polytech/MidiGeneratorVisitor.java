@@ -80,7 +80,7 @@ public class MidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitBpm(MusicDSLParser.BpmContext ctx) {
-        this.tempo = Integer.parseInt(ctx.INT().getText());
+        this.tempo = ctx.INT() != null ? Integer.parseInt(ctx.INT().getText()) : DEFAULT_BPM;
         LOGGER.info("Tempo set to {} BPM", tempo);
         return null;
     }

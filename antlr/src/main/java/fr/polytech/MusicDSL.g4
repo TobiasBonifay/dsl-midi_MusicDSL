@@ -28,7 +28,7 @@ volumeSetting : 'volume' INT;
 // inherited bpm
 // inherited signature
 track : 'track' ID ':' trackContent;
-trackContent : (noteSequence | percussionElement)+;
+trackContent : (noteSequence | percussionSequence);
 
 // ----------------- NOTE -----------------
 noteSequence : (note | silence | chord) (',' (note | silence | chord))*;
@@ -49,7 +49,8 @@ clipInstance : ID ('x' INT)?;
 // Lexer Rules
 FRACTION : INT '/' INT;
 SIGNED_INT : '-'? INT;
-INT : [0-9]+;
+INT : DIGIT+;
+fragment DIGIT : [0-9];
 
 VELOCITY_SYMBOL : 'ppp' | 'pp' | 'p' | 'mp' | 'mf' | 'f' | 'ff' | 'fff';
 
