@@ -24,4 +24,17 @@ public enum MidiInstrument {
         }
         return "Unknown instrument";
     }
+
+    public int getInstrumentNumber() {
+        return instrumentNumber;
+    }
+
+    public static MidiInstrument getByValue(int value) {
+        for (MidiInstrument instrument : values()) {
+            if (instrument.getInstrumentNumber() == value) {
+                return instrument;
+            }
+        }
+        throw new IllegalArgumentException("Aucun enum avec la valeur : " + value);
+    }
 }
