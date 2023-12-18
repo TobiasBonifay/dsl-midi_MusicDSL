@@ -1,0 +1,42 @@
+signature 4/4
+bpm 120
+
+Instruments:
+	trumpetoche TRUMPET volume 100
+	pianouche ACOUSTIC_GRAND_PIANO volume 90
+	pianouche2 ACOUSTIC_GRAND_PIANO volume 90
+	drum1 DRUMS volume 95
+	ocarina OCARINA volume 100
+
+clip CHORUS:
+bar [
+	// LINEAR| tempo +20
+	volume 95 // (1-100 € N (%))
+	signature 3/4
+
+	track trumpetoche:
+	     A4 ppp (1/16), C5 f (1/16), D5 f (1/16), C5 f (1/16), F#4, C5 f (1/16), D5 f (1/16), C5 f (1/16)
+
+	track pianouche:
+	     A3 ppp (1/16), C4 f (1/16), D4 f (1/16), C4 f (1/16), F#3, C4 f (1/16), D4 f (1/16), C4 f (1/16)
+
+	track drum1:
+		KICK CLAP KICK CLAP KICK CLAP KICK CLAP
+]
+bar [
+    bpm 140
+    signature 4/4
+    volume 100
+
+    track ocarina:
+        A4 ppp (1/16), C5 f (1/16), D5 f (1/16), C5 f (1/16), F#4, C5 f (1/16), D5 f (1/16), C5 f (1/16)
+]
+
+clip VERSE:
+bar [
+    track ocarina:
+        A4 ppp (1/16), C5 f (1/16), D5 f (1/16), C5 f (1/16), F#4, C5 f (1/16), D5 f (1/16), C5 f (1/16)
+]
+
+Timeline:
+    CHORUS x2 VERSE
