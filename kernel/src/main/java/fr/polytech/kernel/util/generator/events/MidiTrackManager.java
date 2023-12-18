@@ -37,6 +37,12 @@ public class MidiTrackManager {
         currentTrack.add(event);
     }
 
+    /**
+     * Sets the time signature for the current Bar
+     *
+     * @param timeSignature The time signature as TimeSignature object (numerator, denominator)
+     * @throws InvalidMidiDataException If the time signature is invalid
+     */
     public void setTimeSignature(TimeSignature timeSignature) throws InvalidMidiDataException {
         LOGGER.info("            ~ Setting time signature to " + timeSignature);
         MetaMessage tsMessage = new MetaMessage();
@@ -44,10 +50,23 @@ public class MidiTrackManager {
         currentTrack.add(new MidiEvent(tsMessage, currentTick));
     }
 
-    public void setTempo(int globalTempo) throws InvalidMidiDataException {
-        LOGGER.info("            ~ Setting tempo to " + globalTempo);
-        MetaMessage tempoMessage = new MetaMessage();
-        // tempoMessage.setMessage(0x51, new byte[]{(byte) ((globalTempo >> 16) & 0xFF), (byte) ((globalTempo >> 8) & 0xFF), (byte) (globalTempo & 0xFF)}, 3);
-        // currentTrack.add(new MidiEvent(tempoMessage, currentTick));
+    /**
+     * Sets the tempo for the current Bar
+     *
+     * @param tempo The tempo in BPM
+     * @throws InvalidMidiDataException If the tempo is invalid
+     */
+    public void setTempo(int tempo) throws InvalidMidiDataException {
+        LOGGER.info("                    ~ with inherited tempo for track: " + tempo);
+        int mpqn = 60000000 / tempo; // 60,000,000 microseconds per minute / BPM
+        byte[] data = new byte[]{
+                (byte) ((mpqn >> 16) & 0xFF),
+                (byte) ((mpqn >> 8) & 0xFF),
+                (byte) (mpqn & 0xFF)
+        };
+
+        MetaMessage tempoChange = new MetaMessage(0x51, data, 3);
+        MidiEvent tempoEvent = new MidiEvent(tempoChange, currentTick);
+        currentTrack.add(tempoEvent);
     }
 }

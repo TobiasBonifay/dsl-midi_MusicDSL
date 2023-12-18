@@ -30,7 +30,6 @@ public class Track {
     public Track(String name, Instrument instrument) {
         this.name = name;
         this.instrument = instrument;
-        this.defaultDynamic = Dynamic.MF;
         this.defaultVolume = 100;
     }
 
@@ -38,23 +37,33 @@ public class Track {
         return name;
     }
 
+    /**
+     * Generates the MIDI events for this track.
+     * <p>
+     * A track is a collection of notes.
+     * The MIDI events are generated for each note.
+     * The instrument and volume are set for the track.
+     * </p>
+     *
+     * @param midiGenerator The MIDI generator
+     * @throws InvalidMidiDataException If the MIDI data is invalid
+     */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("                    -> Generating MIDI for track " + name + " with instrument " + instrument);
+        LOGGER.info("                    -> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument);
+        midiGenerator.setTrackVolume(this.defaultVolume);
         midiGenerator.setInstrumentForTrack(this.instrument.getMidiInstrument().instrumentNumber);
         for (Note note : notes) {
-            final Dynamic noteDynamic;
-            if (note.hasDynamic()) {
-                noteDynamic = note.dynamic(); // TODO: every note seems to have a dynamic, so this is always used
-            } else {
-                LOGGER.info("                            -> Note " + note + " has no dynamic, using track dynamic " + defaultDynamic);
-                noteDynamic = this.defaultDynamic;
-            }
-            midiGenerator.addMidiEventToTrack(note.with(noteDynamic), MidiGenerator.INSTRUMENT_CHANNEL);
+            midiGenerator.addMidiEventToTrack(note, MidiGenerator.INSTRUMENT_CHANNEL);
         }
     }
 
+    /**
+     * Adds a note to the track. but can change the dynamic...
+     *
+     * @param note The note to add... as Note object
+     */
     public void addNote(Note note) {
-        notes.add(note.with(defaultDynamic));
+        notes.add(note);
     }
 
     public long calculateEndTick() {

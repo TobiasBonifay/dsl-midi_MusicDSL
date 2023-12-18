@@ -19,11 +19,11 @@ public class Bar {
     }
 
     private final String name;
-    @Setter
-    private long startTick;
     private final List<Track> tracks = new ArrayList<>();
     private final TimeSignature timeSignature;
     private final int tempo;
+    @Setter
+    private long startTick;
 
 
     public Bar(String name, TimeSignature timeSignature, int tempo) {
@@ -32,6 +32,17 @@ public class Bar {
         this.tempo = tempo;
     }
 
+    /**
+     * Generates the MIDI events for this bar.
+     * <p>
+     * A bar is a collection of tracks.
+     * The MIDI events are generated for each track.
+     * The time signature and tempo are set for the bar.
+     * </p>
+     *
+     * @param midiGenerator The MIDI generator
+     * @throws InvalidMidiDataException If the MIDI data is invalid
+     */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("            Generating MIDI for bar " + name + " with time signature " + timeSignature + " and tempo " + tempo);
         for (Track track : tracks) {

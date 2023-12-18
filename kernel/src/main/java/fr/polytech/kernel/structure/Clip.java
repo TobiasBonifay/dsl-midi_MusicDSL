@@ -26,6 +26,16 @@ public class Clip {
         return name;
     }
 
+    /**
+     * Generates the MIDI events for this clip.
+     * <p>
+     * A clip is a collection of bars.
+     * The MIDI events are generated for each bar.
+     * </p>
+     *
+     * @param midiGenerator The MIDI generator
+     * @throws InvalidMidiDataException If the MIDI data is invalid
+     */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("        Generating MIDI for clip " + name);
         for (Bar bar : bars) bar.generateMidi(midiGenerator);

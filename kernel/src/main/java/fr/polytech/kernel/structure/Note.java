@@ -16,7 +16,7 @@ public record Note(String pitch, int duration, Dynamic dynamic, int volume) impl
     @Override
     public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution) throws InvalidMidiDataException {
         long midiDuration = (long) resolution * this.duration();
-        MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, parseNote(pitch), this.dynamic().slightlyRandomizedValue()), currentTick);
+        MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, parseNote(pitch), dynamic.slightlyRandomizedValue()), currentTick);
         MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, parseNote(pitch), 0), currentTick + midiDuration);
 
         return new MidiEvent[]{noteOn, noteOff};
@@ -24,10 +24,6 @@ public record Note(String pitch, int duration, Dynamic dynamic, int volume) impl
     @Override
     public String toString() {
         return "%s %s %s".formatted(pitch, duration != 1 ? "/ duration " + duration + " /" : " / ", dynamic);
-    }
-
-    public boolean hasDynamic() {
-        return dynamic != null;
     }
 
     public Note with(Dynamic newDynamic) {

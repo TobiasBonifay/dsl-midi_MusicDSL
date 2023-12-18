@@ -1,7 +1,6 @@
 package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.logs.LoggingSetup;
-import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.MidiEventGeneratable;
 
@@ -37,12 +36,10 @@ public record MidiGenerator(MidiTrackManager trackManager) {
     }
 
     public void setTrackVolume(int volume) throws InvalidMidiDataException {
-        MidiEvent volumeControl = new MidiEvent(new ShortMessage(ShortMessage.CONTROL_CHANGE, 0, 7, volume), trackManager.getCurrentTick());
-        trackManager.addMidiEvent(volumeControl);
-    }
-
-    public void setTrackDynamic(Dynamic dynamic) throws InvalidMidiDataException {
-        MidiEvent volumeControl = new MidiEvent(new ShortMessage(ShortMessage.CONTROL_CHANGE, 0, 7, dynamic.slightlyRandomizedValue()), trackManager.getCurrentTick());
-        trackManager.addMidiEvent(volumeControl);
+        LOGGER.info("                    ~ with volume for track: " + volume);
+        ShortMessage volumeMessage = new ShortMessage();
+        volumeMessage.setMessage(ShortMessage.CONTROL_CHANGE, 0, 7, volume);
+        MidiEvent volumeEvent = new MidiEvent(volumeMessage, trackManager.getCurrentTick());
+        trackManager.addMidiEvent(volumeEvent);
     }
 }
