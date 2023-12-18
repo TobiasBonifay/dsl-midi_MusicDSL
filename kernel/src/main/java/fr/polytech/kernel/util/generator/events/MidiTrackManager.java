@@ -34,4 +34,10 @@ public class MidiTrackManager {
         tsMessage.setMessage(0x58, timeSignature.toMidiData(), 4);
         currentTrack.add(new MidiEvent(tsMessage, currentTick));
     }
+
+    public void setTempo(int globalTempo) throws InvalidMidiDataException {
+        MetaMessage tempoMessage = new MetaMessage();
+        tempoMessage.setMessage(0x51, new byte[]{(byte) ((globalTempo >> 16) & 0xFF), (byte) ((globalTempo >> 8) & 0xFF), (byte) (globalTempo & 0xFF)}, 3);
+        currentTrack.add(new MidiEvent(tempoMessage, currentTick));
+    }
 }

@@ -50,7 +50,7 @@ public class DrumsMelodyGenerator {
 
         app.addClip(clip1);
         app.setGlobalTimeSignature(new TimeSignature(3, 4));
-        // app.setGlobalTempo(120);
+        app.setGlobalTempo(120);
         app.generateMidi();
     }
 

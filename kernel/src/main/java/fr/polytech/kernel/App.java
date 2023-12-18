@@ -24,6 +24,8 @@ public class App {
     private final MidiTrackManager trackManager;
     @Setter
     private TimeSignature globalTimeSignature;
+    @Setter
+    private int globalTempo;
 
     public App(String name) throws MidiGenerationException {
         this.name = name;
@@ -42,8 +44,9 @@ public class App {
     }
 
     public void generateMidi() throws IOException, InvalidMidiDataException {
-        LOGGER.info("Generating MIDI for app " + name + " with default time signature " + globalTimeSignature);
+        LOGGER.info("Generating MIDI for app " + name + " with default time signature " + globalTimeSignature + " and default tempo " + globalTempo);
         trackManager.setTimeSignature(globalTimeSignature);
+        trackManager.setTempo(globalTempo);
         for (Clip clip : clips) {
             LOGGER.info("    Generating MIDI for clip " + clip.name());
             clip.generateMidi(midiGenerator);
