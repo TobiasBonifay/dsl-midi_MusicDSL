@@ -11,7 +11,7 @@ tempoChange : 'tempo' ('+' | '-') INT;
 
 // ----------------- INSTRUMENTS -----------------
 instrumentsSection : 'Instruments:' instrumentDefinition+;
-instrumentDefinition : ID ':' INSTRUMENT 'volume' INT;
+instrumentDefinition : ID INSTRUMENT 'volume' INT;
 
 // ----------------- CLIP -----------------
 clipSection : 'clip' clip+;
@@ -22,22 +22,25 @@ barSequence : 'bar' '[' barContent* ']';
 barContent : (tempoChange | volumeSetting | signature | trackSequence);
 
 // ----------------- TRACK -----------------
+trackSequence : track+;
 // tempoChange : 'LINEAR|' 'tempo' SIGNED_INT;
 volumeSetting : 'volume' INT;
 // inherited bpm
 // inherited signature
-trackSequence : track+;
 track : 'track' ID ':' trackContent;
 trackContent : (noteSequence | percussionElement)+;
 
 // ----------------- NOTE -----------------
-noteSequence : note (',' note)*;
+noteSequence : (note | silence | chord) (',' (note | silence | chord))*;
 note : NOTE dynamicSetting? duration?;
+chord : CHORD dynamicSetting? duration?;
+silence : SILENCE duration?;
 
 dynamicSetting : VELOCITY_SYMBOL;
 duration : '(' FRACTION ')';
 
-percussionElement : PERCUSSION '|' NOTE;
+percussionSequence : percussionElement+;
+percussionElement : PERCUSSION (',' PERCUSSION)*;
 
 mainSection : mainSequence;
 mainSequence : clipInstance (clipInstance)*;
@@ -53,6 +56,8 @@ VELOCITY_SYMBOL : 'ppp' | 'pp' | 'p' | 'mp' | 'mf' | 'f' | 'ff' | 'fff';
 INSTRUMENT : 'ACOUSTIC_GRAND_PIANO' | 'TRUMPET' | 'DRUMS' | 'OCARINA' | 'PIANO' | 'HARP' | 'VIOLIN' | 'CELLO' | 'FLUTE' | 'SAXOPHONE' | 'GUITAR' | 'BASS';
 
 NOTE : [A-G] ( '#' | 'b' )? [0-9];
+CHORD : [A-G] ( '#' | 'b' )? [0-9] ('-' [A-G] ( '#' | 'b' )? [0-9])+;
+SILENCE : 'SILENCE';
 
 PERCUSSION : 'KICK' | 'CLAP' | 'SNARE_DRUM' | 'CLOSED_HI_HAT' | 'OPEN_HI_HAT' | 'CRASH_CYMBAL' | 'RIDE_CYMBAL' | 'TAMBOURINE' | 'COWBELL' | 'MARACAS' | 'HIGH_BONGO' | 'LOW_BONGO' | 'MUTE_HIGH_CONGA' | 'OPEN_HIGH_CONGA' | 'LOW_CONGA' | 'HIGH_TIMBALE' | 'LOW_TIMBALE' | 'HIGH_AGOGO' | 'LOW_AGOGO' | 'CABASA' | 'SHORT_WHISTLE' | 'LONG_WHISTLE' | 'SHORT_GUIRO' | 'LONG_GUIRO' | 'CLAVES' | 'HIGH_WOOD_BLOCK' | 'LOW_WOOD_BLOCK' | 'MUTE_CUICA' | 'OPEN_CUICA' | 'MUTE_TRIANGLE' | 'OPEN_TRIANGLE';
 

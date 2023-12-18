@@ -19,7 +19,7 @@ bar [
 	     A4 ppp (1/16), C5 f (1/16), D5 f (1/16), C5 f (1/16), F#4, C5 f (1/16), D5 f (1/16), C5 f (1/16)
 
 	track pianouche:
-	     A3 ppp (1/16), C4 f (1/16), D4 f (1/16), SILENCE (1/16), F#3, C4 f (1/16), D4 f (1/16), C4 f (1/16)
+	     A3-C4-D4 ppp (1/16), C4 f (1/16), D4 f (1/16), SILENCE (1/16), F#3, C4 f (1/16), D4 f (1/16), C4 f (1/16)
 
 	track drum1:
 		KICK CLAP KICK CLAP KICK CLAP KICK CLAP

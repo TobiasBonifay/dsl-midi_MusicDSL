@@ -97,7 +97,7 @@ public class MidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
     public Void visitNote(MusicDSLParser.NoteContext ctx) {
         String noteName = ctx.NOTE().getText();
         Integer midiNote = noteMap.getOrDefault(noteName, 60);
-        int midiVelocity = parseVelocity(ctx.velocitySetting() != null ? ctx.velocitySetting().getText() : DEFAULT_VELOCITY);
+        int midiVelocity = parseVelocity(ctx.dynamicSetting() != null ? ctx.dynamicSetting().getText() : DEFAULT_VELOCITY);
         long midiDuration = parseDuration(ctx.duration() != null ? ctx.duration().getText() : DEFAULT_DURATION_OF_NOTE);
         createNote(midiNote, midiVelocity, midiDuration);
         return null;
