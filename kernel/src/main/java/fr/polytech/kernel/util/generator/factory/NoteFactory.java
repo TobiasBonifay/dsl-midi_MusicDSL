@@ -1,7 +1,7 @@
 package fr.polytech.kernel.util.generator.factory;
 
 import fr.polytech.kernel.structure.Note;
-import fr.polytech.kernel.util.Velocity;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
 
 /**
  * Factory for creating Note objects.
@@ -9,7 +9,7 @@ import fr.polytech.kernel.util.Velocity;
  */
 public class NoteFactory {
 
-    public static Note createNote(String pitch, int duration, Velocity velocity) {
-        return new Note(pitch, duration, velocity);
+    public static Note createNote(String pitch, int duration, Dynamic dynamique, int volume) {
+        return new Note(pitch, duration, dynamique, volume);
     }
 }
