@@ -30,7 +30,7 @@ public record Note(String pitch, int duration, Dynamic dynamic, int volume) impl
         return dynamic != null;
     }
 
-    public Note with(Dynamic newDynamic, int newVolume) {
-        return new Note(this.pitch, this.duration, newDynamic, newVolume);
+    public Note with(Dynamic newDynamic) {
+        return new Note(this.pitch, this.duration, newDynamic, this.volume);
     }
 }

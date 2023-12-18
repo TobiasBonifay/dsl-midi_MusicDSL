@@ -53,25 +53,12 @@ public class Track {
                 LOGGER.info("                            -> Note " + note + " has no dynamic, using track dynamic " + defaultDynamic);
                 noteDynamic = this.defaultDynamic;
             }
-            int noteVolume;
-            if (note.volume() > 0) {
-                // TODO: note has no volume.. it's track, bar and instrument that have volume I think
-                LOGGER.info("                            -> Note " + note + " has volume " + note.volume());
-                noteVolume = note.volume();
-            } else {
-                LOGGER.info("                            -> Note " + note + " has no volume, using track volume " + defaultVolume);
-                noteVolume = defaultVolume;
-            }
-            midiGenerator.addMidiEventToTrack(note.with(noteDynamic, noteVolume), MidiGenerator.INSTRUMENT_CHANNEL);
+            midiGenerator.addMidiEventToTrack(note.with(noteDynamic), MidiGenerator.INSTRUMENT_CHANNEL);
         }
     }
 
     public void addNote(Note note) {
-        notes.add(note.with(defaultDynamic, defaultVolume));
-    }
-
-    public void addNote(Note note, Dynamic dynamic, int volume) {
-        notes.add(note.with(dynamic, volume));
+        notes.add(note.with(defaultDynamic));
     }
 
     public long calculateEndTick() {
