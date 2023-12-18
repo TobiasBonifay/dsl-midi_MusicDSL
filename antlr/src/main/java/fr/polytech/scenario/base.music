@@ -1,6 +1,5 @@
 // signature 3/4 //(default 4/4)
 // bpm 120 // must be at least 1
-volume 100
 // dynamic available: ppp pp p mp m mf f ff fff // dynamic syntax2: --- -- - x + ++ +++
 
 Instruments:

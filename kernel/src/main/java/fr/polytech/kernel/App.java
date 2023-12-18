@@ -25,7 +25,7 @@ public class App {
     @Setter
     private TimeSignature globalTimeSignature;
     @Setter
-    private int globalTempo;
+    public int globalTempo;
 
     public App(String name) throws MidiGenerationException {
         this.name = name;

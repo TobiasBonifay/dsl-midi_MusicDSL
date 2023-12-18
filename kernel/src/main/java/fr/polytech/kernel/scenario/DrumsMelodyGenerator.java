@@ -38,13 +38,14 @@ public class DrumsMelodyGenerator {
 
         // Create bars
         final Clip clip1 = new Clip("Chorus");
-        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4));
-        final Bar bar2 = new Bar("Bar 2", new TimeSignature(3, 8));
+        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120);
         bar1.addTrack(pianoTrack);
         bar1.addTrack(drumTrack);
-        //  bar1.setVolume(60); // should set the volume of all tracks in the bar to 50% by default except if they override
+
+        final Bar bar2 = new Bar("Bar 2", new TimeSignature(3, 8), 140);
         bar2.addTrack(violinTrack);
         bar2.addTrack(drumTrack);
+
         clip1.addBar(bar1);
         clip1.addBar(bar2);
 
