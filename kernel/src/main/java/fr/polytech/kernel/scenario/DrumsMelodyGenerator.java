@@ -2,10 +2,7 @@ package fr.polytech.kernel.scenario;
 
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
-import fr.polytech.kernel.structure.Bar;
-import fr.polytech.kernel.structure.Clip;
-import fr.polytech.kernel.structure.Note;
-import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.structure.*;
 import fr.polytech.kernel.structure.drums.DrumHit;
 import fr.polytech.kernel.structure.drums.DrumTrack;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
@@ -24,10 +21,14 @@ public class DrumsMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App("Drums");
 
+        final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO);
+        final Instrument violinInstrument = new Instrument("Violin", MidiInstrument.VIOLIN);
+
+
         // Create tracks
-        final Track pianoTrack = new Track("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO);
+        final Track pianoTrack = new Track("Piano", pianoInstrument);
         final DrumTrack drumTrack = new DrumTrack("Drums");
-        final Track violinTrack = new Track("Violin", MidiInstrument.VIOLIN);
+        final Track violinTrack = new Track("Violin", violinInstrument);
         // violinTrack.setDefaultDynamic(Dynamic.PP); // should work
         // violinTrack.setVolume(50); // should work
 

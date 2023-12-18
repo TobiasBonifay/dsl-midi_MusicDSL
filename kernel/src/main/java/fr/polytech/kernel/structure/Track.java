@@ -21,17 +21,13 @@ public class Track {
 
     private final String name;
     private final List<Note> notes = new ArrayList<>();
-    private final MidiInstrument instrument;
+    private final Instrument instrument;
     @Setter
     private int defaultVolume;
     @Setter
     private Dynamic defaultDynamic;
 
-    public Track(String name) {
-        this(name, MidiInstrument.VIOLIN); // to recognize the default constructor
-    }
-
-    public Track(String name, MidiInstrument instrument) {
+    public Track(String name, Instrument instrument) {
         this.name = name;
         this.instrument = instrument;
         this.defaultDynamic = Dynamic.MF;
@@ -44,7 +40,7 @@ public class Track {
 
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("                    -> Generating MIDI for track " + name + " with instrument " + instrument);
-        midiGenerator.setInstrumentForTrack(this.instrument.instrumentNumber);
+        midiGenerator.setInstrumentForTrack(this.instrument.getMidiInstrument().instrumentNumber);
         for (Note note : notes) {
             final Dynamic noteDynamic;
             if (note.hasDynamic()) {

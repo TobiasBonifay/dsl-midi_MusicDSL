@@ -1,7 +1,9 @@
 package fr.polytech.kernel.structure.drums;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -21,8 +23,9 @@ public class DrumTrack extends Track {
 
     private final List<DrumHit> drumHits = new ArrayList<>();
 
+    //todo: find better way to set the Drums instrument when writing a drum track
     public DrumTrack(String name) {
-        super(name);
+        super(name, new Instrument("Drums", MidiInstrument.VIOLIN));
     }
 
     public void addDrumHit(DrumHit hit) {
