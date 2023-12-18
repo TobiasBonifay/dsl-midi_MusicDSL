@@ -24,8 +24,8 @@ barContent : (tempoChange | volumeSetting | signature | trackSequence);
 // ----------------- TRACK -----------------
 // tempoChange : 'LINEAR|' 'tempo' SIGNED_INT;
 volumeSetting : 'volume' INT;
-signature : 'signature' FRACTION;
-
+// inherited bpm
+// inherited signature
 trackSequence : track+;
 track : 'track' ID ':' trackContent;
 trackContent : (noteSequence | percussionElement)+;

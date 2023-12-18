@@ -3,6 +3,7 @@ bpm 120
 
 Instruments:
 	trumpetoche TRUMPET volume 100
+	trumpetoche2 TRUMPET volume 50
 	pianouche ACOUSTIC_GRAND_PIANO volume 90
 	pianouche2 ACOUSTIC_GRAND_PIANO volume 90
 	drum1 DRUMS volume 95
@@ -18,7 +19,7 @@ bar [
 	     A4 ppp (1/16), C5 f (1/16), D5 f (1/16), C5 f (1/16), F#4, C5 f (1/16), D5 f (1/16), C5 f (1/16)
 
 	track pianouche:
-	     A3 ppp (1/16), C4 f (1/16), D4 f (1/16), C4 f (1/16), F#3, C4 f (1/16), D4 f (1/16), C4 f (1/16)
+	     A3 ppp (1/16), C4 f (1/16), D4 f (1/16), SILENCE (1/16), F#3, C4 f (1/16), D4 f (1/16), C4 f (1/16)
 
 	track drum1:
 		KICK CLAP KICK CLAP KICK CLAP KICK CLAP
