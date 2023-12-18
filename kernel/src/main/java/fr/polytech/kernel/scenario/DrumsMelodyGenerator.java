@@ -28,7 +28,7 @@ public class DrumsMelodyGenerator {
         final Track pianoTrack = new Track("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO);
         final DrumTrack drumTrack = new DrumTrack("Drums");
         final Track violinTrack = new Track("Violin", MidiInstrument.VIOLIN);
-        // violinTrack.setDynamic(Dynamic.PP); // should work
+        // violinTrack.setDefaultDynamic(Dynamic.PP); // should work
         // violinTrack.setVolume(50); // should work
 
         // Add notes to tracks
