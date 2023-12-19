@@ -54,11 +54,12 @@ public class App {
     }
 
     public void generateMidi() throws InvalidMidiDataException {
-        LOGGER.info("Generating MIDI for app " + name + " with default time signature " + globalTimeSignature + " and default tempo " + globalTempo);
+        LOGGER.info("Generating MIDI for app %s with default time signature %s and default tempo %d".formatted(name, globalTimeSignature, globalTempo));
         trackManager.setTimeSignature(globalTimeSignature);
         trackManager.setTempo(globalTempo);
-        for (Clip clip : clips) {
-            LOGGER.info("    Generating MIDI for clip " + clip.name());
+        for (int i = 0, clipsSize = clips.size(); i < clipsSize; i++) {
+            Clip clip = clips.get(i);
+            LOGGER.info("    Generating bar %d/%d MIDI for clip %s".formatted(i, clipsSize, clip.name()));
             clip.generateMidi(midiGenerator);
         }
 
