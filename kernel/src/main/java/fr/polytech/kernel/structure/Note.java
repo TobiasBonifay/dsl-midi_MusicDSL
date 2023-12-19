@@ -13,6 +13,14 @@ import static fr.polytech.kernel.util.Notes.parseNote;
  * Represents a musical note with its properties.
  */
 public record Note(String pitch, int duration, Dynamic dynamic, int volume) implements MidiEventGeneratable {
+
+    /**
+     * make a note builder
+     */
+    public static NoteBuilder builder() {
+        return new NoteBuilder();
+    }
+
     @Override
     public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution) throws InvalidMidiDataException {
         long midiDuration = (long) resolution * this.duration();
@@ -24,9 +32,5 @@ public record Note(String pitch, int duration, Dynamic dynamic, int volume) impl
     @Override
     public String toString() {
         return "%s %s %s".formatted(pitch, duration != 1 ? "/ duration " + duration + " /" : " / ", dynamic);
-    }
-
-    public Note with(Dynamic newDynamic) {
-        return new Note(this.pitch, this.duration, newDynamic, this.volume);
     }
 }

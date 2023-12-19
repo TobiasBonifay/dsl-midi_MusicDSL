@@ -1,5 +1,6 @@
 package fr.polytech;
 
+import fr.polytech.kernel.exceptions.MidiGenerationException;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -22,7 +23,7 @@ public class Main {
                 return;
             }
             processMusicFile(args[0]);
-        } catch (IOException e) {
+        } catch (IOException | MidiGenerationException e) {
             System.err.println("Error reading file: " + e.getMessage());
         } catch (InvalidMidiDataException e) {
             System.err.println("Error processing MIDI data: " + e.getMessage());
@@ -36,7 +37,7 @@ public class Main {
      * @throws IOException              When an I/O error occurs.
      * @throws InvalidMidiDataException When the MIDI data is invalid.
      */
-    private static void processMusicFile(String filePath) throws IOException, InvalidMidiDataException {
+    private static void processMusicFile(String filePath) throws IOException, InvalidMidiDataException, MidiGenerationException {
         final CharStream input = CharStreams.fromPath(Paths.get(filePath));
         final MusicDSLLexer lexer = new MusicDSLLexer(input);
         final CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -55,8 +56,8 @@ public class Main {
      * @throws InvalidMidiDataException When the MIDI data is invalid.
      * @throws IOException              When an I/O error occurs.
      */
-    private static void generateMIDI(ParseTree tree) throws InvalidMidiDataException, IOException {
-        NewMidiGeneratorVisitor visitor = new NewMidiGeneratorVisitor();
+    private static void generateMIDI(ParseTree tree) throws IOException, MidiGenerationException, InvalidMidiDataException {
+        MidiGeneratorWithKernel visitor = new MidiGeneratorWithKernel();
         visitor.visit(tree);
         visitor.writeMidiFile(OUTPUT_FILENAME);
         System.out.println("MIDI file generated: " + OUTPUT_FILENAME);

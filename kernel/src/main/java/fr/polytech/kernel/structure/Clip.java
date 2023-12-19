@@ -5,6 +5,7 @@ import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -43,5 +44,9 @@ public class Clip {
 
     public void addBar(Bar bar) {
         bars.add(bar);
+    }
+
+    public Collection<Bar> getBars() {
+        return bars;
     }
 }

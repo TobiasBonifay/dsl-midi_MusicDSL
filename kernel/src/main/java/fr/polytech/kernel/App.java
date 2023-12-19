@@ -2,14 +2,17 @@ package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.Clip;
+import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
+import lombok.Getter;
 import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,20 +25,23 @@ public class App {
     private final String name;
     private final List<Clip> clips = new ArrayList<>();
     private final MidiTrackManager trackManager;
+    @Getter
+    private final List<Instrument> instruments = new ArrayList<>();
+    @Getter
     @Setter
     private TimeSignature globalTimeSignature;
+    @Getter
     @Setter
-    public int globalTempo;
+    private int globalTempo;
 
     public App(String name) throws MidiGenerationException {
         this.name = name;
-        // this.globalTimeSignature = new TimeSignature(4, 4);
         try {
             this.trackManager = new MidiTrackManager();
             this.midiGenerator = new MidiGenerator(trackManager);
         } catch (InvalidMidiDataException e) {
             LOGGER.severe("Error creating MIDI generator");
-            throw new MidiGenerationException("Failed to add note to track", e);
+            throw new MidiGenerationException("Failed to create App instance", e);
         }
     }
 
@@ -43,7 +49,11 @@ public class App {
         clips.add(clip);
     }
 
-    public void generateMidi() throws IOException, InvalidMidiDataException {
+    public void addInstrument(Instrument instrument) {
+        instruments.add(instrument);
+    }
+
+    public void generateMidi() throws InvalidMidiDataException {
         LOGGER.info("Generating MIDI for app " + name + " with default time signature " + globalTimeSignature + " and default tempo " + globalTempo);
         trackManager.setTimeSignature(globalTimeSignature);
         trackManager.setTempo(globalTempo);
@@ -52,11 +62,19 @@ public class App {
             clip.generateMidi(midiGenerator);
         }
 
-        // Retrieve the Sequence from MidiTrackManager
-        Sequence sequence = midiGenerator.trackManager().getSequence();
+        // writeMidiFile(name);
+    }
 
-        // Replace space with underscore for the file name
+    public void writeMidiFile(String filename) throws IOException {
         String pathName = name.replaceAll(" ", "_");
-        MidiSystem.write(sequence, 1, new java.io.File(pathName + ".midi"));
+        MidiSystem.write(this.getSequence(), 1, new File(pathName + ".midi"));
+    }
+
+    public Sequence getSequence() {
+        return midiGenerator.trackManager().getSequence();
+    }
+
+    public void setVolume(int volume) {
+        // TODO: implement this
     }
 }

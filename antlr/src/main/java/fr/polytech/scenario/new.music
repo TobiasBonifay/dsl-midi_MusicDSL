@@ -1,5 +1,6 @@
 signature 4/4
 bpm 120
+volume 100
 
 Instruments:
 	trumpetoche TRUMPET volume 100
@@ -22,7 +23,7 @@ bar [
 	     A3-C4-D4 ppp (1/16), C4 f (1/16), D4 f (1/16), SILENCE (1/16), F#3, C4 f (1/16), D4 f (1/16), C4 f (1/16)
 
 	track drum1:
-		KICK CLAP KICK CLAP KICK CLAP KICK CLAP
+		KICK SNARE KICK SNARE KICK SNARE KICK SNARE
 ]
 bar [
     bpm 140

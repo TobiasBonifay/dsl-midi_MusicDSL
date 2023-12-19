@@ -58,6 +58,10 @@ public class MidiTrackManager {
      */
     public void setTempo(int tempo) throws InvalidMidiDataException {
         LOGGER.info("                    ~ with inherited tempo for track: " + tempo);
+        if (tempo == 0) {
+            LOGGER.warning("Tempo is 0, skipping");
+            return;
+        }
         int mpqn = 60000000 / tempo; // 60,000,000 microseconds per minute / BPM
         byte[] data = new byte[]{
                 (byte) ((mpqn >> 16) & 0xFF),

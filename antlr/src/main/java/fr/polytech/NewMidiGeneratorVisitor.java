@@ -43,7 +43,7 @@ public class NewMidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
     /**
      * List of composition's bars
      */
-    private final List<Bar> bars = new ArrayList<Bar>();
+    private final List<Bar> bars = new ArrayList<>();
 
     /**
      * List of composition's clips

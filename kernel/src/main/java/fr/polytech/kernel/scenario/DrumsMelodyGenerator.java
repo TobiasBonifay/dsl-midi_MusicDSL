@@ -57,7 +57,7 @@ public class DrumsMelodyGenerator {
     }
 
     private static List<DrumHit> createDrumsSequence() {
-        return Stream.of(DrumFactory.createDrumHit(DrumSound.KICK_DRUM), DrumFactory.createDrumHit(DrumSound.SNARE), DrumFactory.createDrumHit(DrumSound.KICK_DRUM), DrumFactory.createDrumHit(DrumSound.SNARE)).toList();
+        return Stream.of(DrumFactory.createDrumHit(DrumSound.KICK), DrumFactory.createDrumHit(DrumSound.SNARE), DrumFactory.createDrumHit(DrumSound.KICK), DrumFactory.createDrumHit(DrumSound.SNARE)).toList();
     }
 
     private static List<Note> createPianoSequence() {

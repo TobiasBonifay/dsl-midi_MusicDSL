@@ -21,4 +21,12 @@ public class Notes {
             throw new IllegalArgumentException("Invalid note: " + note);
         }
     }
+
+    public static int parseDuration(String duration) {
+        if (duration.matches("\\d+")) return 4 / Integer.parseInt(duration); // TODO: Time signature
+        String[] fraction = duration.split("/");
+        int numerator = Integer.parseInt(fraction[0]);
+        int denominator = Integer.parseInt(fraction[1]);
+        return 4 / denominator * numerator;
+    }
 }
