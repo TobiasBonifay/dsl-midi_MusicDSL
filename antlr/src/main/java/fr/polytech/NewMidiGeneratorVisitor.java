@@ -3,16 +3,17 @@ package fr.polytech;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
-import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Track;
+import java.io.IOException;
+import java.util.*;
 
 public class NewMidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
 
@@ -27,6 +28,12 @@ public class NewMidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
      * The logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(NewMidiGeneratorVisitor.class);
+
+    /**
+     * The MIDI sequence.
+     */
+    private final Sequence sequence = new Sequence(javax.sound.midi.Sequence.PPQ, 480);
+
 
     /**
      * Maps instrument names to MIDI program numbers.
@@ -49,13 +56,21 @@ public class NewMidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
      * The current tempo in beats per minute.
      */
     private int tempo = DEFAULT_BPM; // Beats per minute
+
+    /**
+     * The current track
+     */
+    private Track currentTrack;
+
     /*
     * The current bar
-    * */
+     */
     private Bar currentBar;
 
-    public NewMidiGeneratorVisitor() {
+    public NewMidiGeneratorVisitor() throws InvalidMidiDataException {
         this.instrumentMap = createInstrumentMap();
+        LOGGER.info("NewMidiGeneratorVisitor created with instrument map {}", instrumentMap);
+        this.currentTrack = sequence.createTrack();         // create the first track
     }
 
     @Override
@@ -85,139 +100,12 @@ public class NewMidiGeneratorVisitor extends MusicDSLBaseVisitor<Void> {
         return null;
     }
 
+
     private static Map<String, Integer> createInstrumentMap() {
-        Map<String, Integer> instrumentMap = new HashMap<>();
-
-        instrumentMap.put("ACOUSTIC_GRAND_PIANO", 0);
-        instrumentMap.put("BRIGHT_ACOUSTIC_PIANO", 1);
-        instrumentMap.put("ELECTRIC_GRAND_PIANO", 2);
-        instrumentMap.put("HONKY_TONK_PIANO", 3);
-        instrumentMap.put("ELECTRIC_PIANO_1", 4);
-        instrumentMap.put("ELECTRIC_PIANO_2", 5);
-        instrumentMap.put("HARPSICHORD", 6);
-        instrumentMap.put("CLAVI", 7);
-        instrumentMap.put("CELESTA", 8);
-        instrumentMap.put("GLOCKENSPIEL", 9);
-        instrumentMap.put("MUSIC_BOX", 10);
-        instrumentMap.put("VIBRAPHONE", 11);
-        instrumentMap.put("MARIMBA", 12);
-        instrumentMap.put("XYLOPHONE", 13);
-        instrumentMap.put("TUBULAR_BELLS", 14);
-        instrumentMap.put("DULCIMER", 15);
-        instrumentMap.put("DRAWBAR_ORGAN", 16);
-        instrumentMap.put("PERCUSSIVE_ORGAN", 17);
-        instrumentMap.put("ROCK_ORGAN", 18);
-        instrumentMap.put("CHURCH_ORGAN", 19);
-        instrumentMap.put("REED_ORGAN", 20);
-        instrumentMap.put("ACCORDION", 21);
-        instrumentMap.put("HARMONICA", 22);
-        instrumentMap.put("TANGO_ACCORDION", 23);
-        instrumentMap.put("ACOUSTIC_GUITAR_NYLON", 24);
-        instrumentMap.put("ACOUSTIC_GUITAR_STEEL", 25);
-        instrumentMap.put("ELECTRIC_GUITAR_JAZZ", 26);
-        instrumentMap.put("ELECTRIC_GUITAR_CLEAN", 27);
-        instrumentMap.put("ELECTRIC_GUITAR_MUTED", 28);
-        instrumentMap.put("OVERDRIVEN_GUITAR", 29);
-        instrumentMap.put("DISTORTION_GUITAR", 30);
-        instrumentMap.put("GUITAR_HARMONICS", 31);
-        instrumentMap.put("ACOUSTIC_BASS", 32);
-        instrumentMap.put("ELECTRIC_BASS_FINGER", 33);
-        instrumentMap.put("ELECTRIC_BASS_PICK", 34);
-        instrumentMap.put("FRETLESS_BASS", 35);
-        instrumentMap.put("SLAP_BASS_1", 36);
-        instrumentMap.put("SLAP_BASS_2", 37);
-        instrumentMap.put("SYNTH_BASS_1", 38);
-        instrumentMap.put("SYNTH_BASS_2", 39);
-        instrumentMap.put("VIOLIN", 40);
-        instrumentMap.put("VIOLA", 41);
-        instrumentMap.put("CELLO", 42);
-        instrumentMap.put("CONTRABASS", 43);
-        instrumentMap.put("TREMOLO_STRINGS", 44);
-        instrumentMap.put("PIZZICATO_STRINGS", 45);
-        instrumentMap.put("ORCHESTRAL_HARP", 46);
-        instrumentMap.put("TIMPANI", 47);
-        instrumentMap.put("STRING_ENSEMBLE_1", 48);
-        instrumentMap.put("STRING_ENSEMBLE_2", 49);
-        instrumentMap.put("SYNTH_STRINGS_1", 50);
-        instrumentMap.put("SYNTH_STRINGS_2", 51);
-        instrumentMap.put("CHOIR_AAHS", 52);
-        instrumentMap.put("VOICE_OOHS", 53);
-        instrumentMap.put("SYNTH_VOICE", 54);
-        instrumentMap.put("ORCHESTRA_HIT", 55);
-        instrumentMap.put("TRUMPET", 56);
-        instrumentMap.put("TROMBONE", 57);
-        instrumentMap.put("TUBA", 58);
-        instrumentMap.put("MUTED_TRUMPET", 59);
-        instrumentMap.put("FRENCH_HORN", 60);
-        instrumentMap.put("BRASS_SECTION", 61);
-        instrumentMap.put("SYNTH_BRASS_1", 62);
-        instrumentMap.put("SYNTH_BRASS_2", 63);
-        instrumentMap.put("SOPRANO_SAX", 64);
-        instrumentMap.put("ALTO_SAX", 65);
-        instrumentMap.put("TENOR_SAX", 66);
-        instrumentMap.put("BARITONE_SAX", 67);
-        instrumentMap.put("OBOE", 68);
-        instrumentMap.put("ENGLISH_HORN", 69);
-        instrumentMap.put("BASSOON", 70);
-        instrumentMap.put("CLARINET", 71);
-        instrumentMap.put("PICCOLO", 72);
-        instrumentMap.put("FLUTE", 73);
-        instrumentMap.put("RECORDER", 74);
-        instrumentMap.put("PAN_FLUTE", 75);
-        instrumentMap.put("BLOWN_BOTTLE", 76);
-        instrumentMap.put("SHAKUHACHI", 77);
-        instrumentMap.put("WHISTLE", 78);
-        instrumentMap.put("OCARINA", 79);
-        instrumentMap.put("LEAD_1_SQUARE", 80);
-        instrumentMap.put("LEAD_2_SAWTOOTH", 81);
-        instrumentMap.put("LEAD_3_CALLIOPE", 82);
-        instrumentMap.put("LEAD_4_CHIFF", 83);
-        instrumentMap.put("LEAD_5_CHARANG", 84);
-        instrumentMap.put("LEAD_6_VOICE", 85);
-        instrumentMap.put("LEAD_7_FIFTHS", 86);
-        instrumentMap.put("LEAD_8_BASS_LEAD", 87);
-        instrumentMap.put("PAD_1_NEW_AGE", 88);
-        instrumentMap.put("PAD_2_WARM", 89);
-        instrumentMap.put("PAD_3_POLYSYNTH", 90);
-        instrumentMap.put("PAD_4_CHOIR", 91);
-        instrumentMap.put("PAD_5_BOWED", 92);
-        instrumentMap.put("PAD_6_METALLIC", 93);
-        instrumentMap.put("PAD_7_HALO", 94);
-        instrumentMap.put("PAD_8_SWEEP", 95);
-        instrumentMap.put("FX_1_RAIN", 96);
-        instrumentMap.put("FX_2_SOUNDTRACK", 97);
-        instrumentMap.put("FX_3_CRYSTAL", 98);
-        instrumentMap.put("FX_4_ATMOSPHERE", 99);
-        instrumentMap.put("FX_5_BRIGHTNESS", 100);
-        instrumentMap.put("FX_6_GOBLINS", 101);
-        instrumentMap.put("FX_7_ECHOES", 102);
-        instrumentMap.put("FX_8_SCI_FI", 103);
-        instrumentMap.put("SITAR", 104);
-        instrumentMap.put("BANJO", 105);
-        instrumentMap.put("SHAMISEN", 106);
-        instrumentMap.put("KOTO", 107);
-        instrumentMap.put("KALIMBA", 108);
-        instrumentMap.put("BAG_PIPE", 109);
-        instrumentMap.put("FIDDLE", 110);
-        instrumentMap.put("SHANAI", 111);
-        instrumentMap.put("TINKLE_BELL", 112);
-        instrumentMap.put("AGOGO", 113);
-        instrumentMap.put("STEEL_DRUMS", 114);
-        instrumentMap.put("WOODBLOCK", 115);
-        instrumentMap.put("TAIKO_DRUM", 116);
-        instrumentMap.put("MELODIC_TOM", 117);
-        instrumentMap.put("SYNTH_DRUM", 118);
-        instrumentMap.put("REVERSE_CYMBAL", 119);
-        instrumentMap.put("GUITAR_FRET_NOISE", 120);
-        instrumentMap.put("BREATH_NOISE", 121);
-        instrumentMap.put("SEASHORE", 122);
-        instrumentMap.put("BIRD_TWEET", 123);
-        instrumentMap.put("TELEPHONE_RING", 124);
-        instrumentMap.put("HELICOPTER", 125);
-        instrumentMap.put("APPLAUSE", 126);
-        instrumentMap.put("GUNSHOT", 127);
-
-        return instrumentMap;
+        return Arrays.stream(MidiInstrument.values()).collect(HashMap::new, (m, v) -> m.put(v.name(), v.instrumentNumber), HashMap::putAll);
     }
 
+    public void writeMidiFile(String filename) throws IOException {
+        MidiSystem.write(sequence, 1, new java.io.File(filename));
+    }
 }

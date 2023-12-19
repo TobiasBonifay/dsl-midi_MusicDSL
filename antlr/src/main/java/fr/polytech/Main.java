@@ -56,7 +56,7 @@ public class Main {
      * @throws IOException              When an I/O error occurs.
      */
     private static void generateMIDI(ParseTree tree) throws InvalidMidiDataException, IOException {
-        MidiGeneratorVisitor visitor = new MidiGeneratorVisitor();
+        NewMidiGeneratorVisitor visitor = new NewMidiGeneratorVisitor();
         visitor.visit(tree);
         visitor.writeMidiFile(OUTPUT_FILENAME);
         System.out.println("MIDI file generated: " + OUTPUT_FILENAME);
