@@ -1,10 +1,17 @@
 package fr.polytech;
 
-import fr.polytech.kernel.structure.Note;
-import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 
-public class MidiGeneratorParsingLayer {
+import java.util.logging.Logger;
+
+public class MidiGeneratorUtils {
+    private static final Logger LOGGER = Logger.getLogger(MidiGeneratorUtils.class.getName());
+
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
+
     public static int parseBpmChange(MusicDSLParser.TempoChangeContext ctx) {
         String sign = ctx.getChild(1).getText(); // + or -
         int bpmChange = Integer.parseInt(ctx.INT().getText());
@@ -18,14 +25,4 @@ public class MidiGeneratorParsingLayer {
         return new TimeSignature(numerator, denominator);
     }
 
-    public static void noteBuilding(MusicDSLParser.NoteContext noteCtx, Track track) {
-        Note note = Note.builder() //
-                .noteName(noteCtx.noteName.getText()) //
-                .duration(noteCtx.noteDuration() != null ? noteCtx.noteDuration().fraction.getText() : "1") //
-                .dynamic(noteCtx.noteDynamic() != null ? noteCtx.noteDynamic().velocity.getText() : "mf") //
-                .volume("100") //
-                .build(); //
-
-        track.addNote(note);
-    }
 }

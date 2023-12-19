@@ -7,12 +7,9 @@ import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.Track;
-import fr.polytech.kernel.structure.drums.DrumHit;
-import fr.polytech.kernel.structure.drums.DrumTrack;
-import fr.polytech.kernel.util.dictionnaries.DrumSound;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
-import fr.polytech.kernel.util.generator.factory.DrumFactory;
+import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
@@ -21,11 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static fr.polytech.MidiGeneratorParsingLayer.*;
+import static fr.polytech.MidiGeneratorUtils.parseBpmChange;
+import static fr.polytech.MidiGeneratorUtils.parseTimeSignature;
 
+@Getter
 public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
-
-    private static final Logger LOGGER = Logger.getLogger(MidiGeneratorWithKernel.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(MidiGeneratorWithKernel.class.getName());
+    public static final int DEFAULT_TEMPO = 140;
+    public static final TimeSignature DEFAULT_TIME_SIGNATURE = new TimeSignature(4, 4);
+    public static final int DEFAULT_VOLUME = 100;
+    public static final String DEFAULT_DYNAMIC = "mf";
+    public static final String DEFAULT_DURATION = "1";
 
     static {
         LoggingSetup.setupLogger(LOGGER);
@@ -35,15 +38,13 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     private final List<Track> tracksInCurrentBar;
     private Clip currentClip;
 
-
     public MidiGeneratorWithKernel() throws MidiGenerationException {
-        this.app = new App("Music");
-        this.app.setGlobalTempo(140);
-        this.app.setGlobalTimeSignature(new TimeSignature(4, 4));
-        this.app.setVolume(100);
-        this.tracksInCurrentBar = new ArrayList<>();
+        app = new App("Music");
+        app.setGlobalTempo(DEFAULT_TEMPO);
+        app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
+        app.setVolume(DEFAULT_VOLUME);
+        tracksInCurrentBar = new ArrayList<>();
     }
-
     @Override
     public Void visitBpm(MusicDSLParser.BpmContext ctx) {
         if (ctx.globalBpmValue == null) {
@@ -76,40 +77,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitTrack(MusicDSLParser.TrackContext ctx) {
-        if (null == ctx.trackName || null == ctx.trackContent()) {
-            LOGGER.info("Track definition is not complete");
-            if (null == ctx.trackName) {
-                LOGGER.info("Track name is missing");
-            }
-            if (null == ctx.trackContent()) {
-                LOGGER.info("Track content is missing");
-            }
-            return super.visitTrack(ctx);
-        }
         String trackId = ctx.trackName.getText();
-        if (ctx.trackContent().percussionSequence() == null) {
-            Instrument instrument = this.app.getInstruments().stream().filter(i -> i.getName().equals(trackId)).findFirst().orElse(null);
-            if (instrument == null) {
-                LOGGER.info("Instrument not found for track: " + trackId);
-                return null;
-            }
-            LOGGER.info("Track found " + trackId + " for instrument: " + instrument.getName() + " " + instrument.getMidiInstrument());
-
-            Track track = new Track(trackId, instrument);
-            this.tracksInCurrentBar.add(track);
-            ctx.trackContent().noteSequence().note().forEach(noteCtx -> noteBuilding(noteCtx, track));
-
-            LOGGER.info("Track added to bar: " + trackId);
-        } else {
-            LOGGER.info("Track is a drum track");
-            DrumTrack drumTrack = new DrumTrack(trackId);
-            ctx.trackContent().percussionSequence().percussionElement().forEach(percussionCtx -> {
-                DrumHit drumHit = DrumFactory.createDrumHit(DrumSound.valueOf(percussionCtx.getText()));
-                LOGGER.info("Drum hit added to track: " + drumHit);
-                drumTrack.addDrumHit(drumHit);
-            });
-            this.tracksInCurrentBar.add(drumTrack);
-        }
+        TrackHandler.handleTrack(ctx, trackId, this);
         return null;
     }
 
@@ -182,8 +151,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     }
 
     public void writeMidiFile(String filename) throws IOException, InvalidMidiDataException {
-        this.app.generateMidi();
-        MidiSystem.write(this.app.getSequence(), 1, new java.io.File(filename));
+        app.generateMidi();
+        MidiSystem.write(app.getSequence(), 1, new java.io.File(filename));
         LOGGER.info("MIDI file generated: " + filename);
     }
 }
