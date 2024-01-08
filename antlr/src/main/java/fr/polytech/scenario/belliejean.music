@@ -3,8 +3,8 @@ bpm 117
 volume 100
 
 Instruments:
-    bass SYNTH_BASS volume 100
-    drum DRUMS volume 100
+    bassLine SYNTH_BASS volume 100
+    drumKit DRUMS volume 100
     synth LEAD_SYNTH volume 90
 
 clip MAIN:
