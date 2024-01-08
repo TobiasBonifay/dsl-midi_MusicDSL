@@ -2,7 +2,6 @@ package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
-import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Setter;
 
@@ -49,7 +48,7 @@ public class Track {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("                    -> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument);
+        LOGGER.info("                    -> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument.getName());
         midiGenerator.setTrackVolume(this.defaultVolume);
         midiGenerator.setInstrumentForTrack(this.instrument.getMidiInstrument().instrumentNumber);
         for (Note note : notes) {
