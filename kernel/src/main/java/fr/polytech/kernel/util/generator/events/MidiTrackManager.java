@@ -6,7 +6,10 @@ import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.sound.midi.*;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiEvent;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Track;
 import java.util.logging.Logger;
 
 @Getter
@@ -45,9 +48,9 @@ public class MidiTrackManager {
      */
     public void setTimeSignature(TimeSignature timeSignature) throws InvalidMidiDataException {
         LOGGER.info("            ~ Setting time signature to " + timeSignature);
-        MetaMessage tsMessage = new MetaMessage();
-        tsMessage.setMessage(0x58, timeSignature.toMidiData(), 4);
-        currentTrack.add(new MidiEvent(tsMessage, currentTick));
+        // MetaMessage tsMessage = new MetaMessage();
+        // tsMessage.setMessage(0x58, timeSignature.toMidiData(), 4);
+        // currentTrack.add(new MidiEvent(tsMessage, currentTick));
     }
 
     /**
@@ -62,15 +65,15 @@ public class MidiTrackManager {
             LOGGER.warning("Tempo is 0, skipping");
             return;
         }
-        int mpqn = 60000000 / tempo; // 60,000,000 microseconds per minute / BPM
-        byte[] data = new byte[]{
-                (byte) ((mpqn >> 16) & 0xFF),
-                (byte) ((mpqn >> 8) & 0xFF),
-                (byte) (mpqn & 0xFF)
-        };
+        // int mpqn = 60000000 / tempo; // 60,000,000 microseconds per minute / BPM
+        // byte[] data = new byte[]{
+        //        (byte) ((mpqn >> 16) & 0xFF),
+        //        (byte) ((mpqn >> 8) & 0xFF),
+        //        (byte) (mpqn & 0xFF)
+        // };
 
-        MetaMessage tempoChange = new MetaMessage(0x51, data, 3);
-        MidiEvent tempoEvent = new MidiEvent(tempoChange, currentTick);
-        currentTrack.add(tempoEvent);
+        // MetaMessage tempoChange = new MetaMessage(0x51, data, 3);
+        // MidiEvent tempoEvent = new MidiEvent(tempoChange, currentTick);
+        // currentTrack.add(tempoEvent);
     }
 }
