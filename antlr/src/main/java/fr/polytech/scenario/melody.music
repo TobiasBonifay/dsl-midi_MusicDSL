@@ -1,7 +1,5 @@
-volume 100
-
 Instruments:
-	PIANO
+	MainPiano ACOUSTIC_GRAND_PIANO volume 95
 
 clip CHORUS:
 bar [
