@@ -145,14 +145,14 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         }
 
         Track track = new Track(trackId, instrument);
-        if (ctx.trackContent().noteSequence() != null) {
-            ctx.trackContent().noteSequence().note().forEach(noteCtx ->
-                    NoteBuilder.addNoteToTrack(noteCtx, track)
-            );
+        MusicDSLParser.NoteSequenceContext notesOfTheTracks = ctx.trackContent().noteSequence();
+        if (notesOfTheTracks != null) {
+            List<MusicDSLParser.NoteContext> notes = notesOfTheTracks.note();
+            notes.forEach(noteCtx -> NoteBuilder.addNoteToTrack(noteCtx, track));
         } else {
-            LOGGER.severe("Track content is not complete");
+            LOGGER.warning("[DEBUG] Track content is not complete");
         }
-
+        LOGGER.warning("[DEBUG] Track processed: " + trackId + " with " + track.getNotes().size() + " notes");
         return track;
     }
 
@@ -181,9 +181,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         }
 
         if (ctx.trackSequence() != null) {
-            for (MusicDSLParser.TrackContext trackCtx : ctx.trackSequence().track()) {
-                visitTrack(trackCtx);
-            }
+            List<MusicDSLParser.TrackContext> tracks = ctx.trackSequence().track();
+            tracks.forEach(this::visitTrack);
         }
 
         return super.visitBarContent(ctx);

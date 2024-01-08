@@ -3,6 +3,7 @@ package fr.polytech.kernel.structure;
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
+import lombok.Getter;
 import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -19,6 +20,7 @@ public class Track {
     }
 
     private final String name;
+    @Getter
     private final List<Note> notes = new ArrayList<>();
     private final Instrument instrument;
     @Setter
