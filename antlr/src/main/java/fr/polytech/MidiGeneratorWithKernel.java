@@ -99,22 +99,57 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitBarSequence(MusicDSLParser.BarSequenceContext ctx) {
-        TimeSignature signature = this.app.getGlobalTimeSignature();
-        int tempo = this.app.getGlobalTempo();
+        for (MusicDSLParser.BarContentContext barCtx : ctx.barContent()) {
+            TimeSignature signature = processBarTimeSignature(barCtx);
+            int tempo = processBarTempo(barCtx);
 
-        if (ctx.barContent() != null && !ctx.barContent().isEmpty()) {
-            signature = parseTimeSignature(ctx.barContent(0).signature());
+            String barName = "Bar " + (this.currentClip.getBars().size() + 1);
+            Bar currentBar = new Bar(barName, signature, tempo);
+
+            if (barCtx.trackSequence() != null) {
+                for (MusicDSLParser.TrackContext trackCtx : barCtx.trackSequence().track()) {
+                    Track track = processTrack(trackCtx);
+                    currentBar.addTrack(track);
+                }
+            }
+
+            this.currentClip.addBar(currentBar);
+            this.tracksInCurrentBar.clear();
+        }
+        return null;
+    }
+
+    private TimeSignature processBarTimeSignature(MusicDSLParser.BarContentContext ctx) {
+        if (ctx.signature() != null) {
+            return MidiGeneratorUtils.parseTimeSignature(ctx.signature());
+        }
+        return this.app.getGlobalTimeSignature();
+    }
+
+    private int processBarTempo(MusicDSLParser.BarContentContext ctx) {
+        if (ctx.tempoChange() != null) {
+            return this.app.getGlobalTempo() + MidiGeneratorUtils.parseBpmChange(ctx.tempoChange());
+        }
+        return this.app.getGlobalTempo();
+    }
+
+    private Track processTrack(MusicDSLParser.TrackContext ctx) {
+        String trackId = ctx.trackName.getText();
+        Instrument instrument = InstrumentFinder.findInstrument(this.app, trackId);
+
+        if (instrument == null) {
+            LOGGER.warning("Instrument not found for track: " + trackId);
+            return null;
         }
 
-        String barName = "Bar " + (this.currentClip.getBars().size() + 1);
-        Bar currentBar = new Bar(barName, signature, tempo);
-        this.currentClip.addBar(currentBar);
-        LOGGER.info("Bar added to clip: " + currentClip.name());
+        Track track = new Track(trackId, instrument);
+        if (ctx.trackContent().noteSequence() != null) {
+            ctx.trackContent().noteSequence().note().forEach(noteCtx ->
+                    NoteBuilder.addNoteToTrack(noteCtx, track)
+            );
+        }
 
-        this.tracksInCurrentBar.forEach(currentBar::addTrack);
-        this.tracksInCurrentBar.clear();
-        ctx.barContent().forEach(this::visitBarContent);
-        return null;
+        return track;
     }
 
     @Override
