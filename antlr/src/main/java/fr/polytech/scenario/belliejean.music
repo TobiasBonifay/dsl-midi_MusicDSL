@@ -1,11 +1,10 @@
 signature 4/4
 bpm 117
-volume 100
 
 Instruments:
-    bassLine SYNTH_BASS volume 100
-    drumKit DRUMS volume 100
-    synth LEAD_SYNTH volume 90
+    bassLine SYNTH_BASS_1 volume 100
+    // drumKit DRUMS volume 100
+    synth SYNTH_STRINGS_1 volume 90
 
 clip MAIN:
 bar [
@@ -19,5 +18,5 @@ bar [
         F#5 (1/8), F#5 (1/8), A5 (1/8), G#5 (1/8) // Repetitive synth notes
 ]
 
-Timeline:
-    MAIN
+// Timeline:
+MAIN
