@@ -32,12 +32,12 @@ trackContent : (noteSequence | percussionSequence);
 
 // ----------------- NOTE -----------------
 noteSequence : (note | silence | chord) (',' (note | silence | chord))*;
+noteDynamic : velocity=VELOCITY_SYMBOL;
+noteDuration : '(' fraction=FRACTION ')';
 note : noteName=NOTE noteDynamic? noteDuration?;
 chord : chordName=CHORD noteDynamic? noteDuration?;
 silence : SILENCE noteDuration?;
 
-noteDynamic : velocity=VELOCITY_SYMBOL;
-noteDuration : '(' fraction=FRACTION ')';
 
 percussionSequence : percussionElement+;
 percussionElement : PERCUSSION (',' PERCUSSION)*;
