@@ -90,24 +90,26 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         }
         String clipName = ctx.clipName.getText();
         this.currentClip = new Clip(clipName);
+        List<MusicDSLParser.BarContentContext> bars = ctx.bars.barContent();
+        bars.forEach(this::visitBarContent);
         this.app.addClip(currentClip);
         LOGGER.info("Clip created: " + clipName);
 
-        ctx.bars.barContent().forEach(this::visitBarContent);
         return null;
     }
 
     @Override
     public Void visitBarSequence(MusicDSLParser.BarSequenceContext ctx) {
-        for (MusicDSLParser.BarContentContext barCtx : ctx.barContent()) {
-            TimeSignature signature = processBarTimeSignature(barCtx);
-            int tempo = processBarTempo(barCtx);
+        for (MusicDSLParser.BarContentContext barContent : ctx.barContent()) {
+            TimeSignature signature = processBarTimeSignature(barContent);
+            int tempo = processBarTempo(barContent);
 
             String barName = "Bar " + (this.currentClip.getBars().size() + 1);
             Bar currentBar = new Bar(barName, signature, tempo);
 
-            if (barCtx.trackSequence() != null) {
-                for (MusicDSLParser.TrackContext trackCtx : barCtx.trackSequence().track()) {
+            if (barContent.trackSequence() != null) {
+                List<MusicDSLParser.TrackContext> currentTrack = barContent.trackSequence().track();
+                for (MusicDSLParser.TrackContext trackCtx : currentTrack) {
                     Track track = processTrack(trackCtx);
                     currentBar.addTrack(track);
                 }
@@ -147,6 +149,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
             ctx.trackContent().noteSequence().note().forEach(noteCtx ->
                     NoteBuilder.addNoteToTrack(noteCtx, track)
             );
+        } else {
+            LOGGER.severe("Track content is not complete");
         }
 
         return track;
