@@ -14,6 +14,7 @@ import fr.polytech.kernel.util.generator.factory.NoteFactory;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,6 +24,14 @@ public class BellieJeanMelodyGenerator {
 
         final Instrument bassLine = new Instrument("Bass line", MidiInstrument.ELECTRIC_BASS_FINGER);
         final Instrument synth = new Instrument("Synth", MidiInstrument.SYNTH_BASS_1);
+
+        final Instrument leadVox = new Instrument("Lead Vox", MidiInstrument.VOICE_OOHS);
+        final Instrument elecPiano = new Instrument("Elec Piano", MidiInstrument.STRING_ENSEMBLE_2);
+        final Instrument rythmGtr = new Instrument("Rythm Gtr", MidiInstrument.ELECTRIC_GUITAR_CLEAN);
+        final Instrument strings2 = new Instrument("String Ensemble 2", MidiInstrument.STRING_ENSEMBLE_2);
+        final Instrument clavBrass = new Instrument("Clav Brass", MidiInstrument.CLAVI);
+        final Instrument strings = new Instrument("Synth Strings", MidiInstrument.SYNTH_STRINGS_1);
+        final Instrument bass = new Instrument("Bass", MidiInstrument.FRETLESS_BASS);
         // Drum instrument
 
         // Create tracks
@@ -30,12 +39,22 @@ public class BellieJeanMelodyGenerator {
         final Track basstrack = new Track("Bass line", bassLine);
         final Track synthtrack = new Track("Synth", synth);
 
+        final Track leadVoxTrack = new Track("Lead Vox Line", leadVox);
+        final Track elecPianoTrack = new Track("Elec Piano", elecPiano);
+        final Track rythmGtrTrack = new Track("Rythm Gtr Line", rythmGtr);
+        final Track strings2Track = new Track("String Ensemble 2 Line", strings2);
+        final Track clavBrassTrack = new Track("Clav Brass Line", clavBrass);
+        final Track stringsTrack = new Track("Synth Strings Line", strings);
+        final Track bassTrack = new Track("Bass Line", bass);
+
         // Add notes to tracks
-        createDrumsSequence().forEach(drumTrack::addDrumHit);
-        createBassNoteSequence().forEach(basstrack::addNote);
-        createBassNoteSequence2().forEach(basstrack::addNote);
-        createLeadBillieJeanNoteSequence1().forEach(synthtrack::addNote);
-        createLeadBillieJeanNoteSequence2().forEach(synthtrack::addNote);
+        createLeadVoxSequence().forEach(leadVoxTrack::addNote);
+        createBassSequence().forEach(bassTrack::addNote);
+        //createDrumsSequence().forEach(drumTrack::addDrumHit);
+        //createBassNoteSequence().forEach(basstrack::addNote);
+        //createBassNoteSequence2().forEach(basstrack::addNote);
+        //createLeadBillieJeanNoteSequence1().forEach(synthtrack::addNote);
+        //createLeadBillieJeanNoteSequence2().forEach(synthtrack::addNote);
 
         // Create bars
         final Clip clip1 = new Clip("main");
@@ -54,9 +73,32 @@ public class BellieJeanMelodyGenerator {
         bar2.addTrack(drumTrack);
 
         app.addClip(clip1);
-        app.setGlobalTimeSignature(new TimeSignature(3, 4));
+        app.setGlobalTimeSignature(new TimeSignature(4, 4));
         app.setGlobalTempo(120);
         app.generateMidi();
+    }
+
+    private static List<Note> createLeadVoxSequence(){
+        Note n1 = new Note("C#3", 1, Dynamic.FFF, 100);
+        Note silence = new Note("C#3", 1, Dynamic.FFF, 0);
+        Note n2 = new Note("C#3", 1, Dynamic.FF, 100);
+        Note b2 = new Note("B2", 1, Dynamic.FFF, 100);
+        Note a2 = new Note("A2", 1, Dynamic.F, 100);
+        return Stream.of(
+                silence, silence, silence, silence, n1, silence, n2, silence, n1, silence, b2, silence, a2, silence, a2
+        ).toList();
+
+    }
+
+    private static List<Note> createBassSequence(){
+        Note silence = new Note("C#3", 1, Dynamic.FFF, 0);
+        Note f1 = new Note("F#1",1, Dynamic.FFF, 100);
+        Note c1 = new Note("C#1", 1, Dynamic.FFF, 100);
+        Note e1 = new Note("E1", 1, Dynamic.FF, 100);
+        Note b0 = new Note("B0", 1, Dynamic.FFF, 100);
+        return Stream.of(
+                f1, silence, c1, silence, e1, silence, f1, silence, e1, silence, c1, silence, b0, silence
+        ).toList();
     }
 
     private static List<DrumHit> createDrumsSequence() {
