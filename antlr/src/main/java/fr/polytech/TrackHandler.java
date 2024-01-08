@@ -7,6 +7,8 @@ import fr.polytech.kernel.structure.drums.DrumTrack;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 
+import java.util.Arrays;
+
 public class TrackHandler {
 
     public static void handleTrack(MusicDSLParser.TrackContext ctx, String trackId, MidiGeneratorWithKernel generator) {
@@ -32,8 +34,16 @@ public class TrackHandler {
         MidiGeneratorWithKernel.LOGGER.info("Drum track found: " + trackId);
         DrumTrack drumTrack = new DrumTrack(trackId);
         ctx.trackContent().percussionSequence().percussionElement().forEach(percussionCtx -> {
-            DrumHit drumHit = DrumFactory.createDrumHit(DrumSound.valueOf(percussionCtx.getText()));
-            drumTrack.addDrumHit(drumHit);
+            String drumSound = percussionCtx.getText();
+            if (drumSound == null || drumSound.isBlank()) {
+                return;
+            }
+            // KICK, SNARE, KICK, SNARE -> List<DrumHit> with enum values
+            Arrays.stream(drumSound.split(",")).map(String::trim).forEach(d -> {
+                DrumSound sound = DrumSound.valueOf(d);
+                DrumHit drumHit = DrumFactory.createDrumHit(sound);
+                drumTrack.addDrumHit(drumHit);
+            });
         });
         midiGeneratorWithKernel.getTracksInCurrentBar().add(drumTrack);
     }
