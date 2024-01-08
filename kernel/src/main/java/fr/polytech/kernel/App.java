@@ -53,7 +53,7 @@ public class App {
         instruments.add(instrument);
     }
 
-    public void generateMidi() throws InvalidMidiDataException {
+    public void generateMidi() throws InvalidMidiDataException, IOException {
         LOGGER.info("Generating MIDI for app %s with default time signature %s and default tempo %d".formatted(name, globalTimeSignature, globalTempo));
         trackManager.setTimeSignature(globalTimeSignature);
         trackManager.setTempo(globalTempo);
@@ -63,11 +63,12 @@ public class App {
             clip.generateMidi(midiGenerator);
         }
 
-        // writeMidiFile(name);
+        writeMidiFile(name);
     }
 
     public void writeMidiFile(String filename) throws IOException {
         String pathName = name.replaceAll(" ", "_");
+        LOGGER.info("Writing MIDI file to %s.midi".formatted(pathName));
         MidiSystem.write(this.getSequence(), 1, new File(pathName + ".midi"));
     }
 
