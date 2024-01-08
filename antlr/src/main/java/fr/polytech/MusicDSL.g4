@@ -47,10 +47,10 @@ mainSequence : clipInstance (clipInstance)*;
 clipInstance : ID ('x' INT)?;
 
 // Lexer Rules
-FRACTION : INT '/' INT;
-SIGNED_INT : '-'? INT;
-INT : DIGIT+;
 fragment DIGIT : [0-9];
+INT : DIGIT+;
+SIGNED_INT : '-'? INT;
+FRACTION : INT '/' INT;
 
 VELOCITY_SYMBOL : 'ppp' | 'pp' | 'p' | 'mp' | 'mf' | 'f' | 'ff' | 'fff';
 
