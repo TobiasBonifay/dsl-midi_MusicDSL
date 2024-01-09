@@ -59,7 +59,7 @@ public class App {
         trackManager.setTempo(globalTempo);
         for (int i = 0, clipsSize = clips.size(); i < clipsSize; i++) {
             Clip clip = clips.get(i);
-            LOGGER.info("    Generating bar %d/%d MIDI for clip %s".formatted(i, clipsSize, clip.name()));
+            LOGGER.info("    Generating bar %d/%d MIDI for clip %s".formatted(i + 1, clipsSize + 1, clip.name()));
             clip.generateMidi(midiGenerator);
         }
 

@@ -26,7 +26,7 @@ public class Track {
     @Setter
     private int defaultVolume;
     @Setter
-    private Dynamic defaultDynamic;
+    private Dynamic defaultDynamic; // TODO: apply by default to all notes
 
     public Track(String name, Instrument instrument) {
         this.name = name;

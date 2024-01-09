@@ -73,4 +73,5 @@ public class MidiTrackManager {
         MidiEvent tempoEvent = new MidiEvent(tempoChange, currentTick);
         currentTrack.add(tempoEvent);
     }
+
 }

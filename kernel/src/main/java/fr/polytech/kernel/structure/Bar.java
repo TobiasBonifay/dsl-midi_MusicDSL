@@ -20,17 +20,17 @@ public class Bar {
 
     private final String name;
     private final List<Track> tracks = new ArrayList<>();
-    private int defaultVolume = 100;
+    private final int barVolume;
     private TimeSignature timeSignature;
     private int tempo;
     @Setter
     private long startTick;
 
-
-    public Bar(String name, TimeSignature timeSignature, int tempo) {
+    public Bar(String name, TimeSignature timeSignature, int tempo, int barVolume) {
         this.name = name;
         this.timeSignature = timeSignature;
         this.tempo = tempo;
+        this.barVolume = barVolume;
     }
 
     /**
@@ -45,18 +45,19 @@ public class Bar {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("            Generating MIDI for bar " + name + " with time signature " + timeSignature + " and tempo " + tempo);
+        LOGGER.info("            Generating MIDI for %s with time signature %s and tempo %d and volume %d".formatted(name, timeSignature, tempo, barVolume));
         for (int i = 0, tracksSize = tracks.size(); i < tracksSize; i++) {
             Track track = tracks.get(i);
             if (null == track) {
                 LOGGER.severe("--------------------- ERROR ---------------------");
-                LOGGER.severe("->              Track " + i + "/" + tracksSize + " is null");
+                LOGGER.severe("->              Track " + (i + 1) + "/" + tracksSize + " is null");
                 continue;
             }
-            LOGGER.info("                Generating track " + i + "/" + tracksSize + " MIDI for bar " + name);
+            LOGGER.info("                Generating track " + (i + 1) + "/" + tracksSize + " MIDI for bar " + name);
             midiGenerator.trackManager().newTrack(this);
             midiGenerator.trackManager().setTimeSignature(timeSignature);
             midiGenerator.trackManager().setTempo(tempo);
+            track.setDefaultVolume(barVolume);
             track.generateMidi(midiGenerator);
         }
     }
@@ -79,14 +80,5 @@ public class Bar {
 
     public void withTempo(int tempo) {
         this.tempo = tempo;
-    }
-
-    /**
-     * TO DO: make the notes louder or quieter depending on the volume of the bar
-     *
-     * @param volume
-     */
-    public void withVolume(int volume) {
-        this.defaultVolume = volume;
     }
 }

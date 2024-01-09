@@ -2,10 +2,10 @@ package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
+import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,6 +17,7 @@ public class Clip {
     }
 
     private final String name;
+    @Getter
     private final List<Bar> bars = new ArrayList<>();
 
     public Clip(String name) {
@@ -38,19 +39,15 @@ public class Clip {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("        Generating MIDI for clip " + name + " with " + bars.size() + " bars");
+        LOGGER.info("        Generating MIDI for clip " + name + " with " + (bars.size() + 1) + " bars");
         for (int i = 0, barsSize = bars.size(); i < barsSize; i++) {
             Bar bar = bars.get(i);
-            LOGGER.info("            Generating bar " + i + "/" + barsSize + " MIDI for clip " + name);
+            // LOGGER.info("            Generating bar " + i + "/" + barsSize + " MIDI for clip " + name);
             bar.generateMidi(midiGenerator);
         }
     }
 
     public void addBar(Bar bar) {
         bars.add(bar);
-    }
-
-    public Collection<Bar> getBars() {
-        return bars;
     }
 }

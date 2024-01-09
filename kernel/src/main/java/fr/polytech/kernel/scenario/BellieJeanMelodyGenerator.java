@@ -54,14 +54,14 @@ public class BellieJeanMelodyGenerator {
 
         // Create bars
         final Clip clip1 = new Clip("main");
-        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120);
+        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100);
         bar1.addTrack(leadVoxTrack);
         bar1.addTrack(bassTrack);
 
         clip1.addBar(bar1);
         clip1.addBar(bar1);
 
-        final Bar bar2 = new Bar("Bar 2", new TimeSignature(4, 4), 120);
+        final Bar bar2 = new Bar("Bar 2", new TimeSignature(4, 4), 120, 100);
         bar2.addTrack(synthtrack);
         bar2.addTrack(basstrack);
         bar2.addTrack(drumTrack);

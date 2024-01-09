@@ -15,7 +15,7 @@ instrumentDefinition : instrumentName=ID instrumentMidiName=INSTRUMENT 'volume' 
 
 // ----------------- CLIP -----------------
 clipSection : clip+;
-clip : 'clip' clipName=ID ':' bars=barSequence;
+clip : 'clip' clipName=ID ':' bars=barSequence+;
 
 // ----------------- BAR -----------------
 barSequence : 'bar' '[' barContent* ']';

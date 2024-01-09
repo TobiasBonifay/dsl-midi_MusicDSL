@@ -36,11 +36,11 @@ public class DrumsMelodyGenerator {
 
         // Create bars
         final Clip clip1 = new Clip("Chorus");
-        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120);
+        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100);
         bar1.addTrack(pianoTrack);
         bar1.addTrack(drumTrack);
 
-        final Bar bar2 = new Bar("Bar 2", new TimeSignature(3, 8), 140);
+        final Bar bar2 = new Bar("Bar 2", new TimeSignature(3, 8), 140, 100);
         bar2.addTrack(violinTrack);
         bar2.addTrack(drumTrack);
 
