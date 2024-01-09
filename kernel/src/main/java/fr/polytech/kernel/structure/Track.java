@@ -51,7 +51,9 @@ public class Track {
      */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("                    -> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument.name());
-        midiGenerator.setTrackVolume(this.defaultVolume);
+        int calculatedVolume = (this.defaultVolume * instrument.volume()) / 100;
+        LOGGER.info("                         -> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
+        midiGenerator.setTrackVolume(calculatedVolume);
         midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber);
         for (Note note : notes) {
             midiGenerator.addMidiEventToTrack(note, MidiGenerator.INSTRUMENT_CHANNEL);
@@ -65,9 +67,5 @@ public class Track {
      */
     public void addNote(Note note) {
         notes.add(note);
-    }
-
-    public long calculateEndTick() {
-        return notes.stream().mapToLong(Note::duration).sum();
     }
 }

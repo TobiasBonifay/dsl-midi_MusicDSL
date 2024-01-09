@@ -69,10 +69,6 @@ public class Bar {
         return startTick;
     }
 
-    public long calculateEndTick() {
-        return tracks.stream().mapToLong(Track::calculateEndTick).max().orElse(0);
-    }
-
     public Bar get() {
         return this;
     }

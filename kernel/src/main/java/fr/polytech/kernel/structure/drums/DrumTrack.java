@@ -23,9 +23,8 @@ public class DrumTrack extends Track {
 
     private final List<DrumHit> drumHits = new ArrayList<>();
 
-    //todo: find better way to set the Drums instrument when writing a drum track
     public DrumTrack(String name) {
-        super(name, new Instrument("Drums", MidiInstrument.VIOLIN));
+        super(name, new Instrument("Drums", MidiInstrument.VIOLIN, 100));
     }
 
     public void addDrumHit(DrumHit hit) {

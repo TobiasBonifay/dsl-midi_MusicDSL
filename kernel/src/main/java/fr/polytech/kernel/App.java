@@ -75,8 +75,4 @@ public class App {
     public Sequence getSequence() {
         return midiGenerator.trackManager().getSequence();
     }
-
-    public void setVolume(int volume) {
-        // TODO: implement this
-    }
 }

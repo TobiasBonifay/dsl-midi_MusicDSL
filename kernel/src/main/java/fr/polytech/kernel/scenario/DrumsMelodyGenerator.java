@@ -21,8 +21,8 @@ public class DrumsMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App("Drums");
 
-        final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO);
-        final Instrument violinInstrument = new Instrument("Violin", MidiInstrument.VIOLIN);
+        final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO, 100);
+        final Instrument violinInstrument = new Instrument("Violin", MidiInstrument.VIOLIN, 100);
 
 
         // Create tracks

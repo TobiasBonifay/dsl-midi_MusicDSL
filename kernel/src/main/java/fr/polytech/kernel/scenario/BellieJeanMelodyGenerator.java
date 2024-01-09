@@ -22,16 +22,16 @@ public class BellieJeanMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App("Billy");
 
-        final Instrument bassLine = new Instrument("Bass line", MidiInstrument.ELECTRIC_BASS_FINGER);
-        final Instrument synth = new Instrument("Synth", MidiInstrument.SYNTH_BASS_1);
+        final Instrument bassLine = new Instrument("Bass line", MidiInstrument.ELECTRIC_BASS_FINGER, 100);
+        final Instrument synth = new Instrument("Synth", MidiInstrument.SYNTH_BASS_1, 100);
 
-        final Instrument leadVox = new Instrument("Lead Vox", MidiInstrument.VOICE_OOHS);
-        final Instrument elecPiano = new Instrument("Elec Piano", MidiInstrument.STRING_ENSEMBLE_2);
-        final Instrument rythmGtr = new Instrument("Rythm Gtr", MidiInstrument.ELECTRIC_GUITAR_CLEAN);
-        final Instrument strings2 = new Instrument("String Ensemble 2", MidiInstrument.STRING_ENSEMBLE_2);
-        final Instrument clavBrass = new Instrument("Clav Brass", MidiInstrument.CLAVI);
-        final Instrument strings = new Instrument("Synth Strings", MidiInstrument.SYNTH_STRINGS_1);
-        final Instrument bass = new Instrument("Bass", MidiInstrument.FRETLESS_BASS);
+        final Instrument leadVox = new Instrument("Lead Vox", MidiInstrument.VOICE_OOHS, 100);
+        final Instrument elecPiano = new Instrument("Elec Piano", MidiInstrument.STRING_ENSEMBLE_2, 100);
+        final Instrument rythmGtr = new Instrument("Rythm Gtr", MidiInstrument.ELECTRIC_GUITAR_CLEAN, 100);
+        final Instrument strings2 = new Instrument("String Ensemble 2", MidiInstrument.STRING_ENSEMBLE_2, 100);
+        final Instrument clavBrass = new Instrument("Clav Brass", MidiInstrument.CLAVI, 100);
+        final Instrument strings = new Instrument("Synth Strings", MidiInstrument.SYNTH_STRINGS_1, 100);
+        final Instrument bass = new Instrument("Bass", MidiInstrument.FRETLESS_BASS, 100);
         // Drum instrument
 
         // Create tracks

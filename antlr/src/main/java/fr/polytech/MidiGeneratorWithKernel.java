@@ -42,7 +42,6 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         app = new App("Music");
         app.setGlobalTempo(DEFAULT_TEMPO);
         app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
-        app.setVolume(DEFAULT_VOLUME);
         tracksInCurrentBar = new ArrayList<>();
     }
     @Override
@@ -60,17 +59,16 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     public Void visitInstrumentDefinition(InstrumentDefinitionContext ctx) {
         String instrumentName = ctx.instrumentName.getText();
         try {
-            MidiInstrument midiInstrument = MidiInstrument.valueOf(ctx.instrumentMidiName.getText());
-            Instrument instrument = new Instrument(instrumentName, midiInstrument);
+            final MidiInstrument midiInstrument = MidiInstrument.valueOf(ctx.instrumentMidiName.getText());
+            Instrument instrument = new Instrument(instrumentName, midiInstrument, DEFAULT_VOLUME);
             if (ctx.volumeInstrument != null) {
                 int volume = Integer.parseInt(ctx.volumeInstrument.getText());
-                // TODO: apply this after: I guess it's not the right moment to do that
+                instrument = new Instrument(instrumentName, midiInstrument, volume);
             }
             this.app.addInstrument(instrument);
             LOGGER.info("Instrument defined: " + instrumentName);
         } catch (IllegalArgumentException e) {
             LOGGER.info("Instrument not found: " + ctx.instrumentMidiName.getText());
-            // if drums, should not call the method..
         }
         return super.visitInstrumentDefinition(ctx);
     }
@@ -151,7 +149,6 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
             }
             int volume = Integer.parseInt(ctx.volumeSetting().trackVolume.getText());
             barToCreate.withVolume(volume);
-            this.app.setVolume(volume);
         }
 
         if (ctx.signature() != null) {
