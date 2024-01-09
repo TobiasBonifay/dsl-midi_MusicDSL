@@ -2,16 +2,18 @@ package fr.polytech;
 
 import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.util.Notes;
+import fr.polytech.kernel.util.dictionnaries.NoteLength;
 
 import static fr.polytech.MidiGeneratorWithKernel.*;
 
 public class NoteBuilder {
     public static void addNoteToTrack(MusicDSLParser.NoteContext noteCtx, Track track) {
         String noteName = noteCtx.noteName.getText();
-        String duration = noteCtx.noteDuration() != null ? noteCtx.noteDuration().fraction.getText() : DEFAULT_DURATION;
+        NoteLength noteLength = noteCtx.noteDuration() != null ? Notes.parseNoteLength(noteCtx.noteDuration().fraction.getText()) : DEFAULT_NOTE_LENGTH;
         String dynamic = noteCtx.noteDynamic() != null ? noteCtx.noteDynamic().velocity.getText() : DEFAULT_DYNAMIC;
 
-        Note note = Note.builder().noteName(noteName).duration(duration).dynamic(dynamic).volume(String.valueOf(DEFAULT_VOLUME)).build();
+        Note note = Note.builder().noteName(noteName).length(noteLength).dynamic(dynamic).volume(String.valueOf(DEFAULT_VOLUME)).build();
         track.addNote(note);
     }
 }

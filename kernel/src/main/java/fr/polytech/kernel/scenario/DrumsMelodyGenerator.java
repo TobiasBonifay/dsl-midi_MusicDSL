@@ -5,10 +5,7 @@ import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.*;
 import fr.polytech.kernel.structure.drums.DrumHit;
 import fr.polytech.kernel.structure.drums.DrumTrack;
-import fr.polytech.kernel.util.dictionnaries.DrumSound;
-import fr.polytech.kernel.util.dictionnaries.Dynamic;
-import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
-import fr.polytech.kernel.util.dictionnaries.TimeSignature;
+import fr.polytech.kernel.util.dictionnaries.*;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
 
@@ -62,6 +59,6 @@ public class DrumsMelodyGenerator {
 
     private static List<Note> createPianoSequence() {
         return Stream.of("C3", "C3", "C3", "D3", "E3", "D3", "C3", "E3", "D3", "D3", "C3")
-                .map(pitch -> NoteFactory.createNote(pitch, 1, Dynamic.FF, 75)).toList();
+                .map(pitch -> NoteFactory.createNote(pitch, NoteLength.QUARTER, Dynamic.FF, 75)).toList();
     }
 }

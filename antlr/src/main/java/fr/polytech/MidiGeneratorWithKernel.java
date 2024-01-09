@@ -8,6 +8,7 @@ import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
+import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import lombok.Getter;
 
@@ -28,7 +29,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     public static final TimeSignature DEFAULT_TIME_SIGNATURE = new TimeSignature(4, 4);
     public static final int DEFAULT_VOLUME = 100;
     public static final String DEFAULT_DYNAMIC = "mf";
-    public static final String DEFAULT_DURATION = "1";
+    public static final NoteLength DEFAULT_NOTE_LENGTH = NoteLength.QUARTER;
 
     static {
         LoggingSetup.setupLogger(LOGGER);

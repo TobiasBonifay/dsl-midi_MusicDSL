@@ -5,16 +5,12 @@ import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.*;
 import fr.polytech.kernel.structure.drums.DrumHit;
 import fr.polytech.kernel.structure.drums.DrumTrack;
-import fr.polytech.kernel.util.dictionnaries.DrumSound;
-import fr.polytech.kernel.util.dictionnaries.Dynamic;
-import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
-import fr.polytech.kernel.util.dictionnaries.TimeSignature;
+import fr.polytech.kernel.util.dictionnaries.*;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -77,11 +73,11 @@ public class BellieJeanMelodyGenerator {
     }
 
     private static List<Note> createLeadVoxSequence(){
-        Note n1 = new Note("C#3", 1, Dynamic.FFF, 100);
-        Note silence = new Note("C#3", 1, Dynamic.FFF, 0);
-        Note n2 = new Note("C#3", 1, Dynamic.FF, 100);
-        Note b2 = new Note("B2", 1, Dynamic.FFF, 100);
-        Note a2 = new Note("A2", 1, Dynamic.F, 100);
+        Note n1 = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 100);
+        Note silence = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 0);
+        Note n2 = new Note("C#3", NoteLength.QUARTER, Dynamic.FF, 100);
+        Note b2 = new Note("B2", NoteLength.QUARTER, Dynamic.FFF, 100);
+        Note a2 = new Note("A2", NoteLength.QUARTER, Dynamic.F, 100);
         return Stream.of(
                 silence, silence, silence, silence, n1, silence, n2, silence, n1, silence, b2, silence, a2, silence, a2
         ).toList();
@@ -89,11 +85,11 @@ public class BellieJeanMelodyGenerator {
     }
 
     private static List<Note> createBassSequence(){
-        Note silence = new Note("C#3", 1, Dynamic.FFF, 0);
-        Note f1 = new Note("F#1",1, Dynamic.FFF, 100);
-        Note c1 = new Note("C#1", 1, Dynamic.FFF, 100);
-        Note e1 = new Note("E1", 1, Dynamic.FF, 100);
-        Note b0 = new Note("B0", 1, Dynamic.FFF, 100);
+        Note silence = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 0);
+        Note f1 = new Note("F#1", NoteLength.QUARTER, Dynamic.FFF, 100);
+        Note c1 = new Note("C#1", NoteLength.QUARTER, Dynamic.FFF, 100);
+        Note e1 = new Note("E1", NoteLength.QUARTER, Dynamic.FF, 100);
+        Note b0 = new Note("B0", NoteLength.QUARTER, Dynamic.FFF, 100);
         return Stream.of(
                 f1, silence, c1, silence, e1, silence, f1, silence, e1, silence, c1, silence, b0, silence
         ).toList();
@@ -107,11 +103,11 @@ public class BellieJeanMelodyGenerator {
      * She was more like a beauty queen
      */
     private static List<Note> createLeadBillieJeanNoteSequence1() {
-        return Stream.of("F#5", "F#5", "A5", "G#5").map(pitch -> NoteFactory.createNote(pitch, 1, Dynamic.FF, 100)).toList();
+        return Stream.of("F#5", "F#5", "A5", "G#5").map(pitch -> NoteFactory.createNote(pitch, NoteLength.QUARTER, Dynamic.FF, 100)).toList();
     }
 
     private static List<Note> createBassNoteSequence() {
-        return Stream.of("F#3", "F#3", "A3", "G#3").map(pitch -> NoteFactory.createNote(pitch, 1, Dynamic.FF, 100)).toList();
+        return Stream.of("F#3", "F#3", "A3", "G#3").map(pitch -> NoteFactory.createNote(pitch, NoteLength.QUARTER, Dynamic.FF, 100)).toList();
     }
 
     /**
@@ -136,7 +132,7 @@ public class BellieJeanMelodyGenerator {
                 "C#4", "C#4", "C#4", "B3", // "Then every head turned"
                 "A3", "B3", "A3", "C#4", // "With eyes that dreamed"
                 "B3", "A3", "G#3", "F#3" // "Of being the one"
-        ).map(pitch -> NoteFactory.createNote(pitch, 1, Dynamic.FF, 100)).toList();
+        ).map(pitch -> NoteFactory.createNote(pitch, NoteLength.QUARTER, Dynamic.FF, 100)).toList();
     }
 
     private static List<Note> createBassNoteSequence2() {
@@ -159,6 +155,6 @@ public class BellieJeanMelodyGenerator {
                 "F#3", "F#3", "F#3", "F#3", // "Then every head turned"
                 "F#3", "F#3", "F#3", "F#3", // "With eyes that dreamed"
                 "F#3", "F#3", "F#3", "F#3" // "Of being the one"
-        ).map(pitch -> NoteFactory.createNote(pitch, 1, Dynamic.FF, 100)).toList();
+        ).map(pitch -> NoteFactory.createNote(pitch, NoteLength.QUARTER, Dynamic.FF, 100)).toList();
     }
 }

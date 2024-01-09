@@ -1,11 +1,11 @@
 package fr.polytech.kernel.structure;
 
-import fr.polytech.kernel.util.Notes;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
+import fr.polytech.kernel.util.dictionnaries.NoteLength;
 
 public class NoteBuilder {
     private String pitch;
-    private int duration;
+    private NoteLength length;
     private Dynamic dynamic;
     private int volume;
 
@@ -14,8 +14,8 @@ public class NoteBuilder {
         return this;
     }
 
-    public NoteBuilder duration(String noteDuration) {
-        if (noteDuration != null) this.duration = Notes.parseDuration(noteDuration);
+    public NoteBuilder length(NoteLength noteLength) {
+        if (noteLength != null) this.length = noteLength;
         return this;
     }
 
@@ -30,6 +30,6 @@ public class NoteBuilder {
     }
 
     public Note build() {
-        return new Note(this.pitch, this.duration, this.dynamic, this.volume);
+        return new Note(this.pitch, this.length, this.dynamic, this.volume);
     }
 }
