@@ -24,8 +24,8 @@ public class NoteBuilder {
         return this;
     }
 
-    public NoteBuilder volume(String i) {
-        if (i != null) this.volume = Integer.parseInt(i);
+    public NoteBuilder volume(int i) {
+        this.volume = i;
         return this;
     }
 

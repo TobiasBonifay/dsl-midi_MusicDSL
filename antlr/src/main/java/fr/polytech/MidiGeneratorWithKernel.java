@@ -7,6 +7,7 @@ import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
@@ -21,11 +22,13 @@ import static fr.polytech.MusicDSLParser.*;
 
 @Getter
 public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
+
+    public static final Dynamic DEFAULT_DYNAMIC = Dynamic.MF;
+    private static final int DEFAULT_TEMPO = 140;
+
     public static final Logger LOGGER = Logger.getLogger(MidiGeneratorWithKernel.class.getName());
-    public static final int DEFAULT_TEMPO = 140;
-    public static final TimeSignature DEFAULT_TIME_SIGNATURE = new TimeSignature(4, 4);
     public static final int DEFAULT_VOLUME = 100;
-    public static final String DEFAULT_DYNAMIC = "mf";
+    private static final TimeSignature DEFAULT_TIME_SIGNATURE = new TimeSignature(4, 4);
     public static final NoteLength DEFAULT_NOTE_LENGTH = NoteLength.QUARTER;
 
     static {
