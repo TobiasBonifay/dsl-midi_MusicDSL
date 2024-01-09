@@ -142,7 +142,6 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         if (ctx.tempoChange() != null) {
             int bpmChange = parseBpmChange(ctx.tempoChange());
             barToCreate.withTempo(this.app.getGlobalTempo() + bpmChange);
-            this.app.setGlobalTempo(this.app.getGlobalTempo() + bpmChange);
         }
 
         if (ctx.volumeSetting() != null) {
@@ -158,7 +157,6 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         if (ctx.signature() != null) {
             TimeSignature signature = parseTimeSignature(ctx.signature());
             barToCreate.withTimeSignature(signature);
-            this.app.setGlobalTimeSignature(signature);
         }
 
         if (ctx.trackSequence() != null) {
