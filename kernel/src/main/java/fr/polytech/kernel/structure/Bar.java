@@ -3,6 +3,7 @@ package fr.polytech.kernel.structure;
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
+import lombok.Getter;
 import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -19,12 +20,17 @@ public class Bar {
     }
 
     private final String name;
+    @Getter
     private final List<Track> tracks = new ArrayList<>();
-    private final int barVolume;
+    private int barVolume;
     private TimeSignature timeSignature;
     private int tempo;
     @Setter
     private long startTick;
+
+    public Bar(String name) {
+        this(name, new TimeSignature(4, 4), 140, 100);
+    }
 
     public Bar(String name, TimeSignature timeSignature, int tempo, int barVolume) {
         this.name = name;
@@ -80,5 +86,9 @@ public class Bar {
 
     public void withTempo(int tempo) {
         this.tempo = tempo;
+    }
+
+    public void witBarVolume(int barVolume) {
+        this.barVolume = barVolume;
     }
 }

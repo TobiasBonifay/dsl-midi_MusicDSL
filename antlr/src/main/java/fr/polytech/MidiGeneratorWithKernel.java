@@ -3,6 +3,7 @@ package fr.polytech;
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.Track;
@@ -13,7 +14,6 @@ import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -33,14 +33,13 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     }
 
     private final App app;
-    private final List<Track> tracksInCurrentBar;
     private Clip currentClip;
+    private Bar currentBar;
 
     public MidiGeneratorWithKernel() throws MidiGenerationException {
         app = new App("Music");
         app.setGlobalTempo(DEFAULT_TEMPO);
         app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
-        tracksInCurrentBar = new ArrayList<>();
     }
     @Override
     public Void visitBpm(BpmContext ctx) {
@@ -89,65 +88,45 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitBarSequence(BarSequenceContext ctx) {
-        ctx.barContent().forEach(barContent -> barContent.accept(this));
+        currentBar = new Bar("" + (currentClip.getBars().size() + 1));
+        super.visitBarSequence(ctx);
+        currentClip.addBar(currentBar);
         return null;
     }
 
-
-    /**
-     private void barContentContext(int currentClip, BarContentContext barContent) {
-     String barName = "Bar " + currentClip;
-     final TimeSignature signature = processBarTimeSignature(barContent);
-     int tempo = processBarTempo(barContent);
-     int volume = processBarVolume(barContent);
-
-     final Bar currentBar = new Bar(barName, signature, tempo, volume);
-
-     if (barContent.trackSequence() != null) {
-     List<TrackContext> currentTrack = barContent.trackSequence().track();
-     for (TrackContext trackCtx : currentTrack) {
-     Track track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
-     currentBar.addTrack(track);
-     }
-     }
-
-     this.currentClip.addBar(currentBar);
-     this.tracksInCurrentBar.clear();
-     } */
-
-    /**
+    @Override
+    public Void visitTempoChange(TempoChangeContext ctx) {
+        int tempo = MidiGeneratorUtils.parseBpmChange(ctx);
+        this.currentBar.withTempo(tempo);
+        return super.visitTempoChange(ctx);
+    }
 
     @Override
-    public Void visitBarContent(BarContentContext ctx) {
-    String name = "Bar " + this.currentClip.getBars().size();
-    TimeSignature signature = (ctx.signature() != null) ? parseTimeSignature(ctx.signature()) : this.app.getGlobalTimeSignature();
-    int tempo = (ctx.tempoChange() != null) ? parseBpmChange(ctx.tempoChange()) : this.app.getGlobalTempo();
-    int volume = (ctx.volumeSetting() != null) ? Integer.parseInt(ctx.volumeSetting().trackVolume.getText()) : DEFAULT_VOLUME;
-
-    final Bar barToCreate = new Bar(name, signature, tempo, volume);
-    TrackSequenceContext tracksCtx = ctx.trackSequence();
-    if (tracksCtx != null) {
-    List<TrackContext> tracks = tracksCtx.track();
-            tracks.forEach(trackCtx -> {
-                Track track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
-                barToCreate.addTrack(track);
-            });
+    public Void visitSignature(SignatureContext ctx) {
+        if (null != currentBar) {
+            TimeSignature signature = MidiGeneratorUtils.parseTimeSignature(ctx);
+            this.currentBar.withTimeSignature(signature);
         }
-
-    this.currentClip.addBar(barToCreate);
-        return super.visitBarContent(ctx);
-    } */
-
-    private TimeSignature processBarTimeSignature(BarContentContext ctx) {
-        return (ctx.signature() != null) ? MidiGeneratorUtils.parseTimeSignature(ctx.signature()) : this.app.getGlobalTimeSignature();
+        return super.visitSignature(ctx);
     }
 
-    private int processBarTempo(BarContentContext ctx) {
-        return (ctx.tempoChange() != null) ? MidiGeneratorUtils.parseBpmChange(ctx.tempoChange()) : this.app.getGlobalTempo();
+    @Override
+    public Void visitVolumeSetting(VolumeSettingContext ctx) {
+        if (null != currentBar) {
+            int volume = Integer.parseInt(ctx.trackVolume.getText());
+            this.currentBar.witBarVolume(volume);
+        }
+        return super.visitVolumeSetting(ctx);
     }
 
-    private int processBarVolume(BarContentContext barContent) {
-        return (barContent.volumeSetting() != null) ? Integer.parseInt(barContent.volumeSetting().trackVolume.getText()) : DEFAULT_VOLUME;
+    @Override
+    public Void visitTrackSequence(TrackSequenceContext ctx) {
+        List<TrackContext> tracks = ctx.track();
+        tracks.forEach(trackCtx -> {
+            Track track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
+            this.currentBar.addTrack(track);
+        });
+        return super.visitTrackSequence(ctx);
     }
 
     public void writeMidiFile() throws IOException, InvalidMidiDataException {
