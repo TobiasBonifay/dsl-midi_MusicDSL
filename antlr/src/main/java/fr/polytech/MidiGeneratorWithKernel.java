@@ -12,7 +12,6 @@ import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiSystem;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.logging.Logger;
 
 import static fr.polytech.MidiGeneratorUtils.parseBpmChange;
 import static fr.polytech.MidiGeneratorUtils.parseTimeSignature;
+import static fr.polytech.MusicDSLParser.*;
 
 @Getter
 public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
@@ -46,7 +46,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         tracksInCurrentBar = new ArrayList<>();
     }
     @Override
-    public Void visitBpm(MusicDSLParser.BpmContext ctx) {
+    public Void visitBpm(BpmContext ctx) {
         if (ctx.globalBpmValue == null) {
             LOGGER.info("Global BPM value is missing");
             return super.visitBpm(ctx);
@@ -57,7 +57,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitInstrumentDefinition(MusicDSLParser.InstrumentDefinitionContext ctx) {
+    public Void visitInstrumentDefinition(InstrumentDefinitionContext ctx) {
         String instrumentName = ctx.instrumentName.getText();
         try {
             MidiInstrument midiInstrument = MidiInstrument.valueOf(ctx.instrumentMidiName.getText());
@@ -76,21 +76,21 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitTrack(MusicDSLParser.TrackContext ctx) {
+    public Void visitTrack(TrackContext ctx) {
         String trackId = ctx.trackName.getText();
         TrackHandler.handleTrack(ctx, trackId, this);
         return null;
     }
 
     @Override
-    public Void visitClip(MusicDSLParser.ClipContext ctx) {
+    public Void visitClip(ClipContext ctx) {
         if (ctx.clipName == null) {
             LOGGER.info("Clip definition is not complete");
             return super.visitClip(ctx);
         }
         String clipName = ctx.clipName.getText();
         this.currentClip = new Clip(clipName);
-        List<MusicDSLParser.BarContentContext> bars = ctx.bars.barContent();
+        List<BarContentContext> bars = ctx.bars.barContent();
         bars.forEach(this::visitBarContent);
         this.app.addClip(currentClip);
         LOGGER.info("Clip created: " + clipName);
@@ -99,8 +99,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitBarSequence(MusicDSLParser.BarSequenceContext ctx) {
-        for (MusicDSLParser.BarContentContext barContent : ctx.barContent()) {
+    public Void visitBarSequence(BarSequenceContext ctx) {
+        for (BarContentContext barContent : ctx.barContent()) {
             TimeSignature signature = processBarTimeSignature(barContent);
             int tempo = processBarTempo(barContent);
 
@@ -108,9 +108,9 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
             Bar currentBar = new Bar(barName, signature, tempo);
 
             if (barContent.trackSequence() != null) {
-                List<MusicDSLParser.TrackContext> currentTrack = barContent.trackSequence().track();
-                for (MusicDSLParser.TrackContext trackCtx : currentTrack) {
-                    Track track = processTrack(trackCtx);
+                List<TrackContext> currentTrack = barContent.trackSequence().track();
+                for (TrackContext trackCtx : currentTrack) {
+                    Track track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
                     currentBar.addTrack(track);
                 }
             }
@@ -121,46 +121,27 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         return null;
     }
 
-    private TimeSignature processBarTimeSignature(MusicDSLParser.BarContentContext ctx) {
+    private TimeSignature processBarTimeSignature(BarContentContext ctx) {
         if (ctx.signature() != null) {
             return MidiGeneratorUtils.parseTimeSignature(ctx.signature());
         }
         return this.app.getGlobalTimeSignature();
     }
 
-    private int processBarTempo(MusicDSLParser.BarContentContext ctx) {
+    private int processBarTempo(BarContentContext ctx) {
         if (ctx.tempoChange() != null) {
             return this.app.getGlobalTempo() + MidiGeneratorUtils.parseBpmChange(ctx.tempoChange());
         }
         return this.app.getGlobalTempo();
     }
 
-    private Track processTrack(MusicDSLParser.TrackContext ctx) {
-        String trackId = ctx.trackName.getText();
-        Instrument instrument = InstrumentFinder.findInstrument(this.app, trackId);
-
-        if (instrument == null) {
-            LOGGER.warning("Instrument not found for track: " + trackId);
-            return null;
-        }
-
-        Track track = new Track(trackId, instrument);
-        MusicDSLParser.NoteSequenceContext notesOfTheTracks = ctx.trackContent().noteSequence();
-        if (notesOfTheTracks != null) {
-            List<MusicDSLParser.NoteContext> notes = notesOfTheTracks.note();
-            notes.forEach(noteCtx -> NoteBuilder.addNoteToTrack(noteCtx, track));
-        } else {
-            LOGGER.warning("[DEBUG] Track content is not complete");
-        }
-        LOGGER.warning("[DEBUG] Track processed: " + trackId + " with " + track.getNotes().size() + " notes");
-        return track;
-    }
 
     @Override
-    public Void visitBarContent(MusicDSLParser.BarContentContext ctx) {
+    public Void visitBarContent(BarContentContext ctx) {
+        final Bar barToCreate = new Bar("Bar " + (this.currentClip.getBars().size() + 1), this.app.getGlobalTimeSignature(), this.app.getGlobalTempo());
         if (ctx.tempoChange() != null) {
             int bpmChange = parseBpmChange(ctx.tempoChange());
-            // TODO: change tempo for the bar only
+            barToCreate.withTempo(this.app.getGlobalTempo() + bpmChange);
             this.app.setGlobalTempo(this.app.getGlobalTempo() + bpmChange);
         }
 
@@ -170,27 +151,29 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
                 return super.visitBarContent(ctx);
             }
             int volume = Integer.parseInt(ctx.volumeSetting().trackVolume.getText());
-            // TODO: change volume for the bar only
+            barToCreate.withVolume(volume);
             this.app.setVolume(volume);
         }
 
         if (ctx.signature() != null) {
             TimeSignature signature = parseTimeSignature(ctx.signature());
-            // TODO: change time signature for the bar only
+            barToCreate.withTimeSignature(signature);
             this.app.setGlobalTimeSignature(signature);
         }
 
         if (ctx.trackSequence() != null) {
-            List<MusicDSLParser.TrackContext> tracks = ctx.trackSequence().track();
-            tracks.forEach(this::visitTrack);
+            List<TrackContext> tracks = ctx.trackSequence().track();
+            tracks.forEach(trackCtx -> {
+                Track track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
+                barToCreate.addTrack(track);
+            });
         }
 
+        this.currentClip.addBar(barToCreate.get());
         return super.visitBarContent(ctx);
     }
 
-    public void writeMidiFile(String filename) throws IOException, InvalidMidiDataException {
+    public void writeMidiFile() throws IOException, InvalidMidiDataException {
         app.generateMidi();
-        MidiSystem.write(app.getSequence(), 1, new java.io.File(filename));
-        LOGGER.info("MIDI file generated: " + filename);
     }
 }

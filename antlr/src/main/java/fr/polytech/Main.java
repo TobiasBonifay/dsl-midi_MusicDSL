@@ -14,7 +14,6 @@ import java.nio.file.Paths;
  * The program's entry point for converting MusicDSL files to MIDI format.
  */
 public class Main {
-    private static final String OUTPUT_FILENAME = "output.midi";
 
     public static void main(String[] args) {
         try {
@@ -59,7 +58,7 @@ public class Main {
     private static void generateMIDI(ParseTree tree) throws IOException, MidiGenerationException, InvalidMidiDataException {
         MidiGeneratorWithKernel visitor = new MidiGeneratorWithKernel();
         visitor.visit(tree);
-        visitor.writeMidiFile(OUTPUT_FILENAME);
-        System.out.println("MIDI file generated: " + OUTPUT_FILENAME);
+        visitor.writeMidiFile();
+        System.out.println("MIDI file generated");
     }
 }

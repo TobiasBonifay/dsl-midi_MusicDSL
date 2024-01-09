@@ -9,13 +9,13 @@ Instruments:
 clip MAIN:
 bar [
     track bassLine:
-        F#3 (1/8), F#3 (1/8), A3 (1/8), G#3 (1/8) // Repetitive bassline notes
+        F#3, F#3, A3, G#3 // Repetitive bassline notes
 
     track drumKit:
-        KICK (1/8), SNARE (1/8), KICK (1/8), SNARE (1/8) // Basic drum pattern
+        KICK, SNARE, KICK, SNARE // Basic drum pattern
 
     track synth:
-        F#5 (1/8), F#5 (1/8), A5 (1/8), G#5 (1/8) // Repetitive synth notes
+        F#5, F#5, A5, G#5 // Repetitive synth notes
 ]
 
 // Timeline:

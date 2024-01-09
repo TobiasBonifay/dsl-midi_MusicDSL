@@ -12,26 +12,26 @@ import java.util.List;
 
 public class TrackHandler {
 
-    public static void handleTrack(MusicDSLParser.TrackContext ctx, String trackId, MidiGeneratorWithKernel generator) {
-        if (ctx.trackContent().percussionSequence() == null) {
-            Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
-            TrackHandler.handleInstrumentTrack(generator, ctx, instrument, trackId);
-        } else {
-            TrackHandler.handleDrumTrack(generator, ctx, trackId);
+    public static Track handleTrack(MusicDSLParser.TrackContext ctx, String trackId, MidiGeneratorWithKernel generator) {
+        if (ctx.trackContent().percussionSequence() != null) {
+            return TrackHandler.handleDrumTrack(generator, ctx, trackId);
         }
+        Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
+        return TrackHandler.handleInstrumentTrack(generator, ctx, instrument, trackId);
+
     }
 
-    private static void handleInstrumentTrack(MidiGeneratorWithKernel generator, MusicDSLParser.TrackContext ctx, Instrument instrument, String trackId) {
+    private static Track handleInstrumentTrack(MidiGeneratorWithKernel generator, MusicDSLParser.TrackContext ctx, Instrument instrument, String trackId) {
         if (instrument == null) {
             MidiGeneratorWithKernel.LOGGER.info("Instrument not found for track: " + trackId);
-            return;
+            throw new RuntimeException("Instrument not found for track: " + trackId);
         }
         Track track = new Track(trackId, instrument);
         ctx.trackContent().noteSequence().note().forEach(noteCtx -> NoteBuilder.addNoteToTrack(noteCtx, track));
-        generator.getTracksInCurrentBar().add(track);
+        return track;
     }
 
-    private static void handleDrumTrack(MidiGeneratorWithKernel midiGeneratorWithKernel, MusicDSLParser.TrackContext ctx, String trackId) {
+    private static Track handleDrumTrack(MidiGeneratorWithKernel midiGeneratorWithKernel, MusicDSLParser.TrackContext ctx, String trackId) {
         MidiGeneratorWithKernel.LOGGER.info("Drum track found: " + trackId);
         DrumTrack drumTrack = new DrumTrack(trackId);
         List<MusicDSLParser.PercussionElementContext> drum_hits = ctx.trackContent().percussionSequence().percussionElement();
@@ -45,6 +45,6 @@ public class TrackHandler {
                             .map(DrumFactory::createDrumHit) // create a drum hit
                             .forEach(drumTrack::addDrumHit);
                 });
-        midiGeneratorWithKernel.getTracksInCurrentBar().add(drumTrack);
+        return drumTrack;
     }
 }
