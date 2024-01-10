@@ -10,8 +10,6 @@ import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -24,33 +22,19 @@ public class DrumTrack extends Track {
         LoggingSetup.setupLogger(LOGGER);
     }
 
-    private final List<DrumHit> drumHits = new ArrayList<>();
-
     public DrumTrack(String name) {
         super(name, new Instrument("Drums", MidiInstrument.VIOLIN, 100));
     }
 
-    public void addDrumHit(DrumHit hit) {
-        drumHits.add(hit);
+    public void addMusicalElement(MusicalElement element) {
+        super.addMusicalElement(element);
     }
-
-//    @Override
-//    public void generateMidi(MidiGenerator midiGenerator) {
-//        LOGGER.info("                   -> Generating MIDI for drum track " + name().toUpperCase());
-//        drumHits.forEach(drumHit -> {
-//            try {
-//                midiGenerator.addMidiEventToTrack(drumHit, MidiGenerator.DRUM_CHANNEL);
-//            } catch (InvalidMidiDataException e) {
-//                LOGGER.severe("Error generating MIDI for drum hit: " + e.getMessage());
-//            }
-//        });
-//    }
 
     @Override
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("-> Generating MIDI for drum track " + name().toUpperCase());
+        LOGGER.info("-> Generating MIDI for drum track " + this.name().toUpperCase());
 
-        for (MusicalElement element : getMusicalElements()) {
+        for (MusicalElement element : this.getMusicalElements()) {
             if (element instanceof DrumHit) {
                 midiGenerator.addMidiEventToTrack(element, MidiGenerator.DRUM_CHANNEL);
             } else if (element instanceof Rest) {

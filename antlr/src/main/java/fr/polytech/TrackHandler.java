@@ -43,7 +43,7 @@ public class TrackHandler {
                             .map(String::trim) // trim
                             .map(DrumSound::valueOf) // convert the string to a drum sound
                             .map(DrumFactory::createDrumHit) // create a drum hit
-                            .forEach(drumTrack::addDrumHit);
+                            .forEach(drumTrack::addMusicalElement);
                 });
         return drumTrack;
     }

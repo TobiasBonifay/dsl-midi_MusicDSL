@@ -44,8 +44,10 @@ public record MidiGenerator(MidiTrackManager trackManager) {
     public void addMidiEventToTrack(MusicalElement midiEventGeneratable, int channel) throws InvalidMidiDataException {
         LOGGER.info("                    + Adding MIDI event to track: " + midiEventGeneratable);
         MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, trackManager.getCurrentTick(), trackManager.getSequence().getResolution());
-        Arrays.stream(events).forEach(trackManager::addMidiEvent);
-        trackManager.setCurrentTick(events[events.length - 1].getTick());
+        for (MidiEvent event : events) {
+            if (event != null && event.getMessage() != null) trackManager.addMidiEvent(event);
+            if (event != null) trackManager.setCurrentTick(event.getTick());
+        }
     }
 
     public void setInstrumentForTrack(int instrumentProgramNumber) throws InvalidMidiDataException {

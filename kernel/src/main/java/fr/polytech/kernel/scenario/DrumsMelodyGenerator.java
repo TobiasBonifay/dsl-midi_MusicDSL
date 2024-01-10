@@ -2,9 +2,12 @@ package fr.polytech.kernel.scenario;
 
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
-import fr.polytech.kernel.structure.*;
-import fr.polytech.kernel.structure.musicalelements.DrumHit;
+import fr.polytech.kernel.structure.Bar;
+import fr.polytech.kernel.structure.Clip;
+import fr.polytech.kernel.structure.Instrument;
+import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.structure.drums.DrumTrack;
+import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.util.dictionnaries.*;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
@@ -31,9 +34,9 @@ public class DrumsMelodyGenerator {
         // violinTrack.setVolume(50); // should work
 
         // Add notes to tracks
-        createPianoSequence().forEach(pianoTrack::addNote);
-        createDrumsSequence().forEach(drumTrack::addDrumHit);
-        createPianoSequence().forEach(violinTrack::addNote);
+        createPianoSequence().forEach(pianoTrack::addMusicalElement);
+        createDrumsSequence().forEach(drumTrack::addMusicalElement);
+        createPianoSequence().forEach(violinTrack::addMusicalElement);
 
         // Create bars
         final Clip clip1 = new Clip("Chorus");

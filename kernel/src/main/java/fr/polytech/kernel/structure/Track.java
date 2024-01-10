@@ -1,7 +1,6 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
-import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
@@ -22,7 +21,6 @@ public class Track {
 
     private final String name;
     @Getter
-    private final List<Note> notes = new ArrayList<>();
     private final List<MusicalElement> musicalElements = new ArrayList<>();
     private final Instrument instrument;
     @Setter
@@ -44,10 +42,10 @@ public class Track {
     /**
      * Adds a note to the track. but can change the dynamic...
      *
-     * @param note The note to add... as Note object
+     * @param musicalElement The musicalElement to add... as Note object
      */
-    public void addNote(Note note) {
-        notes.add(note);
+    public void addMusicalElement(MusicalElement musicalElement) {
+        musicalElements.add(musicalElement);
     }
 
     /**
@@ -70,14 +68,5 @@ public class Track {
         for (MusicalElement musicalElement : musicalElements) {
             midiGenerator.addMidiEventToTrack(musicalElement, MidiGenerator.INSTRUMENT_CHANNEL);
         }
-    }
-
-    /**
-     * Adds a note to the track. but can change the dynamic...
-     *
-     * @param note The note to add... as Note object
-     */
-    public void addMusicalElement(MusicalElement note) {
-        musicalElements.add(note);
     }
 }
