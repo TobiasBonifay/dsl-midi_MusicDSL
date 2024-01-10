@@ -4,8 +4,6 @@ import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.Track;
-import fr.polytech.kernel.structure.musicalelements.DrumHit;
-import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
@@ -35,11 +33,7 @@ public class DrumTrack extends Track {
         LOGGER.info("-> Generating MIDI for drum track " + this.name().toUpperCase());
 
         for (MusicalElement element : this.getMusicalElements()) {
-            if (element instanceof DrumHit) {
-                midiGenerator.addMidiEventToTrack(element, MidiGenerator.DRUM_CHANNEL);
-            } else if (element instanceof Rest) {
-                midiGenerator.addRestToTrack((Rest) element);
-            }
+            midiGenerator.addMidiEventToTrack(element, MidiGenerator.DRUM_CHANNEL);
         }
     }
 }

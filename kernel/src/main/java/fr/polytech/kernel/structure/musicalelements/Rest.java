@@ -8,6 +8,10 @@ import javax.sound.midi.MidiEvent;
 public class Rest implements MusicalElement {
     private final NoteLength duration;
 
+    public Rest() {
+        this.duration = NoteLength.QUARTER;
+    }
+
     public Rest(NoteLength duration) {
         this.duration = duration;
     }

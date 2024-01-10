@@ -33,10 +33,6 @@ public class MidiTrackManager {
         this.currentTick = bar.startTick();
     }
 
-    public int getResolution() {
-        return sequence.getResolution();
-    }
-
     public void addMidiEvent(MidiEvent event) {
         currentTrack.add(event);
     }

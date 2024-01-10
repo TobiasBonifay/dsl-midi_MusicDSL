@@ -2,7 +2,6 @@ package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.MusicalElement;
-import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -20,16 +19,6 @@ public record MidiGenerator(MidiTrackManager trackManager) {
 
     static {
         LoggingSetup.setupLogger(LOGGER);
-    }
-
-    /**
-     * Adds a rest to the track by moving the current tick forward by the duration of the rest
-     *
-     * @param rest The rest to add...
-     */
-    public void addRestToTrack(Rest rest) {
-        long duration = rest.getDuration(this.trackManager.getResolution());
-        this.trackManager.setCurrentTick(this.trackManager.getCurrentTick() + duration);
     }
 
     public void addMidiEventToTrack(MusicalElement midiEventGeneratable, int channel) throws InvalidMidiDataException {
