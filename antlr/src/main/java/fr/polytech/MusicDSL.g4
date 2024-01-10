@@ -40,7 +40,7 @@ silence : SILENCE noteDuration?;
 
 
 percussionSequence : percussionElement+;
-percussionElement : PERCUSSION (',' PERCUSSION)*;
+percussionElement : PERCUSSION | silence;
 
 mainSection : mainSequence;
 mainSequence : clipInstance (clipInstance)*;

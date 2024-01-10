@@ -3,8 +3,10 @@ package fr.polytech.kernel.scenario;
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.*;
-import fr.polytech.kernel.structure.drums.DrumHit;
+import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.drums.DrumTrack;
+import fr.polytech.kernel.structure.musicalelements.Note;
+import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.dictionnaries.*;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
@@ -44,8 +46,8 @@ public class BellieJeanMelodyGenerator {
         final Track bassTrack = new Track("Bass Line", bass);
 
         // Add notes to tracks
-        createLeadVoxSequence().forEach(leadVoxTrack::addNote);
-        createBassSequence().forEach(bassTrack::addNote);
+        createLeadVoxSequence().forEach(leadVoxTrack::addMusicalElement);
+        createBassSequence().forEach(bassTrack::addMusicalElement);
         //createDrumsSequence().forEach(drumTrack::addDrumHit);
         //createBassNoteSequence().forEach(basstrack::addNote);
         //createBassNoteSequence2().forEach(basstrack::addNote);
@@ -72,20 +74,19 @@ public class BellieJeanMelodyGenerator {
         app.generateMidi();
     }
 
-    private static List<Note> createLeadVoxSequence(){
+    private static List<MusicalElement> createLeadVoxSequence(){
         Note n1 = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 100);
-        Note silence = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 0);
+        Rest silence = new Rest(NoteLength.QUARTER);
         Note n2 = new Note("C#3", NoteLength.QUARTER, Dynamic.FF, 100);
         Note b2 = new Note("B2", NoteLength.QUARTER, Dynamic.FFF, 100);
         Note a2 = new Note("A2", NoteLength.QUARTER, Dynamic.F, 100);
         return Stream.of(
                 silence, silence, silence, silence, n1, silence, n2, silence, n1, silence, b2, silence, a2, silence, a2
         ).toList();
-
     }
 
-    private static List<Note> createBassSequence(){
-        Note silence = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 0);
+    private static List<MusicalElement> createBassSequence(){
+        Rest silence = new Rest(NoteLength.QUARTER);
         Note f1 = new Note("F#1", NoteLength.QUARTER, Dynamic.FFF, 100);
         Note c1 = new Note("C#1", NoteLength.QUARTER, Dynamic.FFF, 100);
         Note e1 = new Note("E1", NoteLength.QUARTER, Dynamic.FF, 100);

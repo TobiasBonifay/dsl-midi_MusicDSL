@@ -1,7 +1,7 @@
 package fr.polytech;
 
-import fr.polytech.kernel.structure.Note;
 import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.util.Notes;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 
@@ -14,6 +14,6 @@ public class NoteBuilder {
         String dynamic = noteCtx.noteDynamic() != null ? noteCtx.noteDynamic().velocity.getText() : String.valueOf(DEFAULT_DYNAMIC);
 
         Note note = Note.builder().noteName(noteName).length(noteLength).dynamic(dynamic).volume(DEFAULT_VOLUME).build();
-        track.addNote(note);
+        track.addMusicalElement(note);
     }
 }

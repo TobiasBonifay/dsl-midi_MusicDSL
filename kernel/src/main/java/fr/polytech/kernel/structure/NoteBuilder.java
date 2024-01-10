@@ -1,5 +1,6 @@
 package fr.polytech.kernel.structure;
 
+import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 

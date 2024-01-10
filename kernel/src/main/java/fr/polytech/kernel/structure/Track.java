@@ -21,12 +21,13 @@ public class Track {
 
     private final String name;
     @Getter
-    private final List<Note> notes = new ArrayList<>();
+    private final List<MusicalElement> musicalElements = new ArrayList<>();
     private final Instrument instrument;
     @Setter
     private int defaultVolume;
     @Setter
     private Dynamic defaultDynamic; // TODO: apply by default to all notes
+
 
     public Track(String name, Instrument instrument) {
         this.name = name;
@@ -36,6 +37,15 @@ public class Track {
 
     public String name() {
         return name;
+    }
+
+    /**
+     * Adds a note to the track. but can change the dynamic...
+     *
+     * @param musicalElement The musicalElement to add... as Note object
+     */
+    public void addMusicalElement(MusicalElement musicalElement) {
+        musicalElements.add(musicalElement);
     }
 
     /**
@@ -55,17 +65,8 @@ public class Track {
         LOGGER.info("                         -> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
         midiGenerator.setTrackVolume(calculatedVolume);
         midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber);
-        for (Note note : notes) {
-            midiGenerator.addMidiEventToTrack(note, MidiGenerator.INSTRUMENT_CHANNEL);
+        for (MusicalElement musicalElement : musicalElements) {
+            midiGenerator.addMidiEventToTrack(musicalElement, MidiGenerator.INSTRUMENT_CHANNEL);
         }
-    }
-
-    /**
-     * Adds a note to the track. but can change the dynamic...
-     *
-     * @param note The note to add... as Note object
-     */
-    public void addNote(Note note) {
-        notes.add(note);
     }
 }
