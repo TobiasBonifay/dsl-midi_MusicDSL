@@ -1,6 +1,7 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
@@ -22,11 +23,13 @@ public class Track {
     private final String name;
     @Getter
     private final List<Note> notes = new ArrayList<>();
+    private final List<MusicalElement> musicalElements = new ArrayList<>();
     private final Instrument instrument;
     @Setter
     private int defaultVolume;
     @Setter
     private Dynamic defaultDynamic; // TODO: apply by default to all notes
+
 
     public Track(String name, Instrument instrument) {
         this.name = name;
@@ -36,6 +39,15 @@ public class Track {
 
     public String name() {
         return name;
+    }
+
+    /**
+     * Adds a note to the track. but can change the dynamic...
+     *
+     * @param note The note to add... as Note object
+     */
+    public void addNote(Note note) {
+        notes.add(note);
     }
 
     /**
@@ -55,8 +67,8 @@ public class Track {
         LOGGER.info("                         -> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
         midiGenerator.setTrackVolume(calculatedVolume);
         midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber);
-        for (Note note : notes) {
-            midiGenerator.addMidiEventToTrack(note, MidiGenerator.INSTRUMENT_CHANNEL);
+        for (MusicalElement musicalElement : musicalElements) {
+            midiGenerator.addMidiEventToTrack(musicalElement, MidiGenerator.INSTRUMENT_CHANNEL);
         }
     }
 
@@ -65,7 +77,7 @@ public class Track {
      *
      * @param note The note to add... as Note object
      */
-    public void addNote(Note note) {
-        notes.add(note);
+    public void addMusicalElement(MusicalElement note) {
+        musicalElements.add(note);
     }
 }

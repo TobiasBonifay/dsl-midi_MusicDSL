@@ -1,6 +1,8 @@
 package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.MusicalElement;
+import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.MidiEventGeneratable;
 
@@ -23,6 +25,23 @@ public record MidiGenerator(MidiTrackManager trackManager) {
     }
 
     public <T extends MidiEventGeneratable> void addMidiEventToTrack(T midiEventGeneratable, int channel) throws InvalidMidiDataException {
+        LOGGER.info("                    + Adding MIDI event to track: " + midiEventGeneratable);
+        MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, trackManager.getCurrentTick(), trackManager.getSequence().getResolution());
+        Arrays.stream(events).forEach(trackManager::addMidiEvent);
+        trackManager.setCurrentTick(events[events.length - 1].getTick());
+    }
+
+    /**
+     * Adds a rest to the track by moving the current tick forward by the duration of the rest
+     *
+     * @param rest The rest to add...
+     */
+    public void addRestToTrack(Rest rest) {
+        long duration = rest.getDuration(this.trackManager.getResolution());
+        this.trackManager.setCurrentTick(this.trackManager.getCurrentTick() + duration);
+    }
+
+    public void addMidiEventToTrack(MusicalElement midiEventGeneratable, int channel) throws InvalidMidiDataException {
         LOGGER.info("                    + Adding MIDI event to track: " + midiEventGeneratable);
         MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, trackManager.getCurrentTick(), trackManager.getSequence().getResolution());
         Arrays.stream(events).forEach(trackManager::addMidiEvent);

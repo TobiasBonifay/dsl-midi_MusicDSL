@@ -1,5 +1,6 @@
-package fr.polytech.kernel.structure.drums;
+package fr.polytech.kernel.structure.musicalelements;
 
+import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
 import fr.polytech.kernel.util.generator.MidiEventGeneratable;
 
@@ -10,7 +11,7 @@ import javax.sound.midi.ShortMessage;
 /**
  * Represents a single drum hit. It's like a note, but for drums.
  */
-public record DrumHit(DrumSound sound) implements MidiEventGeneratable {
+public record DrumHit(DrumSound sound) implements MidiEventGeneratable, MusicalElement {
     private static final long DRUM_HIT_DURATION = 1L;
 
     private static final int DRUM_HIT_VELOCITY = 100;
@@ -23,6 +24,11 @@ public record DrumHit(DrumSound sound) implements MidiEventGeneratable {
         MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, midiNote, 0), currentTick + midiDuration);
 
         return new MidiEvent[]{noteOn, noteOff};
+    }
+
+    @Override
+    public long getDuration(int resolution) {
+        return (long) resolution * DRUM_HIT_DURATION;
     }
 
     @Override

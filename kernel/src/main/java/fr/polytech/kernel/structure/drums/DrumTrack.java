@@ -2,7 +2,10 @@ package fr.polytech.kernel.structure.drums;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Instrument;
+import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.structure.musicalelements.DrumHit;
+import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
@@ -31,15 +34,28 @@ public class DrumTrack extends Track {
         drumHits.add(hit);
     }
 
+//    @Override
+//    public void generateMidi(MidiGenerator midiGenerator) {
+//        LOGGER.info("                   -> Generating MIDI for drum track " + name().toUpperCase());
+//        drumHits.forEach(drumHit -> {
+//            try {
+//                midiGenerator.addMidiEventToTrack(drumHit, MidiGenerator.DRUM_CHANNEL);
+//            } catch (InvalidMidiDataException e) {
+//                LOGGER.severe("Error generating MIDI for drum hit: " + e.getMessage());
+//            }
+//        });
+//    }
+
     @Override
-    public void generateMidi(MidiGenerator midiGenerator) {
-        LOGGER.info("                   -> Generating MIDI for drum track " + name().toUpperCase());
-        drumHits.forEach(drumHit -> {
-            try {
-                midiGenerator.addMidiEventToTrack(drumHit, MidiGenerator.DRUM_CHANNEL);
-            } catch (InvalidMidiDataException e) {
-                LOGGER.severe("Error generating MIDI for drum hit: " + e.getMessage());
+    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
+        LOGGER.info("-> Generating MIDI for drum track " + name().toUpperCase());
+
+        for (MusicalElement element : getMusicalElements()) {
+            if (element instanceof DrumHit) {
+                midiGenerator.addMidiEventToTrack(element, MidiGenerator.DRUM_CHANNEL);
+            } else if (element instanceof Rest) {
+                midiGenerator.addRestToTrack((Rest) element);
             }
-        });
+        }
     }
 }

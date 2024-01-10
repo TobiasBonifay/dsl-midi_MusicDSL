@@ -3,6 +3,7 @@ package fr.polytech.kernel.scenario;
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.*;
+import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;

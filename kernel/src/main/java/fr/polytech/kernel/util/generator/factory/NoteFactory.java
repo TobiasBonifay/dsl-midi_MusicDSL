@@ -1,6 +1,6 @@
 package fr.polytech.kernel.util.generator.factory;
 
-import fr.polytech.kernel.structure.Note;
+import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 

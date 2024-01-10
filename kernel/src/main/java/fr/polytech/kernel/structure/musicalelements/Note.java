@@ -1,6 +1,8 @@
-package fr.polytech.kernel.structure;
+package fr.polytech.kernel.structure.musicalelements;
 
 import fr.polytech.kernel.logs.LogColor;
+import fr.polytech.kernel.structure.MusicalElement;
+import fr.polytech.kernel.structure.NoteBuilder;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.generator.MidiEventGeneratable;
@@ -14,7 +16,7 @@ import static fr.polytech.kernel.util.Notes.parseNote;
 /**
  * Represents a musical note with its properties.
  */
-public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int volume) implements MidiEventGeneratable {
+public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int volume) implements MidiEventGeneratable, MusicalElement {
 
     /**
      * make a note builder
@@ -31,6 +33,12 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
 
         return new MidiEvent[]{noteOn, noteOff};
     }
+
+    @Override
+    public long getDuration(int resolution) {
+        return noteLength.getDuration(resolution);
+    }
+
     @Override
     public String toString() {
         return "%s %s %s".formatted(pitch, toStringOfNoteDuration(noteLength), dynamic);
