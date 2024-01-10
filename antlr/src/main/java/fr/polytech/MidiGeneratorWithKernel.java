@@ -100,7 +100,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     @Override
     public Void visitTempoChange(TempoChangeContext ctx) {
         int tempo = MidiGeneratorUtils.parseBpmChange(ctx);
-        this.currentBar.withTempo(tempo);
+        this.currentBar.changeTempo(tempo);
         return super.visitTempoChange(ctx);
     }
 

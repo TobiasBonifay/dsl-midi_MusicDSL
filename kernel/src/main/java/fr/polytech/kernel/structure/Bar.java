@@ -76,16 +76,16 @@ public class Bar {
         return startTick;
     }
 
-    public Bar get() {
-        return this;
-    }
-
     public void withTimeSignature(TimeSignature signature) {
         this.timeSignature = signature;
     }
 
     public void withTempo(int tempo) {
         this.tempo = tempo;
+    }
+
+    public void changeTempo(int tempo) {
+        this.tempo += tempo;
     }
 
     public void witBarVolume(int barVolume) {
