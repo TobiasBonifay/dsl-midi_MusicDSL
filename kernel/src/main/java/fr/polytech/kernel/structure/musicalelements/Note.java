@@ -5,7 +5,6 @@ import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.NoteBuilder;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
-import fr.polytech.kernel.util.generator.MidiEventGeneratable;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
@@ -16,7 +15,7 @@ import static fr.polytech.kernel.util.Notes.parseNote;
 /**
  * Represents a musical note with its properties.
  */
-public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int volume) implements MidiEventGeneratable, MusicalElement {
+public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int volume) implements MusicalElement {
 
     /**
      * make a note builder

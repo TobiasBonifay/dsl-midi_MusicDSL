@@ -4,12 +4,10 @@ import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
-import fr.polytech.kernel.util.generator.MidiEventGeneratable;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.ShortMessage;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
@@ -22,13 +20,6 @@ public record MidiGenerator(MidiTrackManager trackManager) {
 
     static {
         LoggingSetup.setupLogger(LOGGER);
-    }
-
-    public <T extends MidiEventGeneratable> void addMidiEventToTrack(T midiEventGeneratable, int channel) throws InvalidMidiDataException {
-        LOGGER.info("                    + Adding MIDI event to track: " + midiEventGeneratable);
-        MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, trackManager.getCurrentTick(), trackManager.getSequence().getResolution());
-        Arrays.stream(events).forEach(trackManager::addMidiEvent);
-        trackManager.setCurrentTick(events[events.length - 1].getTick());
     }
 
     /**

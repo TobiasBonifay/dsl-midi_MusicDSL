@@ -2,7 +2,6 @@ package fr.polytech.kernel.structure.musicalelements;
 
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
-import fr.polytech.kernel.util.generator.MidiEventGeneratable;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
@@ -11,7 +10,7 @@ import javax.sound.midi.ShortMessage;
 /**
  * Represents a single drum hit. It's like a note, but for drums.
  */
-public record DrumHit(DrumSound sound) implements MidiEventGeneratable, MusicalElement {
+public record DrumHit(DrumSound sound) implements MusicalElement {
     private static final long DRUM_HIT_DURATION = 1L;
 
     private static final int DRUM_HIT_VELOCITY = 100;
