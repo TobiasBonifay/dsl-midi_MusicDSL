@@ -39,7 +39,7 @@ public class TrackHandler {
                 Note note = Note.builder()
                         .noteName(((NoteContext) element).noteName.getText())
                         .length(((NoteContext) element).noteDuration() != null
-                                ? parseNoteLength(((NoteContext) element).noteDuration().fraction.getText())
+                                ? parseNoteLength(((NoteContext) element).noteDuration().length.getText())
                                 : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH)
                         .dynamic(((NoteContext) element).noteDynamic() != null
                                 ? ((NoteContext) element).noteDynamic().velocity.getText()
@@ -49,7 +49,7 @@ public class TrackHandler {
                 track.addMusicalElement(note);
             } else if (element instanceof SilenceContext) {
                 NoteLength noteLength = ((SilenceContext) element).noteDuration() != null
-                        ? parseNoteLength(((SilenceContext) element).noteDuration().fraction.getText())
+                        ? parseNoteLength(((SilenceContext) element).noteDuration().length.getText())
                         : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
                 Rest rest = new Rest(noteLength);
                 track.addMusicalElement(rest);
