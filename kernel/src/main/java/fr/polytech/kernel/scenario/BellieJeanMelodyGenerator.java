@@ -38,6 +38,7 @@ public class BellieJeanMelodyGenerator {
         final Track synthtrack = new Track("Synth", synth);
 
         final Track leadVoxTrack = new Track("Lead Vox Line", leadVox);
+        final Track leadVoxTrack16 = new Track("Lead Vox Line 16", leadVox);
         final Track elecPianoTrack = new Track("Elec Piano", elecPiano);
         final Track rythmGtrTrack = new Track("Rythm Gtr Line", rythmGtr);
         final Track strings2Track = new Track("String Ensemble 2 Line", strings2);
@@ -48,6 +49,7 @@ public class BellieJeanMelodyGenerator {
         // Add notes to tracks
         createLeadVoxSequence().forEach(leadVoxTrack::addMusicalElement);
         createBassSequence().forEach(bassTrack::addMusicalElement);
+        createLeadVoxSequence16().forEach(leadVoxTrack16::addMusicalElement);
         //createDrumsSequence().forEach(drumTrack::addDrumHit);
         //createBassNoteSequence().forEach(basstrack::addNote);
         //createBassNoteSequence2().forEach(basstrack::addNote);
@@ -64,9 +66,9 @@ public class BellieJeanMelodyGenerator {
         clip1.addBar(bar1);
 
         final Bar bar2 = new Bar("Bar 2", new TimeSignature(4, 4), 120, 100);
-        bar2.addTrack(synthtrack);
-        bar2.addTrack(basstrack);
-        bar2.addTrack(drumTrack);
+        bar2.addTrack(leadVoxTrack16);
+
+        clip1.addBar(bar2);
 
         app.addClip(clip1);
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
@@ -77,11 +79,23 @@ public class BellieJeanMelodyGenerator {
     private static List<MusicalElement> createLeadVoxSequence(){
         Note n1 = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 100);
         Rest silence = new Rest(NoteLength.QUARTER);
-        Note n2 = new Note("C#3", NoteLength.QUARTER, Dynamic.FF, 100);
+        Note n2 = new Note("C#3", NoteLength.HALF, Dynamic.FF, 100);
         Note b2 = new Note("B2", NoteLength.QUARTER, Dynamic.FFF, 100);
         Note a2 = new Note("A2", NoteLength.QUARTER, Dynamic.F, 100);
         return Stream.of(
                 silence, silence, silence, silence, n1, silence, n2, silence, n1, silence, b2, silence, a2, silence, a2
+        ).toList();
+    }
+
+    private static List<MusicalElement> createLeadVoxSequence16(){
+        Note c1 = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 100);
+        Rest silence = new Rest(NoteLength.QUARTER);
+        Note c2 = new Note("C#3", NoteLength.HALF, Dynamic.FF, 100);
+        Note b2 = new Note("B2", NoteLength.HALF, Dynamic.FFF, 100);
+        Note a2 = new Note("A2", NoteLength.QUARTER, Dynamic.F, 100);
+        Note a2_half = new Note("A2", NoteLength.HALF, Dynamic.FFF, 100);
+        return Stream.of(
+                b2, a2, silence, c2, a2, a2, b2, a2_half, c2, c1, silence
         ).toList();
     }
 
