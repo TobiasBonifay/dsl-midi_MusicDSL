@@ -33,7 +33,7 @@ trackContent : (noteSequence | percussionSequence);
 // ----------------- NOTE -----------------
 noteSequence : (note | silence | chord) (',' (note | silence | chord))*;
 noteDynamic : velocity=VELOCITY_SYMBOL;
-noteDuration : '(' fraction=FRACTION ')';
+noteDuration : '(' length=(FRACTION | INT) ')';
 note : noteName=NOTE noteDynamic? noteDuration?;
 chord : chordName=CHORD noteDynamic? noteDuration?;
 silence : SILENCE noteDuration?;
