@@ -30,7 +30,7 @@ public class DrumTrack extends Track {
 
     @Override
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
-        LOGGER.info("-> Generating MIDI for drum track " + this.name().toUpperCase());
+        LOGGER.info("                -> Generating MIDI for drum track " + this.name().toUpperCase());
 
         for (MusicalElement element : this.getMusicalElements()) {
             midiGenerator.addMidiEventToTrack(element, MidiGenerator.DRUM_CHANNEL);

@@ -21,6 +21,14 @@ public class CustomLogFormatter extends Formatter {
             return message;
         }
 
+        // if [value] display the value in green
+        if (message.contains("[")) {
+            int index3 = message.indexOf("[");
+            int index4 = message.indexOf("]");
+            return message.substring(0, index3) + LogColor.ANSI_GREEN.getColor() + message.substring(index3, index4 + 1)
+                    + LogColor.ANSI_RESET.getColor() + message.substring(index4 + 1);
+        }
+
         // if ~ Setting instrument for track: VIOLIN which is 40 in MIDI. then color VIOLIN
         int index2 = message.indexOf("which is");
         if (index2 != -1) {
