@@ -43,7 +43,7 @@ public class Clip {
         long currentTick = midiGenerator.trackManager().getCurrentTick();
         for (Bar bar : bars) {
             bar.generateMidi(midiGenerator, currentTick);
-            currentTick += bar.calculateDuration();
+            currentTick += bar.calculateDuration(midiGenerator.getSequence().getResolution());
         }
     }
 
@@ -51,9 +51,9 @@ public class Clip {
         bars.add(bar);
     }
 
-    public long calculateDuration() {
+    public long calculateDuration(int resolution) {
         return bars.stream()
-                .mapToLong(Bar::calculateDuration)
+                .mapToLong(bar -> bar.calculateDuration(resolution))
                 .sum();
     }
 }

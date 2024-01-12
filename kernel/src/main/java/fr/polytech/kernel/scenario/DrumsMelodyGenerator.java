@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 public class DrumsMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
-        final App app = new App("Drums");
+        final App app = new App();
 
         final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO, 100);
         final Instrument violinInstrument = new Instrument("Violin", MidiInstrument.VIOLIN, 100);

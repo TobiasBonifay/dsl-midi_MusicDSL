@@ -6,6 +6,7 @@ import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
+import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import java.util.logging.Logger;
 
@@ -19,6 +20,10 @@ public record MidiGenerator(MidiTrackManager trackManager) {
 
     static {
         LoggingSetup.setupLogger(LOGGER);
+    }
+
+    public Sequence getSequence() {
+        return trackManager.getSequence();
     }
 
     /**

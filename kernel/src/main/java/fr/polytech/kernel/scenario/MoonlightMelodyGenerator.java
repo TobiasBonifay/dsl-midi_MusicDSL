@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 public class MoonlightMelodyGenerator {
 
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
-        final App app = new App("Moonlight");
+        final App app = new App();
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
         app.setGlobalTempo(120);
         app.setMidiGeneratorParameters();

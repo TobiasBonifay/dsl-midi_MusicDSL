@@ -72,11 +72,9 @@ public class Track {
         }
     }
 
-    public long calculateDuration() {
-        long duration = 0;
-        for (MusicalElement musicalElement : musicalElements) {
-            duration += musicalElement.getDuration(480);
-        }
-        return duration;
+    public long calculateDuration(int resolution) {
+        return musicalElements.stream()//
+                .mapToLong(element -> element.getDuration(resolution)) //
+                .sum(); //
     }
 }

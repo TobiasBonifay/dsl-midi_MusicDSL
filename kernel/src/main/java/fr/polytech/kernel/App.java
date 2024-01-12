@@ -1,10 +1,8 @@
 package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
-import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
-import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
@@ -23,7 +21,6 @@ import java.util.logging.Logger;
 public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private final MidiGenerator midiGenerator;
-    private final String name;
     private final MidiTrackManager trackManager;
     @Getter
     private final List<Instrument> instruments = new ArrayList<>();
@@ -34,8 +31,7 @@ public class App {
     @Setter
     private int globalTempo;
 
-    public App(String name) throws MidiGenerationException {
-        this.name = name;
+    public App() throws MidiGenerationException {
         try {
             this.trackManager = new MidiTrackManager();
             this.midiGenerator = new MidiGenerator(trackManager);
@@ -52,33 +48,13 @@ public class App {
     public void generateClip(Clip clip) throws InvalidMidiDataException {
         LOGGER.info("Generating MIDI for clip: " + clip.name());
         setMidiGeneratorParameters();
-        long startTick = trackManager.getCurrentTick();
+
+        long initialTick = trackManager.getCurrentTick();
         clip.generateMidi(midiGenerator);
-        long clipDuration = clip.calculateDuration();
-        trackManager.setCurrentTick(startTick + clipDuration);
-    }
+        long clipDuration = clip.calculateDuration(midiGenerator.getSequence().getResolution());
 
-
-    /**
-     * Calculate the total duration of each track in each bar and then find the maximum duration among them.
-     * This would ensure that you account for any variations in track lengths within a bar.
-     *
-     * @param clip The clip to calculate the duration for.
-     * @return The duration of the clip in ticks.
-     */
-    private long calculateClipDuration(Clip clip) {
-        long duration = 0;
-        for (Bar bar : clip.getBars()) {
-            long barDuration = 0;
-            for (Track track : bar.getTracks()) {
-                long trackDuration = track.getMusicalElements().stream() //
-                        .mapToLong(element -> element.getDuration(480)) //
-                        .sum();
-                barDuration = Math.max(barDuration, trackDuration);
-            }
-            duration += barDuration;
-        }
-        return duration;
+        // Update the current tick based on the duration of the clip
+        trackManager.setCurrentTick(initialTick + clipDuration);
     }
 
 
@@ -90,6 +66,7 @@ public class App {
      * @throws InvalidMidiDataException If there is a problem setting the time signature or tempo.
      */
     public void setMidiGeneratorParameters() throws InvalidMidiDataException {
+        trackManager.setResolution(480);
         trackManager.setTimeSignature(globalTimeSignature);
         trackManager.setTempo(globalTempo);
     }

@@ -82,9 +82,9 @@ public class Bar {
         this.barVolume = barVolume;
     }
 
-    public long calculateDuration() {
-        return tracks.stream() //
-                .mapToLong(Track::calculateDuration) //
+    public long calculateDuration(int resolution) {
+        return tracks.stream()//
+                .mapToLong(track -> track.calculateDuration(resolution)) //
                 .max() //
                 .orElse(0);
     }

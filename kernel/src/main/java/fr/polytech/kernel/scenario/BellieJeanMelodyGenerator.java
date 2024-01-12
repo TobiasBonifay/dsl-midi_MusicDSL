@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 public class BellieJeanMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
-        final App app = new App("Billy");
+        final App app = new App();
 
         final Instrument bassLine = new Instrument("Bass line", MidiInstrument.ELECTRIC_BASS_FINGER, 100);
         final Instrument synth = new Instrument("Synth", MidiInstrument.SYNTH_BASS_1, 100);

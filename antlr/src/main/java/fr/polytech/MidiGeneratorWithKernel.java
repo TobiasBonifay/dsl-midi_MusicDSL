@@ -42,7 +42,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     private Bar currentBar;
 
     public MidiGeneratorWithKernel() throws MidiGenerationException {
-        app = new App("Music");
+        app = new App();
         app.setGlobalTempo(DEFAULT_TEMPO);
         app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
     }
