@@ -1,0 +1,42 @@
+signature 4/4
+bpm 110
+// tempo -5 grammar - does not work
+
+Instruments:
+    electricPiano ELECTRIC_PIANO_1 volume 80
+    jazzBass ELECTRIC_BASS_FINGER volume 85
+    saxophone ALTO_SAX volume 90
+
+clip JazzIntro:
+bar [
+    track electricPiano:
+        F7 mf (1/2), E7 mf (1/2), D7 mf (1/2), C7 mf (1/2),
+        B6 mf (1/2), A6 mf (1/2), G6 mf (1/2), F6 mf (1/2)
+    track jazzBass:
+        F3 f, SILENCE (1/2), E3 mf (1/2),
+        D3 p, C3 mf (1/2), SILENCE (1/2)
+    track jazzDrums:
+        KICK SNARE OPEN_HIHAT KICK SNARE OPEN_HIHAT
+    track saxophone:
+        C6 f (1/4), D6 mf (1/4), E6 p (1/4), F6 f (1/4),
+        G6 mf (1/4), A6 p (1/4), B6 f (1/4), C7 mf (1/4)
+]
+
+clip JazzMainTheme:
+bar [
+    track electricPiano:
+        E6 f (1/2), D#6 f (1/2), E6 f (1/2), G#6 f (1/2),
+        G6 mf (1/2), F#6 mf (1/2), G6 mf (1/2), B6 mf (1/2)
+    track jazzBass:
+        E2 f (1/2), SILENCE (1/2), D#2 mf (1/2),
+        E2 p (1/2), G#2 mf (1/2), SILENCE (1/2)
+    track jazzDrums:
+        KICK SNARE OPEN_HIHAT KICK SNARE OPEN_HIHAT
+    track saxophone:
+        G5 f (1/8), F#5 mf (1/8), G5 p (1/8), B5 f (1/8),
+        A5 mf (1/8), G5 p (1/8), A5 f (1/8), C6 mf (1/8)
+]
+
+Timeline:
+    JazzIntro x 2
+    JazzMainTheme x 4

@@ -1,0 +1,17 @@
+// This example features a guitar and bongo percussion in a groovy 6/8 time signature at 90 BPM.
+signature 6/8
+bpm 90
+
+Instruments:
+    guitar ACOUSTIC_GUITAR_STEEL volume 85
+
+clip Groove:
+bar [
+    track guitar:
+        A3 mp (1/2), B3 mp (1/2), C4 mp (1/2), D4 mp (1/2), E4 mp (1/2), F4 mp (1/2)
+    track perc:
+        LOW_BONGO HI_BONGO LOW_BONGO HI_BONGO LOW_BONGO HI_BONGO
+]
+
+Timeline:
+    Groove x 3

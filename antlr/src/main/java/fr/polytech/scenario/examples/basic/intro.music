@@ -1,0 +1,17 @@
+// This piece features a simple intro with a piano playing chords and a drum kit on a standard 4/4 time signature at 120 BPM.
+signature 4/4
+bpm 120
+
+Instruments:
+    piano ACOUSTIC_GRAND_PIANO volume 80
+
+clip Intro:
+bar [
+    track piano:
+        C4 mf, E4 mf, G4 mf, C5 mf
+    track drums:
+        KICK SNARE KICK SNARE
+]
+
+Timeline:
+    Intro x 2

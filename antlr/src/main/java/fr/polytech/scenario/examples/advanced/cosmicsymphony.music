@@ -1,0 +1,42 @@
+signature 6/8
+bpm 120
+tempo +5
+
+Instruments:
+    leadSynth LEAD_6_VOICE volume 90
+    padSynth PAD_4_CHOIR volume 80
+    bass SYNTH_BASS_2 volume 85
+
+clip CosmicIntro:
+bar [
+    track leadSynth:
+        G5 f (1/4), A5 f (1/4), B5 mf (1/4), D6 mf (1/4), G6 p (1/4), E6 p (1/4),
+        F6 f (1/4), E6 f (1/4), D6 mf (1/4), C6 mf (1/4), B5 p (1/4), A5 p (1/4)
+    track padSynth:
+        E4 mf (1/2), G4 mf (1/2), // should be (3/2) but it's not supported yet
+        A4 p (1/2), C5 p (1/2)
+    track bass:
+        E3 f (1/2), SILENCE (1/2), A3 mf (1/2),
+        D3 p (1/2), SILENCE (1/2), G3 mf (1/2)
+    track drumKit:
+        KICK SNARE KICK SNARE KICK SNARE
+]
+
+clip CosmicCrescendo:
+bar [
+    track leadSynth:
+        E6 f (1/4), F6 f (1/4), G6 mf (1/4), A6 mf (1/4), B6 p (1/4), C7 p (1/4),
+        D7 f (1/4), E7 f (1/4), F7 mf (1/4), G7 mf (1/4), A7 p (1/4), B7 p (1/4)
+    track padSynth:
+        C4 mf (1/2), E4 mf (1/2), // should be (3/8) but it's not supported yet
+        F4 p (1/2), A4 p (1/2)
+    track bass:
+        C3 f (1/2), SILENCE (1/2), F3 mf (1/2),
+        G3 p (1/2), SILENCE (1/2), B3 mf (1/2)
+    track drumKit:
+        KICK SNARE KICK SNARE KICK SNARE
+]
+
+Timeline:
+    CosmicIntro x 2
+    CosmicCrescendo x 4

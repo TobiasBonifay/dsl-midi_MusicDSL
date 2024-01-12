@@ -1,0 +1,15 @@
+// In this composition, a bass guitar plays a rhythmic pattern in a 3/4 time signature at 100 BPM.
+signature 3/4
+bpm 100
+
+Instruments:
+    bass ELECTRIC_BASS_PICK volume 70
+
+clip MainTheme:
+bar [
+    track bass:
+        E2 f (1/4), F2 f (1/4), G2 f (1/4)
+]
+
+Timeline:
+    MainTheme x 16
