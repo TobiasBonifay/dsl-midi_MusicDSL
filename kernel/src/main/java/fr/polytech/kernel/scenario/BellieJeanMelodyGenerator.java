@@ -80,10 +80,11 @@ public class BellieJeanMelodyGenerator {
 
         clip1.addBar(bar3);
 
-        // app.addClip(clip1);
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
         app.setGlobalTempo(120);
-        // app.generateMidi();
+
+        app.generateClip(clip1);
+        app.writeMidiFile("belliejean.mid");
     }
 
     private static List<MusicalElement> createLeadVoxSequence(){
