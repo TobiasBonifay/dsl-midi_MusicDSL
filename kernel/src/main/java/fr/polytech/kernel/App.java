@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class App {
-
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private final MidiGenerator midiGenerator;
     private final String name;
@@ -53,23 +52,76 @@ public class App {
         instruments.add(instrument);
     }
 
+    /**
+     * Retrieves a clip by its name.
+     *
+     * @param clipName The name of the clip to retrieve.
+     * @return The clip with the given name, or null if not found.
+     */
+    public Clip getClipByName(String clipName) {
+        return clips.stream().filter(clip -> clip.name().equals(clipName)).findFirst().orElse(null);
+    }
+
+    /**
+     * STEP 2/3
+     * Generates the MIDI for a specific clip by its name.
+     *
+     * @param clipName The name of the clip to generate.
+     * @throws InvalidMidiDataException If there is a problem generating the MIDI data.
+     */
+    public void generateClip(String clipName) throws InvalidMidiDataException {
+        setMidiGeneratorParameters(); // should be set before generating MIDI...
+        Clip clip = getClipByName(clipName);
+        if (clip != null) {
+            LOGGER.info("Generating MIDI for clip: " + clipName);
+            clip.generateMidi(midiGenerator);
+        } else {
+            LOGGER.warning("Clip not found: " + clipName);
+            throw new InvalidMidiDataException("Clip not found: " + clipName);
+        }
+    }
+
+    public void generateClip(Clip clip) throws InvalidMidiDataException {
+        setMidiGeneratorParameters(); // should be set before generating MIDI...
+        LOGGER.info("Generating MIDI for clip: " + clip.name());
+        clip.generateMidi(midiGenerator);
+    }
+
+    /**
+     * STEP 1/3
+     * Should be set before generating MIDI.
+     * Sets the time signature and tempo for the MIDI generator.
+     *
+     * @throws InvalidMidiDataException If there is a problem setting the time signature or tempo.
+     */
+    public void setMidiGeneratorParameters() throws InvalidMidiDataException {
+        trackManager.setTimeSignature(globalTimeSignature);
+        trackManager.setTempo(globalTempo);
+    }
+
+
+    /**
+     * STEP 3/3
+     *
+     * @param filename The name of the file to write.
+     * @throws IOException If there is a problem writing the file.
+     */
+    public void writeMidiFile(String filename) throws IOException {
+        String pathName = filename.replaceAll(" ", "_");
+        LOGGER.info("Writing MIDI file to %s.midi".formatted(pathName));
+        MidiSystem.write(this.getSequence(), 1, new File(pathName + ".midi"));
+    }
+
+    @Deprecated
     public void generateMidi() throws InvalidMidiDataException, IOException {
         LOGGER.info("Generating MIDI for app %s with default time signature %s and default tempo %d".formatted(name, globalTimeSignature, globalTempo));
         trackManager.setTimeSignature(globalTimeSignature);
         trackManager.setTempo(globalTempo);
-        for (int i = 0, clipsSize = clips.size(); i < clipsSize; i++) {
-            Clip clip = clips.get(i);
-            LOGGER.info("    Generating bar %d/%d MIDI for clip %s".formatted(i + 1, clipsSize + 1, clip.name()));
+        for (Clip clip : clips) {
+            LOGGER.info("    Generating MIDI for clip " + clip.name());
             clip.generateMidi(midiGenerator);
         }
-
         writeMidiFile(name);
-    }
-
-    public void writeMidiFile(String filename) throws IOException {
-        String pathName = name.replaceAll(" ", "_");
-        LOGGER.info("Writing MIDI file to %s.midi".formatted(pathName));
-        MidiSystem.write(this.getSequence(), 1, new File(pathName + ".midi"));
     }
 
     public Sequence getSequence() {

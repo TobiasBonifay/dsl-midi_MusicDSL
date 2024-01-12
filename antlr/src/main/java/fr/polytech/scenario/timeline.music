@@ -1,0 +1,18 @@
+    signature 4/4
+    bpm 117
+
+    Instruments:
+        bassLine SYNTH_BASS_1 volume 100
+        synth SYNTH_STRINGS_1 volume 90
+
+    clip MAIN:
+    bar [
+        track bassLine:
+            F#3, SILENCE (1/4), F#3, SILENCE, G#3 // Repetitive bassline notes
+
+        track drumKit:
+            KICK SILENCE KICK SNARE // Basic drum pattern with no comma
+    ]
+
+    Timeline:
+        MAIN x 5

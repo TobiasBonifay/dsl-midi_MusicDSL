@@ -15,7 +15,9 @@ import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static fr.polytech.MusicDSLParser.*;
@@ -24,17 +26,17 @@ import static fr.polytech.MusicDSLParser.*;
 public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     public static final Dynamic DEFAULT_DYNAMIC = Dynamic.MF;
-    private static final int DEFAULT_TEMPO = 140;
-
     public static final Logger LOGGER = Logger.getLogger(MidiGeneratorWithKernel.class.getName());
     public static final int DEFAULT_VOLUME = 100;
-    private static final TimeSignature DEFAULT_TIME_SIGNATURE = new TimeSignature(4, 4);
     public static final NoteLength DEFAULT_NOTE_LENGTH = NoteLength.QUARTER;
+    private static final int DEFAULT_TEMPO = 140;
+    private static final TimeSignature DEFAULT_TIME_SIGNATURE = new TimeSignature(4, 4);
 
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
 
+    private final Map<String, Clip> clipMap = new HashMap<>();
     private final App app;
     private Clip currentClip;
     private Bar currentBar;
@@ -44,6 +46,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         app.setGlobalTempo(DEFAULT_TEMPO);
         app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
     }
+
     @Override
     public Void visitBpm(BpmContext ctx) {
         if (ctx.globalBpmValue == null) {
@@ -80,12 +83,16 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         return null;
     }
 
+    /**
+     * Stop generating the clip by returning null.
+     */
     @Override
     public Void visitClip(ClipContext ctx) {
         String clipName = ctx.clipName.getText();
-        this.currentClip = new Clip(clipName);
+        Clip clip = new Clip(clipName);
+        this.currentClip = clip;
         ctx.barSequence().forEach(barSequence -> barSequence.accept(this));
-        this.app.addClip(this.currentClip);
+        clipMap.put(clipName, clip);
         return null;
     }
 
@@ -132,7 +139,50 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         return super.visitTrackSequence(ctx);
     }
 
-    public void writeMidiFile() throws IOException, InvalidMidiDataException {
-        app.generateMidi();
+    /**
+     * Generate the clips NOW
+     *
+     * @param ctx the parse tree
+     * @return null
+     */
+    @Override
+    public Void visitTimelineSequence(TimelineSequenceContext ctx) {
+        ctx.timelineClip().forEach(timelineClipCtx -> {
+            String clipName = timelineClipCtx.clipName.getText();
+            int repeatCount = timelineClipCtx.INT() != null ? Integer.parseInt(timelineClipCtx.INT().getText()) : 1;
+            for (int i = 0; i < repeatCount; i++) {
+                processClip(clipName);
+            }
+        });
+        return null;
+    }
+
+    @Override
+    public Void visitMainSequence(MainSequenceContext ctx) {
+        ctx.clipInstance().forEach(clipInstanceCtx -> {
+            String clipName = clipInstanceCtx.ID().getText();
+            int repeat = clipInstanceCtx.INT() != null ? Integer.parseInt(clipInstanceCtx.INT().getText()) : 1;
+            for (int i = 0; i < repeat; i++) {
+                processClip(clipName);
+            }
+        });
+        return super.visitMainSequence(ctx);
+    }
+
+    private void processClip(String clipName) {
+        Clip clip = clipMap.get(clipName);
+        if (clip != null) {
+            try {
+                app.generateClip(clip);
+            } catch (InvalidMidiDataException e) {
+                LOGGER.warning("Error generating MIDI for clip: " + clipName);
+            }
+        } else {
+            LOGGER.warning("Clip not found: " + clipName);
+        }
+    }
+
+    public void writeMidiFile() throws IOException {
+        app.writeMidiFile("test");
     }
 }
