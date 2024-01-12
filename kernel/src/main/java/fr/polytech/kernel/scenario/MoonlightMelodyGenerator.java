@@ -23,8 +23,9 @@ public class MoonlightMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App("Moonlight");
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
-        final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO, 100);
+        app.setMidiGeneratorParameters();
 
+        final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO, 100);
         final Track piano = new Track("Piano", pianoInstrument);
         createNoteSequence().forEach(piano::addMusicalElement);
 
@@ -34,9 +35,9 @@ public class MoonlightMelodyGenerator {
         Clip clip1 = new Clip("Chorus");
         clip1.addBar(bar1);
 
-        app.addClip(clip1);
-
-        app.generateMidi();
+        app.generateClip(clip1);
+        app.generateClip(clip1);
+        app.writeMidiFile("moonlight.mid");
     }
 
     private static List<Note> createNoteSequence() {
