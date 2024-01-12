@@ -21,14 +21,23 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         LoggingSetup.setupLogger(LOGGER);
     }
 
+    /**
+     * Calculates the start tick for the event, including the current tick and any additional offset and adds the event to the track
+     *
+     * @throws InvalidMidiDataException If the event is invalid
+     */
     public void addMidiEventToTrack(MusicalElement midiEventGeneratable, int channel) throws InvalidMidiDataException {
-        LOGGER.info("                    + Adding MIDI event to track: %s at tick %d".formatted(midiEventGeneratable, trackManager.getCurrentTick()));
         long startTick = trackManager.getCurrentTick() + midiEventGeneratable.getStartOffset();
-        MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, startTick, trackManager.getSequence().getResolution());
+        LOGGER.info("                    + Adding MIDI event to track: %s at tick %d".formatted(midiEventGeneratable, startTick));
 
+        MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, startTick, trackManager.getSequence().getResolution());
         for (MidiEvent event : events) {
-            if (event != null && event.getMessage() != null) trackManager.addMidiEvent(event);
-            if (event != null) trackManager.setCurrentTick(event.getTick());
+            if (event != null && event.getMessage() != null) {
+                trackManager.addMidiEvent(event);
+                if (event.getTick() > trackManager.getCurrentTick()) {
+                    trackManager.setCurrentTick(event.getTick());
+                }
+            }
         }
     }
 
