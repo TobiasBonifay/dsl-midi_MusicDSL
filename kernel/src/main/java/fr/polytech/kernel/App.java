@@ -61,8 +61,8 @@ public class App {
             LOGGER.warning("Clip duration is 0");
             return;
         }
-        trackManager.updateCurrentTickAfterClip(clipDuration);
         clip.generateMidi(midiGenerator);
+        trackManager.updateCurrentTickAfterClip(clipDuration);
     }
 
     /**
