@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class BellieJeanMelodyGenerator {
+    static final Rest silence = new Rest(NoteLength.QUARTER);
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App();
 
@@ -39,6 +40,7 @@ public class BellieJeanMelodyGenerator {
 
         final Track leadVoxTrack = new Track("Lead Vox Line", leadVox);
         final Track leadVoxTrack16 = new Track("Lead Vox Line 16", leadVox);
+        final Track leadVoxTrack17 = new Track("Lead Vox Line 17", leadVox);
         final Track elecPianoTrack = new Track("Elec Piano", elecPiano);
         final Track rythmGtrTrack = new Track("Rythm Gtr Line", rythmGtr);
         final Track strings2Track = new Track("String Ensemble 2 Line", strings2);
@@ -50,6 +52,7 @@ public class BellieJeanMelodyGenerator {
         createLeadVoxSequence().forEach(leadVoxTrack::addMusicalElement);
         createBassSequence().forEach(bassTrack::addMusicalElement);
         createLeadVoxSequence16().forEach(leadVoxTrack16::addMusicalElement);
+        createLeadVoxSequence17().forEach(leadVoxTrack17::addMusicalElement);
         //createDrumsSequence().forEach(drumTrack::addDrumHit);
         //createBassNoteSequence().forEach(basstrack::addNote);
         //createBassNoteSequence2().forEach(basstrack::addNote);
@@ -70,6 +73,11 @@ public class BellieJeanMelodyGenerator {
 
         clip1.addBar(bar2);
 
+        final Bar bar3 = new Bar("Bar 3", new TimeSignature(4, 4), 120, 100);
+        bar3.addTrack(leadVoxTrack17);
+
+        clip1.addBar(bar3);
+
         // app.addClip(clip1);
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
         app.setGlobalTempo(120);
@@ -78,7 +86,6 @@ public class BellieJeanMelodyGenerator {
 
     private static List<MusicalElement> createLeadVoxSequence(){
         Note n1 = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 100);
-        Rest silence = new Rest(NoteLength.QUARTER);
         Note n2 = new Note("C#3", NoteLength.HALF, Dynamic.FF, 100);
         Note b2 = new Note("B2", NoteLength.QUARTER, Dynamic.FFF, 100);
         Note a2 = new Note("A2", NoteLength.QUARTER, Dynamic.F, 100);
@@ -89,7 +96,6 @@ public class BellieJeanMelodyGenerator {
 
     private static List<MusicalElement> createLeadVoxSequence16(){
         Note c1 = new Note("C#3", NoteLength.QUARTER, Dynamic.FFF, 100);
-        Rest silence = new Rest(NoteLength.QUARTER);
         Note c2 = new Note("C#3", NoteLength.HALF, Dynamic.FF, 100);
         Note b2 = new Note("B2", NoteLength.HALF, Dynamic.FFF, 100);
         Note a2 = new Note("A2", NoteLength.QUARTER, Dynamic.F, 100);
@@ -99,8 +105,16 @@ public class BellieJeanMelodyGenerator {
         ).toList();
     }
 
+    private static List<MusicalElement> createLeadVoxSequence17(){
+        Note c2 = new Note("C#3", NoteLength.HALF, Dynamic.FF, 100);
+        Note b2 = new Note("B2", NoteLength.HALF, Dynamic.FFF, 100);
+        Note a2_half = new Note("A2", NoteLength.HALF, Dynamic.FFF, 100);
+        return Stream.of(
+                silence, silence, c2, c2, c2, c2, b2, a2_half, b2
+        ).toList();
+    }
+
     private static List<MusicalElement> createBassSequence(){
-        Rest silence = new Rest(NoteLength.QUARTER);
         Note f1 = new Note("F#1", NoteLength.QUARTER, Dynamic.FFF, 100);
         Note c1 = new Note("C#1", NoteLength.QUARTER, Dynamic.FFF, 100);
         Note e1 = new Note("E1", NoteLength.QUARTER, Dynamic.FF, 100);
