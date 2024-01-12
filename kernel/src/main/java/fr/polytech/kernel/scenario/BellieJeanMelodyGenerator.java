@@ -53,6 +53,7 @@ public class BellieJeanMelodyGenerator {
         createBassSequence().forEach(bassTrack::addMusicalElement);
         createLeadVoxSequence16().forEach(leadVoxTrack16::addMusicalElement);
         createLeadVoxSequence17().forEach(leadVoxTrack17::addMusicalElement);
+        createStringsSequence().forEach(stringsTrack::addMusicalElement);
         //createDrumsSequence().forEach(drumTrack::addDrumHit);
         //createBassNoteSequence().forEach(basstrack::addNote);
         //createBassNoteSequence2().forEach(basstrack::addNote);
@@ -64,6 +65,7 @@ public class BellieJeanMelodyGenerator {
         final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100);
         bar1.addTrack(leadVoxTrack);
         bar1.addTrack(bassTrack);
+        bar1.addTrack(stringsTrack);
 
         clip1.addBar(bar1);
         clip1.addBar(bar1);
@@ -111,6 +113,15 @@ public class BellieJeanMelodyGenerator {
         Note a2_half = new Note("A2", NoteLength.HALF, Dynamic.FFF, 100);
         return Stream.of(
                 silence, silence, c2, c2, c2, c2, b2, a2_half, b2
+        ).toList();
+    }
+
+    private static List<MusicalElement> createStringsSequence(){
+        //TODO put accords
+        Note b2 = new Note("B2", NoteLength.QUARTER, Dynamic.F, 100);
+        Note a2 = new Note("A2", NoteLength.QUARTER, Dynamic.F, 100);
+        return Stream.of(
+                a2, silence, silence, silence, silence, silence, b2, silence, silence, silence, silence, silence, silence, silence, silence, silence
         ).toList();
     }
 
