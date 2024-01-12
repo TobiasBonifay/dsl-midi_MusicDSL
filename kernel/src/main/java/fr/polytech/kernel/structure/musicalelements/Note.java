@@ -1,6 +1,7 @@
 package fr.polytech.kernel.structure.musicalelements;
 
 import fr.polytech.kernel.logs.LogColor;
+import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.NoteBuilder;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
@@ -9,6 +10,7 @@ import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.ShortMessage;
+import java.util.logging.Logger;
 
 import static fr.polytech.kernel.util.Notes.parseNote;
 
@@ -17,6 +19,12 @@ import static fr.polytech.kernel.util.Notes.parseNote;
  */
 public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int volume) implements MusicalElement {
 
+    private static final Logger LOGGER = Logger.getLogger(Note.class.getName());
+
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
+
     /**
      * make a note builder
      */
@@ -24,11 +32,19 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
         return new NoteBuilder();
     }
 
+    /**
+     * Generates the MIDI events for this note
+     *
+     * @param velocityRandomization The randomization percentage for the velocity
+     * @param timeShift             The time shift in ticks, could be negative
+     */
     @Override
-    public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution) throws InvalidMidiDataException {
+    public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution, int velocityRandomization, int timeShift) throws InvalidMidiDataException {
         long midiDuration = noteLength.getDuration(resolution);
-        MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, parseNote(pitch), dynamic.slightlyRandomizedValue()), currentTick);
-        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, parseNote(pitch), 0), currentTick + midiDuration);
+        int theDynamic = dynamic.randomizedValueInPercent(velocityRandomization);
+        LOGGER.info("                                                   with dynamic %s and time shift %s".formatted(theDynamic, timeShift));
+        MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, parseNote(pitch), theDynamic), currentTick + timeShift);
+        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, parseNote(pitch), 0), currentTick + midiDuration + timeShift);
 
         return new MidiEvent[]{noteOn, noteOff};
     }
@@ -36,11 +52,6 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
     @Override
     public long getDuration(int resolution) {
         return noteLength.getDuration(resolution);
-    }
-
-    @Override
-    public long getStartOffset() {
-        return 0; // will be randomized
     }
 
     @Override

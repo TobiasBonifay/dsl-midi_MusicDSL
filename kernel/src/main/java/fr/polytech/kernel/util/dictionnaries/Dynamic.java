@@ -1,10 +1,12 @@
 package fr.polytech.kernel.util.dictionnaries;
 
+import java.util.Random;
 
 public enum Dynamic {
-    PPP(16), PP(32), P(48), MP(64), MF(80), F(96), FF(112), FFF(127);
+    PPP(16), PP(32), P(48), MP(64), MF(80), F(96), FF(112), FFF(120);
 
     private final int velocity;
+    private static final Random random = new Random();
 
     Dynamic(int value) {
         this.velocity = value;
@@ -25,11 +27,23 @@ public enum Dynamic {
     }
 
     /**
+     * dynamic value randomly chosen between x% and y% of the dynamic
+     */
+    public int randomizedValueInPercent(int percent) {
+        int min = velocity - (int) (velocity * (percent / 100.0));
+        int max = velocity + (int) (velocity * (percent / 100.0));
+        return randomizedValue(min, max);
+    }
+
+    /**
+     * Ensures the dynamic value is between 0 and 127
      * @param startStrength minimum dynamic value
      * @param endStrength   maximum dynamic value
      * @return dynamic value randomly chosen between startStrength and endStrength
      */
     private int randomizedValue(int startStrength, int endStrength) {
-        return Math.min(Math.max((int) (velocity * (Math.random() * (endStrength - startStrength) + startStrength)), 0), 127);
+        startStrength = Math.max(startStrength, 0);
+        endStrength = Math.min(endStrength, 127);
+        return startStrength + random.nextInt(endStrength - startStrength + 1);
     }
 }

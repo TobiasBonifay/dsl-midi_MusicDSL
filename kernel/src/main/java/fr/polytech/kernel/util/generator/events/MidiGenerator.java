@@ -32,10 +32,13 @@ public record MidiGenerator(MidiTrackManager trackManager) {
      * @throws InvalidMidiDataException If the event is invalid
      */
     public void addMidiEventToTrack(MusicalElement midiEventGeneratable, int channel) throws InvalidMidiDataException {
-        long startTick = trackManager.getCurrentTick() + midiEventGeneratable.getStartOffset();
+        long startTick = trackManager.getCurrentTick();
+        int timeShiftRandomness = trackManager.getTimeShift();
+        int velocityRandomness = trackManager.getVelocityRandomness();
         LOGGER.info("                    + Tick [%s] adding MIDI event to track: %s".formatted(startTick, midiEventGeneratable));
 
-        MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, startTick, trackManager.getSequence().getResolution());
+        int resolution = trackManager.getSequence().getResolution();
+        MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, startTick, resolution, velocityRandomness, timeShiftRandomness);
         for (MidiEvent event : events) {
             if (event != null && event.getMessage() != null) {
                 trackManager.addMidiEvent(event);
@@ -58,5 +61,15 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         volumeMessage.setMessage(ShortMessage.CONTROL_CHANGE, 0, 7, volume);
         MidiEvent volumeEvent = new MidiEvent(volumeMessage, trackManager.getCurrentTick());
         trackManager.addMidiEvent(volumeEvent);
+    }
+
+    public void setVelocityRandomness(int velocityRandomness) {
+        // LOGGER.info("                    ~ with velocity randomness for track: " + velocityRandomness);
+        trackManager.setVelocityRandomness(velocityRandomness);
+    }
+
+    public void setTimeShiftRandomness(int timeShiftRandomness) {
+        //  LOGGER.info("                    ~ with time shift randomness for track: " + timeShiftRandomness);
+        trackManager.setTimeShiftRandomness(timeShiftRandomness);
     }
 }

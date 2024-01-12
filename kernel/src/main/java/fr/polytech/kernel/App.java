@@ -1,17 +1,16 @@
 package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
+import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Sequence;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,15 +19,17 @@ import java.util.logging.Logger;
 
 public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
+
+    static {
+        LoggingSetup.setupLogger(LOGGER);
+    }
     private final MidiGenerator midiGenerator;
     private final MidiTrackManager trackManager;
     @Getter
     private final List<Instrument> instruments = new ArrayList<>();
     @Getter
-    @Setter
     private TimeSignature globalTimeSignature;
     @Getter
-    @Setter
     private int globalTempo;
 
     public App() throws MidiGenerationException {
@@ -47,7 +48,6 @@ public class App {
 
     public void generateClip(Clip clip) throws InvalidMidiDataException {
         LOGGER.info("Generating MIDI for clip: " + clip.name());
-        setMidiGeneratorParameters();
 
         long initialTick = trackManager.getCurrentTick();
         clip.generateMidi(midiGenerator);
@@ -55,20 +55,6 @@ public class App {
 
         // Update the current tick based on the duration of the clip
         trackManager.setCurrentTick(initialTick + clipDuration);
-    }
-
-
-    /**
-     * STEP 1/3
-     * Should be set before generating MIDI.
-     * Sets the time signature and tempo for the MIDI generator.
-     *
-     * @throws InvalidMidiDataException If there is a problem setting the time signature or tempo.
-     */
-    public void setMidiGeneratorParameters() throws InvalidMidiDataException {
-        trackManager.setResolution(480);
-        trackManager.setTimeSignature(globalTimeSignature);
-        trackManager.setTempo(globalTempo);
     }
 
 
@@ -81,10 +67,61 @@ public class App {
     public void writeMidiFile(String filename) throws IOException {
         String pathName = filename.replaceAll(" ", "_");
         LOGGER.info("Writing MIDI file to %s.midi".formatted(pathName));
-        MidiSystem.write(this.getSequence(), 1, new File(pathName + ".midi"));
+        MidiSystem.write(this.midiGenerator.trackManager().getSequence(), 1, new File(pathName + ".midi"));
     }
 
-    public Sequence getSequence() {
-        return midiGenerator.trackManager().getSequence();
+    /**
+     * Set the velocity randomness for the MIDI generator.
+     *
+     * @param velocityRandomness The velocity randomness in percent.
+     */
+    public void setVelocityRandomness(int velocityRandomness) {
+        LOGGER.info("                    ~ with velocity randomness (in percentage): " + velocityRandomness);
+        this.midiGenerator.setVelocityRandomness(velocityRandomness);
+    }
+
+    /**
+     * Set the time shift randomness for the MIDI generator.
+     *
+     * @param timeShiftRandomness The time shift randomness in ticks.
+     */
+    public void setTimeShiftRandomness(int timeShiftRandomness) {
+        LOGGER.info("                    ~ with time shift randomness (in ticks): " + timeShiftRandomness);
+        this.midiGenerator.setTimeShiftRandomness(timeShiftRandomness);
+    }
+
+    public int getResolution() {
+        return this.midiGenerator.getSequence().getResolution();
+    }
+
+    /**
+     * Set the resolution for the MIDI generator.
+     *
+     * @param resolution The resolution in ticks.
+     */
+    public void setResolution(int resolution) throws InvalidMidiDataException {
+        LOGGER.info("                    ~ with resolution (in ticks) for beat: " + resolution);
+        // this.trackManager.setResolution(resolution);
+        this.trackManager.changeMidiTrackResolution(resolution);
+    }
+
+    /**
+     * Set the global time signature for the MIDI generator.
+     *
+     * @param timeSignature The time signature as TimeSignature object (numerator, denominator)
+     */
+    public void setGlobalTimeSignature(TimeSignature timeSignature) {
+        LOGGER.info("                    ~ with time signature: " + timeSignature);
+        this.globalTimeSignature = timeSignature;
+    }
+
+    /**
+     * Set the global tempo for the MIDI generator.
+     *
+     * @param tempo The tempo in BPM
+     */
+    public void setGlobalTempo(int tempo) {
+        LOGGER.info("                    ~ with tempo: " + tempo);
+        this.globalTempo = tempo;
     }
 }

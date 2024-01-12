@@ -3,11 +3,14 @@ grammar MusicDSL;
 // Parser Rules
 musicComposition : globalSettings instrumentsSection clipSection timelineSection?; // mainSection;
 
-globalSettings : (signature | bpm | tempoChange)*;
+globalSettings : (signature | bpm | tempoChange | timeshift | velocityrandomization | resolution)*;
 
 signature : 'signature' globalSignatureValue=FRACTION;
 bpm : 'bpm' globalBpmValue=INT;
 tempoChange : 'tempo' ('+' | '-') tempoChangeValue=INT;
+timeshift : 'timeshift' timeshiftValue=INT;
+velocityrandomization : 'velocityrandomization' velocityrandomizationValue=INT;
+resolution : 'resolution' resolutionValue=INT;
 
 // ----------------- INSTRUMENTS -----------------
 instrumentsSection : 'Instruments:' instrumentDefinition+;
