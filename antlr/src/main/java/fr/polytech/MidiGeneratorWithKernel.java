@@ -133,6 +133,10 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     public Void visitTrackSequence(TrackSequenceContext ctx) {
         List<TrackContext> tracks = ctx.track();
         tracks.forEach(trackCtx -> {
+            if (trackCtx.trackContent() == null) {
+                LOGGER.info("No track content found for track: " + trackCtx.trackName.getText());
+                return;
+            }
             Track track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
             this.currentBar.addTrack(track);
         });
