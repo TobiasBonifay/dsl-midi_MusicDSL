@@ -78,17 +78,16 @@ public class TrackHandler {
                     Arrays.stream(drumSound.split(",")) // split the string by comma
                             .map(String::trim) // trim
                             .forEach(sound -> { // for each sound
-                                if ("SILENCE".equals(sound)) {
-                                    drumTrack.addMusicalElement(new Rest());
-                                } else {
-                                    try {
-                                        DrumSound drumEnum = DrumSound.valueOf(sound);
+                                // if not found in the enum, it's a silence
+                                for (DrumSound drumEnum : DrumSound.values()) {
+                                    if (drumEnum.name().equals(sound)) {
                                         DrumHit drumHit = DrumFactory.createDrumHit(drumEnum);
                                         drumTrack.addMusicalElement(drumHit);
-                                    } catch (IllegalArgumentException e) {
-                                        MidiGeneratorWithKernel.LOGGER.severe("Invalid drum sound: " + sound);
+                                        return;
                                     }
                                 }
+                                Rest rest = new Rest(MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH);
+                                drumTrack.addMusicalElement(rest);
                             });
                 });
         return drumTrack;
