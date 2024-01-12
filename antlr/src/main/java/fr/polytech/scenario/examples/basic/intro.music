@@ -8,7 +8,7 @@ Instruments:
 clip Intro:
 bar [
     track piano:
-        C4 mf, E4 mf, G4 mf, C5 mf
+        DO4 pp, Re#4 mf, G4 mf, mib5 ff
     track drums:
         KICK SNARE KICK SNARE
 ]

@@ -2,26 +2,39 @@ package fr.polytech.kernel.util;
 
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Notes {
-    private static final Map<String, Integer> note;
+    private static final Map<String, Integer> note = new HashMap<>();
 
     static {
-        final String[] notes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
-        final Map<String, String> enharmonicEquivalents = Map.ofEntries(Map.entry("Db", "C#"), Map.entry("Eb", "D#"), Map.entry("Gb", "F#"), Map.entry("Ab", "G#"), Map.entry("Bb", "A#"), Map.entry("Cb", "B"));
-        note = IntStream.rangeClosed(0, 8).boxed().flatMap(octave -> Stream.concat(Stream.of(notes).map(note -> Map.entry(note + octave, 12 * octave + Stream.of(notes).toList().indexOf(note) + 12)), enharmonicEquivalents.entrySet().stream().map(entry -> Map.entry(entry.getKey() + octave, 12 * octave + Stream.of(notes).toList().indexOf(entry.getValue()) + 12)))).distinct().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        initializeNoteMap();
+    }
+
+    private static void initializeNoteMap() {
+        // English note names and their MIDI values
+        final String[] englishNotes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+        final String[] latinNotes = {"DO", "DO#", "RE", "RE#", "MI", "FA", "FA#", "SOL", "SOL#", "LA", "LA#", "SI"};
+        final String[] bemolEnglish = {"B#", "DB", "EB", "FB", "E#", "GB", "AB", "BB", "CB", "D#", "EB", "FB"};
+        final String[] bemolLatin = {"SI#", "REB", "MIB", "MI#", "FAB", "SOLB", "LAB", "SIB", "DOB", "FA#", "SOLB", "LAB"};
+
+        for (int octave = 0; octave <= 8; octave++) {
+            for (int i = 0; i < englishNotes.length; i++) {
+                int midiValue = 12 * octave + i;
+                note.put(englishNotes[i] + octave, midiValue);
+                note.put(latinNotes[i] + octave, midiValue);
+                note.put(bemolEnglish[i] + octave, midiValue);
+                note.put(bemolLatin[i] + octave, midiValue);
+            }
+        }
     }
 
     public static int parseNote(String note) {
-        try {
-            return Notes.note.get(note);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Invalid note: " + note);
-        }
+        if (note == null) throw new IllegalArgumentException("Note cannot be null");
+        String noteNormalized = note.trim().toUpperCase();
+        if (Notes.note.containsKey(noteNormalized)) return Notes.note.get(noteNormalized);
+        throw new IllegalArgumentException("Invalid note: " + note);
     }
 
     /**
