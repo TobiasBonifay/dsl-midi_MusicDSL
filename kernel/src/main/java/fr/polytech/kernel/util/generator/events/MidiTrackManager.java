@@ -28,6 +28,10 @@ public class MidiTrackManager {
         this.currentTick = 0;
     }
 
+    public void updateCurrentTickAfterClip(long clipDuration) {
+        this.currentTick += clipDuration;
+    }
+
     public void newTrack(Bar bar) {
         this.currentTrack = sequence.createTrack();
         this.currentTick = bar.startTick();

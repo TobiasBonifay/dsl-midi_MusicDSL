@@ -1,8 +1,10 @@
 package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
+import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
+import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
@@ -50,8 +52,41 @@ public class App {
     public void generateClip(Clip clip) throws InvalidMidiDataException {
         setMidiGeneratorParameters(); // should be set before generating MIDI...
         LOGGER.info("Generating MIDI for clip: " + clip.name());
+        long clipDuration = calculateClipDuration(clip);
+        if (clipDuration < 0) {
+            LOGGER.severe("Clip duration is negative: " + clipDuration);
+            throw new InvalidMidiDataException("Clip duration is negative: " + clipDuration);
+        }
+        if (clipDuration == 0) {
+            LOGGER.warning("Clip duration is 0");
+            return;
+        }
+        trackManager.updateCurrentTickAfterClip(clipDuration);
         clip.generateMidi(midiGenerator);
     }
+
+    /**
+     * Calculate the total duration of each track in each bar and then find the maximum duration among them.
+     * This would ensure that you account for any variations in track lengths within a bar.
+     *
+     * @param clip The clip to calculate the duration for.
+     * @return The duration of the clip in ticks.
+     */
+    private long calculateClipDuration(Clip clip) {
+        long duration = 0;
+        for (Bar bar : clip.getBars()) {
+            long barDuration = 0;
+            for (Track track : bar.getTracks()) {
+                long trackDuration = track.getMusicalElements().stream() //
+                        .mapToLong(element -> element.getDuration(480)) //
+                        .sum();
+                barDuration = Math.max(barDuration, trackDuration);
+            }
+            duration += barDuration;
+        }
+        return duration;
+    }
+
 
     /**
      * STEP 1/3
