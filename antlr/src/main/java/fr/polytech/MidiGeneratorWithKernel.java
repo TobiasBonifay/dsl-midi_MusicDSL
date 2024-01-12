@@ -43,8 +43,6 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     public MidiGeneratorWithKernel() throws MidiGenerationException {
         app = new App();
-        app.setGlobalTempo(DEFAULT_TEMPO);
-        app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
     }
 
     @Override
@@ -88,6 +86,20 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
      */
     @Override
     public Void visitClip(ClipContext ctx) {
+        // if time signature or tempo is not defined, use default values
+        if (app.getGlobalTimeSignature() == null) {
+            app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
+        }
+        if (app.getGlobalTempo() == 0) {
+            app.setGlobalTempo(DEFAULT_TEMPO);
+        }
+        if (app.getResolution() == 0) {
+            try {
+                app.setResolution(480);
+            } catch (InvalidMidiDataException e) {
+                LOGGER.warning("Error setting resolution: " + 480);
+            }
+        }
         String clipName = ctx.clipName.getText();
         Clip clip = new Clip(clipName);
         this.currentClip = clip;
@@ -177,6 +189,38 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         });
         return super.visitMainSequence(ctx);
     }
+
+    @Override
+    public Void visitVelocityrandomization(VelocityrandomizationContext ctx) {
+        if (null != ctx.velocityrandomizationValue.getText()) {
+            int velocityRandomness = Integer.parseInt(ctx.velocityrandomizationValue.getText());
+            this.app.setVelocityRandomness(velocityRandomness);
+        }
+        return super.visitVelocityrandomization(ctx);
+    }
+
+    @Override
+    public Void visitTimeshift(TimeshiftContext ctx) {
+        if (null != ctx.timeshiftValue.getText()) {
+            int timeShiftRandomness = Integer.parseInt(ctx.timeshiftValue.getText());
+            this.app.setTimeShiftRandomness(timeShiftRandomness);
+        }
+        return super.visitTimeshift(ctx);
+    }
+
+    @Override
+    public Void visitResolution(ResolutionContext ctx) {
+        if (null != ctx.resolutionValue.getText()) {
+            int resolution = Integer.parseInt(ctx.resolutionValue.getText());
+            try {
+                this.app.setResolution(resolution);
+            } catch (InvalidMidiDataException e) {
+                LOGGER.warning("Error setting resolution: " + resolution);
+            }
+        }
+        return super.visitResolution(ctx);
+    }
+
 
     private void processClip(String clipName) {
         Clip clip = clipMap.get(clipName);

@@ -24,7 +24,6 @@ public class MoonlightMelodyGenerator {
         final App app = new App();
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
         app.setGlobalTempo(120);
-        app.setMidiGeneratorParameters();
 
         final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO, 100);
         final Track piano = new Track("Piano", pianoInstrument);

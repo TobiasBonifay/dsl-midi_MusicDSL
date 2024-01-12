@@ -21,23 +21,21 @@ public class Rest implements MusicalElement {
      * However, they do affect the timing, so we simulate this by returning an array with a single null event.
      * The tick value for this event will be the current tick plus the duration of the rest.
      *
-     * @param channel The channel to generate the MidiEvents on
      * @return An empty array
      */
-    @Override
-    public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution) {
+    private MidiEvent[] generateMidiEvents(long currentTick, int resolution) {
         long newTick = currentTick + getDuration(resolution);
         return new MidiEvent[]{new MidiEvent(null, newTick)};
     }
 
     @Override
-    public long getDuration(int resolution) {
-        return duration.getDuration(resolution);
+    public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution, int velocityRandomization, int timeshiftRandomization) {
+        return generateMidiEvents(currentTick, resolution);
     }
 
     @Override
-    public long getStartOffset() {
-        return 0;
+    public long getDuration(int resolution) {
+        return duration.getDuration(resolution);
     }
 
     @Override

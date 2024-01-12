@@ -16,11 +16,11 @@ public record DrumHit(DrumSound sound) implements MusicalElement {
     private static final int DRUM_HIT_VELOCITY = 100;
 
     @Override
-    public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution) throws InvalidMidiDataException {
+    public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution, int velocityRandomization, int timeshiftRandomization) throws InvalidMidiDataException {
         int midiNote = this.sound.getMidiNote();
         long midiDuration = (long) resolution * DRUM_HIT_DURATION;
-        MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, midiNote, DRUM_HIT_VELOCITY), currentTick);
-        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, midiNote, 0), currentTick + midiDuration);
+        MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, midiNote, DRUM_HIT_VELOCITY), currentTick + timeshiftRandomization);
+        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, midiNote, 0), currentTick + midiDuration + timeshiftRandomization);
 
         return new MidiEvent[]{noteOn, noteOff};
     }
@@ -28,11 +28,6 @@ public record DrumHit(DrumSound sound) implements MusicalElement {
     @Override
     public long getDuration(int resolution) {
         return (long) resolution * DRUM_HIT_DURATION;
-    }
-
-    @Override
-    public long getStartOffset() {
-        return 0;
     }
 
     @Override
