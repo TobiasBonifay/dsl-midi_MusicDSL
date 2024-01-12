@@ -22,8 +22,10 @@ public record MidiGenerator(MidiTrackManager trackManager) {
     }
 
     public void addMidiEventToTrack(MusicalElement midiEventGeneratable, int channel) throws InvalidMidiDataException {
-        LOGGER.info("                    + Adding MIDI event to track: " + midiEventGeneratable);
-        MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, trackManager.getCurrentTick(), trackManager.getSequence().getResolution());
+        LOGGER.info("                    + Adding MIDI event to track: %s at tick %d".formatted(midiEventGeneratable, trackManager.getCurrentTick()));
+        long startTick = trackManager.getCurrentTick() + midiEventGeneratable.getStartOffset();
+        MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, startTick, trackManager.getSequence().getResolution());
+
         for (MidiEvent event : events) {
             if (event != null && event.getMessage() != null) trackManager.addMidiEvent(event);
             if (event != null) trackManager.setCurrentTick(event.getTick());
@@ -42,5 +44,10 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         volumeMessage.setMessage(ShortMessage.CONTROL_CHANGE, 0, 7, volume);
         MidiEvent volumeEvent = new MidiEvent(volumeMessage, trackManager.getCurrentTick());
         trackManager.addMidiEvent(volumeEvent);
+    }
+
+    @Deprecated
+    public MidiTrackManager getTrackManager() {
+        return trackManager;
     }
 }

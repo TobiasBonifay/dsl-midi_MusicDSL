@@ -50,20 +50,20 @@ public class App {
     }
 
     public void generateClip(Clip clip) throws InvalidMidiDataException {
-        setMidiGeneratorParameters(); // should be set before generating MIDI...
         LOGGER.info("Generating MIDI for clip: " + clip.name());
+        setMidiGeneratorParameters(); // should be set before generating MIDI...
+
+        clip.generateMidi(midiGenerator);
+
+        // Calculate the duration after generating the MIDI to get the correct end time
         long clipDuration = calculateClipDuration(clip);
-        if (clipDuration < 0) {
-            LOGGER.severe("Clip duration is negative: " + clipDuration);
-            throw new InvalidMidiDataException("Clip duration is negative: " + clipDuration);
-        }
-        if (clipDuration == 0) {
-            LOGGER.warning("Clip duration is 0");
+        if (clipDuration <= 0) {
+            LOGGER.warning("Clip duration is non-positive: " + clipDuration);
             return;
         }
-        clip.generateMidi(midiGenerator);
         trackManager.updateCurrentTickAfterClip(clipDuration);
     }
+
 
     /**
      * Calculate the total duration of each track in each bar and then find the maximum duration among them.

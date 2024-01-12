@@ -7,4 +7,6 @@ public interface MusicalElement {
     MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution) throws InvalidMidiDataException;
 
     long getDuration(int resolution);
+
+    long getStartOffset();
 }

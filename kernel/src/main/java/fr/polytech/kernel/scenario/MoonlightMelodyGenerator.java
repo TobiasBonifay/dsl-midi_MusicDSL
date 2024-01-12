@@ -23,6 +23,7 @@ public class MoonlightMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App("Moonlight");
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
+        app.setGlobalTempo(120);
         app.setMidiGeneratorParameters();
 
         final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO, 100);

@@ -29,7 +29,9 @@ public class MidiTrackManager {
     }
 
     public void updateCurrentTickAfterClip(long clipDuration) {
+        LOGGER.info("            ~ Updating current tick after clip: " + clipDuration);
         this.currentTick += clipDuration;
+        LOGGER.info("            ~ Current tick is now: " + currentTick);
     }
 
     public void newTrack(Bar bar) {
@@ -48,7 +50,7 @@ public class MidiTrackManager {
      * @throws InvalidMidiDataException If the time signature is invalid
      */
     public void setTimeSignature(TimeSignature timeSignature) throws InvalidMidiDataException {
-        LOGGER.info("            ~ Setting time signature to " + timeSignature);
+        // LOGGER.info("            ~ Setting time signature to " + timeSignature);
         MetaMessage tsMessage = new MetaMessage();
         tsMessage.setMessage(0x58, timeSignature.toMidiData(), 4);
         currentTrack.add(new MidiEvent(tsMessage, currentTick));
@@ -61,7 +63,7 @@ public class MidiTrackManager {
      * @throws InvalidMidiDataException If the tempo is invalid
      */
     public void setTempo(int tempo) throws InvalidMidiDataException {
-        LOGGER.info("                    ~ with inherited tempo for track: " + tempo);
+        // LOGGER.info("                    ~ with inherited tempo for track: " + tempo);
         if (tempo == 0) {
             LOGGER.warning("Tempo is 0, skipping");
             return;

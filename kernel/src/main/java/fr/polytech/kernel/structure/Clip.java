@@ -39,7 +39,7 @@ public class Clip {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("        Generating MIDI for clip %s with %d bars".formatted(name, bars.size()));
+        LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s".formatted(name, bars.size(), midiGenerator.getTrackManager().getCurrentTick()));
         for (Bar bar : bars) bar.generateMidi(midiGenerator);
     }
 
