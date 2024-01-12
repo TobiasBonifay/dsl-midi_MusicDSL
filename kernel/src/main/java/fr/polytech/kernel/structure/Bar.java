@@ -48,10 +48,11 @@ public class Bar {
      * </p>
      *
      * @param midiGenerator The MIDI generator
+     * @param currentTick
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
-    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("            Generating MIDI for bar %s with time signature %s and tempo %d and volume %d".formatted(name, timeSignature, tempo, barVolume));
+    public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
+        LOGGER.info("            Generating MIDI for bar %s with time signature %s and tempo %d and volume %d at tick %s".formatted(name, timeSignature, tempo, barVolume, currentTick));
         for (int i = 0, tracksSize = tracks.size(); i < tracksSize; i++) {
             Track track = tracks.get(i);
             if (null == track) {
@@ -64,7 +65,7 @@ public class Bar {
             midiGenerator.trackManager().setTimeSignature(timeSignature);
             midiGenerator.trackManager().setTempo(tempo);
             track.setDefaultVolume(barVolume);
-            track.generateMidi(midiGenerator);
+            track.generateMidi(midiGenerator, currentTick);
         }
     }
 
@@ -90,5 +91,12 @@ public class Bar {
 
     public void witBarVolume(int barVolume) {
         this.barVolume = barVolume;
+    }
+
+    public long calculateDuration() {
+        return tracks.stream() //
+                .mapToLong(Track::calculateDuration) //
+                .max() //
+                .orElse(0);
     }
 }

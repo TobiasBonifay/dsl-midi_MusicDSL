@@ -38,6 +38,11 @@ public class MoonlightMelodyGenerator {
 
         app.generateClip(clip1);
         app.generateClip(clip1);
+
+        Clip clip2 = new Clip("Verse");
+        clip2.addBar(bar1);
+        clip2.addBar(bar1);
+        app.generateClip(clip2);
         app.writeMidiFile("moonlight.mid");
     }
 

@@ -54,9 +54,4 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         MidiEvent volumeEvent = new MidiEvent(volumeMessage, trackManager.getCurrentTick());
         trackManager.addMidiEvent(volumeEvent);
     }
-
-    @Deprecated
-    public MidiTrackManager getTrackManager() {
-        return trackManager;
-    }
 }

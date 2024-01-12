@@ -23,6 +23,7 @@ public class MidiTrackManager {
     private long currentTick;
 
     public MidiTrackManager() throws InvalidMidiDataException {
+        LOGGER.info("        ~ Creating new MIDI track manager with resolution 480");
         this.sequence = new Sequence(Sequence.PPQ, 480);
         this.currentTrack = sequence.createTrack();
         this.currentTick = 0;
