@@ -1,8 +1,10 @@
 package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
+import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
+import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
@@ -19,11 +21,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class App {
-
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
     private final MidiGenerator midiGenerator;
     private final String name;
-    private final List<Clip> clips = new ArrayList<>();
     private final MidiTrackManager trackManager;
     @Getter
     private final List<Instrument> instruments = new ArrayList<>();
@@ -45,29 +45,64 @@ public class App {
         }
     }
 
-    public void addClip(Clip clip) {
-        clips.add(clip);
-    }
-
     public void addInstrument(Instrument instrument) {
         instruments.add(instrument);
     }
 
-    public void generateMidi() throws InvalidMidiDataException, IOException {
-        LOGGER.info("Generating MIDI for app %s with default time signature %s and default tempo %d".formatted(name, globalTimeSignature, globalTempo));
-        trackManager.setTimeSignature(globalTimeSignature);
-        trackManager.setTempo(globalTempo);
-        for (int i = 0, clipsSize = clips.size(); i < clipsSize; i++) {
-            Clip clip = clips.get(i);
-            LOGGER.info("    Generating bar %d/%d MIDI for clip %s".formatted(i + 1, clipsSize + 1, clip.name()));
-            clip.generateMidi(midiGenerator);
-        }
-
-        writeMidiFile(name);
+    public void generateClip(Clip clip) throws InvalidMidiDataException {
+        LOGGER.info("Generating MIDI for clip: " + clip.name());
+        setMidiGeneratorParameters();
+        long startTick = trackManager.getCurrentTick();
+        clip.generateMidi(midiGenerator);
+        long clipDuration = clip.calculateDuration();
+        trackManager.setCurrentTick(startTick + clipDuration);
     }
 
+
+    /**
+     * Calculate the total duration of each track in each bar and then find the maximum duration among them.
+     * This would ensure that you account for any variations in track lengths within a bar.
+     *
+     * @param clip The clip to calculate the duration for.
+     * @return The duration of the clip in ticks.
+     */
+    private long calculateClipDuration(Clip clip) {
+        long duration = 0;
+        for (Bar bar : clip.getBars()) {
+            long barDuration = 0;
+            for (Track track : bar.getTracks()) {
+                long trackDuration = track.getMusicalElements().stream() //
+                        .mapToLong(element -> element.getDuration(480)) //
+                        .sum();
+                barDuration = Math.max(barDuration, trackDuration);
+            }
+            duration += barDuration;
+        }
+        return duration;
+    }
+
+
+    /**
+     * STEP 1/3
+     * Should be set before generating MIDI.
+     * Sets the time signature and tempo for the MIDI generator.
+     *
+     * @throws InvalidMidiDataException If there is a problem setting the time signature or tempo.
+     */
+    public void setMidiGeneratorParameters() throws InvalidMidiDataException {
+        trackManager.setTimeSignature(globalTimeSignature);
+        trackManager.setTempo(globalTempo);
+    }
+
+
+    /**
+     * STEP 3/3
+     *
+     * @param filename The name of the file to write.
+     * @throws IOException If there is a problem writing the file.
+     */
     public void writeMidiFile(String filename) throws IOException {
-        String pathName = name.replaceAll(" ", "_");
+        String pathName = filename.replaceAll(" ", "_");
         LOGGER.info("Writing MIDI file to %s.midi".formatted(pathName));
         MidiSystem.write(this.getSequence(), 1, new File(pathName + ".midi"));
     }

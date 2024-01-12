@@ -3,8 +3,8 @@ package fr.polytech.kernel.scenario;
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.*;
-import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.drums.DrumTrack;
+import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.dictionnaries.*;
@@ -70,10 +70,10 @@ public class BellieJeanMelodyGenerator {
 
         clip1.addBar(bar2);
 
-        app.addClip(clip1);
+        // app.addClip(clip1);
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
         app.setGlobalTempo(120);
-        app.generateMidi();
+        // app.generateMidi();
     }
 
     private static List<MusicalElement> createLeadVoxSequence(){

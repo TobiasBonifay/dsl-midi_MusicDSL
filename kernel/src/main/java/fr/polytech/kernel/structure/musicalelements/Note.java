@@ -39,6 +39,11 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
     }
 
     @Override
+    public long getStartOffset() {
+        return 0; // will be randomized
+    }
+
+    @Override
     public String toString() {
         return "%s %s %s".formatted(pitch, toStringOfNoteDuration(noteLength), dynamic);
     }

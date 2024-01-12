@@ -57,16 +57,26 @@ public class Track {
      * </p>
      *
      * @param midiGenerator The MIDI generator
+     * @param currentTick
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
-    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
+    public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
         LOGGER.info("                    -> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument.name());
         int calculatedVolume = (this.defaultVolume * instrument.volume()) / 100;
         LOGGER.info("                         -> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
         midiGenerator.setTrackVolume(calculatedVolume);
         midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber);
+        midiGenerator.trackManager().setCurrentTick(currentTick);
         for (MusicalElement musicalElement : musicalElements) {
             midiGenerator.addMidiEventToTrack(musicalElement, MidiGenerator.INSTRUMENT_CHANNEL);
         }
+    }
+
+    public long calculateDuration() {
+        long duration = 0;
+        for (MusicalElement musicalElement : musicalElements) {
+            duration += musicalElement.getDuration(480);
+        }
+        return duration;
     }
 }

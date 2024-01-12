@@ -51,10 +51,10 @@ public class DrumsMelodyGenerator {
         clip1.addBar(bar1);
         clip1.addBar(bar2);
 
-        app.addClip(clip1);
+        // app.addClip(clip1);
         app.setGlobalTimeSignature(new TimeSignature(3, 4));
         app.setGlobalTempo(120);
-        app.generateMidi();
+        // app.generateMidi();
     }
 
     private static List<DrumHit> createDrumsSequence() {

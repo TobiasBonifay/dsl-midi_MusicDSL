@@ -36,6 +36,11 @@ public class Rest implements MusicalElement {
     }
 
     @Override
+    public long getStartOffset() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
         return "Rest of duration " + duration;
     }

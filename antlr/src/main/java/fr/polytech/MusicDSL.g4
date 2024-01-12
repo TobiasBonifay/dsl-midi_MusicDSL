@@ -1,7 +1,7 @@
 grammar MusicDSL;
 
 // Parser Rules
-musicComposition : globalSettings instrumentsSection clipSection mainSection;
+musicComposition : globalSettings instrumentsSection clipSection timelineSection?; // mainSection;
 
 globalSettings : (signature | bpm | tempoChange)*;
 
@@ -38,7 +38,12 @@ note : noteName=NOTE noteDynamic? noteDuration?;
 chord : chordName=CHORD noteDynamic? noteDuration?;
 silence : SILENCE noteDuration?;
 
+// ----------------- TIMELINE -----------------
+timelineSection : 'Timeline:' WS* timelineSequence;
+timelineSequence : timelineClip+ WS*;
+timelineClip : clipName=ID (WS* 'x' WS* repeatNumber=INT)?;
 
+// ----------------- DRUMS -----------------
 percussionSequence : percussionElement+;
 percussionElement : PERCUSSION | silence;
 

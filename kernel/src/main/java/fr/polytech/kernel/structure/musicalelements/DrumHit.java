@@ -31,6 +31,11 @@ public record DrumHit(DrumSound sound) implements MusicalElement {
     }
 
     @Override
+    public long getStartOffset() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
         return "%s".formatted(sound);
     }
