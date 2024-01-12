@@ -1,0 +1,15 @@
+signature 4/4
+bpm 90
+
+Instruments:
+    piano ACOUSTIC_GRAND_PIANO volume 100
+
+clip SimpleSong:
+bar [
+    track piano:
+        C4 mf (1/4), D4 mf (1/4), E4 mf (1/4), F4 mf (1/4),
+        G4 mf (1/4), A4 mf (1/4), B4 mf (1/4), C5 mf (1/4)
+]
+
+Timeline:
+    SimpleSong x 2

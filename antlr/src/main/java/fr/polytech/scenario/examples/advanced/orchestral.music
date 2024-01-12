@@ -1,0 +1,30 @@
+signature 4/4
+bpm 70
+tempo +10
+
+Instruments:
+    violin VIOLIN volume 85
+    cello CELLO volume 80
+    frenchHorn FRENCH_HORN volume 75
+    flute FLUTE volume 70
+    timpani TIMPANI volume 90
+
+clip OrchestralMovement:
+bar [
+    track violin:
+        E5 f (1/2), G5 f (1/2), B5 f (1/2), D6 f (1/2),
+        C6 mf (1/2), A5 mf (1/2), F5 mf (1/2), D5 mf (1/2)
+    track cello:
+        E3 p, A3 p,
+        D3 p, G3 p
+    track frenchHorn:
+        F4 mf (1/2), A4 mf (1/2), C5 mf (1/2), E5 mf (1/2)
+    track flute:
+        B6 pp (1/4), A6 pp (1/4), G6 pp (1/4), F6 pp (1/4),
+        E6 pp (1/4), D6 pp (1/4), C6 pp (1/4), B5 pp (1/4)
+    track timpani:
+        KICK SILENCE KICK SILENCE // SILENCE 1/2 SHOULD BE SUPPORTED
+]
+
+Timeline:
+    OrchestralMovement x 3

@@ -107,7 +107,12 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     @Override
     public Void visitTempoChange(TempoChangeContext ctx) {
         int tempo = MidiGeneratorUtils.parseBpmChange(ctx);
-        this.currentBar.changeTempo(tempo);
+        if (null != currentBar) {
+            this.currentBar.changeTempo(tempo);
+        } else {
+            LOGGER.severe("Tempo change found outside of a bar OR feature not implemented");
+            LOGGER.severe("Tempo change ignored");
+        }
         return super.visitTempoChange(ctx);
     }
 
