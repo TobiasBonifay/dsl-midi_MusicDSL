@@ -19,17 +19,17 @@ clip : 'clip' clipName=ID ':' bars=barSequence+;
 
 // ----------------- BAR -----------------
 barSequence : 'bar' '[' barContent* ']';
-barContent : (tempoChange | volumeSetting | signature | trackSequence);
+barContent : (tempoChange | volumeSetting | signature | trackSequence | emptyBarContent);
+emptyBarContent : 'EMPTY';
 
 // ----------------- TRACK -----------------
-trackSequence : track+;
 // tempoChange : 'LINEAR|' 'tempo' SIGNED_INT;
 volumeSetting : 'volume' trackVolume=INT;
 // inherited bpm
 // inherited signature
-track : 'track' trackName=ID ':' trackContent;
+trackSequence : track+;
+track : 'track' trackName=ID ':' trackContent?;
 trackContent : (noteSequence | percussionSequence);
-
 // ----------------- NOTE -----------------
 noteSequence : (note | silence | chord) (',' (note | silence | chord))*;
 noteDynamic : velocity=VELOCITY_SYMBOL;

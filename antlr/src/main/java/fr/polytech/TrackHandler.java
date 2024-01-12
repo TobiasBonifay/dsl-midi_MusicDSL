@@ -21,7 +21,9 @@ import static fr.polytech.kernel.util.Notes.parseNoteLength;
 public class TrackHandler {
 
     public static Track handleTrack(TrackContext ctx, String trackId, MidiGeneratorWithKernel generator) {
-        if (ctx.trackContent().percussionSequence() != null) return TrackHandler.handleDrumTrack(ctx, trackId);
+        TrackContentContext trackContent = ctx.trackContent();
+        if (trackContent == null) return new Track(trackId, null);
+        if (trackContent.percussionSequence() != null) return TrackHandler.handleDrumTrack(ctx, trackId);
         Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
         return TrackHandler.handleInstrumentTrack(ctx, instrument, trackId);
 
@@ -34,7 +36,12 @@ public class TrackHandler {
         }
         Track track = new Track(trackId, instrument);
 
-        ctx.trackContent().noteSequence().children.forEach(element -> {
+        TrackContentContext trackContent = ctx.trackContent();
+        if (trackContent.noteSequence() == null) {
+            MidiGeneratorWithKernel.LOGGER.info("No note sequence found for track: " + trackId);
+            return track;
+        }
+        trackContent.noteSequence().children.forEach(element -> {
             if (element instanceof NoteContext) {
                 Note note = Note.builder()
                         .noteName(((NoteContext) element).noteName.getText())
