@@ -51,17 +51,11 @@ public class App {
 
     public void generateClip(Clip clip) throws InvalidMidiDataException {
         LOGGER.info("Generating MIDI for clip: " + clip.name());
-        setMidiGeneratorParameters(); // should be set before generating MIDI...
-
+        setMidiGeneratorParameters();
+        long startTick = trackManager.getCurrentTick();
         clip.generateMidi(midiGenerator);
-
-        // Calculate the duration after generating the MIDI to get the correct end time
-        long clipDuration = calculateClipDuration(clip);
-        if (clipDuration <= 0) {
-            LOGGER.warning("Clip duration is non-positive: " + clipDuration);
-            return;
-        }
-        trackManager.updateCurrentTickAfterClip(clipDuration);
+        long clipDuration = clip.calculateDuration();
+        trackManager.setCurrentTick(startTick + clipDuration);
     }
 
 

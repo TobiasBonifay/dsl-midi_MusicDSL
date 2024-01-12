@@ -50,4 +50,10 @@ public class Clip {
     public void addBar(Bar bar) {
         bars.add(bar);
     }
+
+    public long calculateDuration() {
+        return bars.stream()
+                .mapToLong(Bar::calculateDuration)
+                .sum();
+    }
 }

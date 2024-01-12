@@ -52,19 +52,8 @@ public class Bar {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
-        LOGGER.info("            Generating MIDI for bar %s with time signature %s and tempo %d and volume %d at tick %s".formatted(name, timeSignature, tempo, barVolume, currentTick));
-        for (int i = 0, tracksSize = tracks.size(); i < tracksSize; i++) {
-            Track track = tracks.get(i);
-            if (null == track) {
-                LOGGER.severe("--------------------- ERROR ---------------------");
-                LOGGER.severe("->              Track " + (i + 1) + "/" + tracksSize + " is null");
-                continue;
-            }
-            LOGGER.info("                Generating track " + (i + 1) + "/" + tracksSize + " MIDI for bar " + name);
-            midiGenerator.trackManager().newTrack(this);
-            midiGenerator.trackManager().setTimeSignature(timeSignature);
-            midiGenerator.trackManager().setTempo(tempo);
-            track.setDefaultVolume(barVolume);
+        LOGGER.info("Generating MIDI for bar " + name + " at tick " + currentTick);
+        for (Track track : tracks) {
             track.generateMidi(midiGenerator, currentTick);
         }
     }
