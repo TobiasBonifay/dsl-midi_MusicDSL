@@ -47,12 +47,6 @@ public class Clip {
             long barDuration = bar.calculateDuration(midiGenerator.getSequence().getResolution());
             bar.generateMidi(midiGenerator, currentTick);
             currentTick += barDuration;
-
-            // time left feature
-            long timeLeft = midiGenerator.trackManager().howMuchTimeLeft(barDuration, margin);
-            if (timeLeft != 0)
-                LOGGER.info(timeLeft > 0 ? "------------- COMPLETION-FEATURE There are %d ticks left -------------".formatted(timeLeft) : "------------- COMPLETION-FEATURE There are %d ticks too much -------------".formatted(-timeLeft));
-            else LOGGER.info("------------- COMPLETION-FEATURE The Bar is fully used. Congrats -------------");
         }
     }
 

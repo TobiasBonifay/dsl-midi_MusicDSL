@@ -56,6 +56,15 @@ public class Bar {
         LOGGER.info("Generating MIDI for bar " + name + " at tick " + currentTick);
         for (Track track : tracks) {
             track.generateMidi(midiGenerator, currentTick);
+
+            // time left feature
+            long tickLength = midiGenerator.trackManager().getSequence().getTickLength();
+            long tickAtTheEndOfGen = midiGenerator.trackManager().getCurrentTick();
+            long timeLeft = tickLength - tickAtTheEndOfGen;
+            if (timeLeft != 0)
+                LOGGER.info(timeLeft > 0 ? "------------- COMPLETION-FEATURE There are %d ticks left -------------".formatted(timeLeft) : "------------- COMPLETION-FEATURE There are %d ticks too much -------------".formatted(-timeLeft));
+            else LOGGER.info("------------- COMPLETION-FEATURE The Bar is fully used. Congrats -------------");
+
         }
     }
 

@@ -100,16 +100,23 @@ public class MidiTrackManager {
      * If matching +- margin, return 0.
      *
      * @param barDuration The duration of the bar in ticks
+     *                    (calculated with the time signature and the resolution)
+     * @param margin      The margin of error in ticks
+     * @param currentTick The current tick globally
      * @return the time left before the end of the bar. If the bar is over, return how much time has been over.
      */
-    public long howMuchTimeLeft(long barDuration, int margin) {
+    public long howMuchTimeLeft(long barDuration, int margin, long currentTick) {
         long timeLeft = barDuration - currentTick;
-        if (timeLeft < 0) {
+        if (timeLeft > 0) {
+            if (timeLeft > margin) {
+                return timeLeft - margin;
+            } else if (timeLeft < -margin) {
+                return timeLeft + margin;
+            } else {
+                return 0;
+            }
+        } else {
             return timeLeft;
         }
-        if (timeLeft <= margin) {
-            return 0;
-        }
-        return timeLeft;
     }
 }
