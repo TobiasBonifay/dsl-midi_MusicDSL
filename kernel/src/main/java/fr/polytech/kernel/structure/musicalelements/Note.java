@@ -75,4 +75,12 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
     private String formatDuration(LogColor color, String name) {
         return "%s%s%s".formatted(color.getColor(), name, LogColor.ANSI_RESET.getColor());
     }
+
+    public Object getPitch() {
+        return null;
+    }
+
+    public Object getLength() {
+        return null;
+    }
 }
