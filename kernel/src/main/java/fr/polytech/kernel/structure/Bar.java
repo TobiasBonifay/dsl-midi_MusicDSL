@@ -19,6 +19,7 @@ public class Bar {
         LoggingSetup.setupLogger(LOGGER);
     }
 
+    @Getter
     private final String name;
     @Getter
     private final List<Track> tracks = new ArrayList<>();
@@ -60,10 +61,6 @@ public class Bar {
 
     public void addTrack(Track track) {
         tracks.add(track);
-    }
-
-    public long startTick() {
-        return startTick;
     }
 
     public void withTimeSignature(TimeSignature signature) {

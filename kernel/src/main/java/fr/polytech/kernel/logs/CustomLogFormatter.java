@@ -15,6 +15,11 @@ public class CustomLogFormatter extends Formatter {
     }
 
     private String advanceMatching(String message) {
+        // if the content is staring with "COMPLETION-FEATURE" then color it
+        if (message.toUpperCase().contains("COMPLETION-FEATURE")) {
+            return LogColor.ANSI_DARK_RED.getColor() + message + LogColor.ANSI_RESET.getColor();
+        }
+
         // parse this to color it: + Adding note to track: C3 / FF
         int index = message.indexOf(':');
         if (index == -1) {
