@@ -47,26 +47,37 @@ public class Bar {
      * The MIDI events are generated for each track.
      * The time signature and tempo are set for the bar.
      * </p>
-     *
-     * @param midiGenerator The MIDI generator
-     * @param currentTick
-     * @throws InvalidMidiDataException If the MIDI data is invalid
+     * <p>
+     * We generate the MIDI events for each track.
+     * We calculate the duration of the bar and the ending tick.
+     * We update the current tick for the next bar.
+     * We calculate the time left or excess.
+     * If there is no time left, we log an OK message.
+     * If there is time left, we log a not OK message.
+     * </p>
      */
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
         LOGGER.info("Generating MIDI for bar " + name + " at tick " + currentTick);
+
         for (Track track : tracks) {
             track.generateMidi(midiGenerator, currentTick);
-
-            // time left feature
-            long tickLength = midiGenerator.trackManager().getSequence().getTickLength();
-            long tickAtTheEndOfGen = midiGenerator.trackManager().getCurrentTick();
-            long timeLeft = tickLength - tickAtTheEndOfGen;
-            if (timeLeft != 0)
-                LOGGER.info(timeLeft > 0 ? "------------- COMPLETION-FEATURE There are %d ticks left -------------".formatted(timeLeft) : "------------- COMPLETION-FEATURE There are %d ticks too much -------------".formatted(-timeLeft));
-            else LOGGER.info("------------- COMPLETION-FEATURE The Bar is fully used. Congrats -------------");
-
         }
+
+        long barDuration = calculateDuration(midiGenerator.getSequence().getResolution());
+        long endingTick = currentTick + barDuration;
+
+        long timeLeft = endingTick - midiGenerator.trackManager().getCurrentTick();
+        if (timeLeft != 0) {
+            LOGGER.info(timeLeft > 0 ? //
+                    "------------- COMPLETION-FEATURE There are %d ticks left -------------".formatted(timeLeft) : //
+                    "------------- COMPLETION-FEATURE There are %d ticks too much -------------".formatted(-timeLeft));
+        } else {
+            LOGGER.info("------------- COMPLETION-FEATURE The Bar is fully used. Congrats -------------");
+        }
+
+        midiGenerator.trackManager().setCurrentTick(endingTick);
     }
+
 
     public void addTrack(Track track) {
         tracks.add(track);
