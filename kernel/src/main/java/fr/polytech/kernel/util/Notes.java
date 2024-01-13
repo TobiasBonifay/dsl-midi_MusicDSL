@@ -79,4 +79,29 @@ public class Notes {
         }
     }
 
+    // to latex
+    public static String toLatex(String note) {
+        String[] split = note.split(" ");
+        String pitch = split[0];
+        String duration = split[1];
+        String dynamic = split[2];
+
+        String latexPitch = pitch.replace("#", "\\sharp{}");
+        String latexDuration = duration.replace("1/2", "\\half{}")
+                .replace("1/4", "\\quarter{}")
+                .replace("1/8", "\\eighth{}")
+                .replace("1/16", "\\sixteenth{}")
+                .replace("1/32", "\\thirtysecond{}")
+                .replace("1/64", "\\sixtyfourth{}");
+        String latexDynamic = dynamic.replace("ppp", "\\ppp{}")
+                .replace("pp", "\\pp{}")
+                .replace("p", "\\p{}")
+                .replace("mp", "\\mp{}")
+                .replace("mf", "\\mf{}")
+                .replace("f", "\\f{}")
+                .replace("ff", "\\ff{}")
+                .replace("fff", "\\fff{}");
+
+        return latexPitch + " " + latexDuration + " " + latexDynamic;
+    }
 }

@@ -77,4 +77,15 @@ public class Track {
                 .mapToLong(element -> element.getDuration(resolution)) //
                 .sum(); //
     }
+
+    // to latex
+    public String toLatex() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\\begin{track}{").append(name).append("}{").append(instrument.name()).append("}\n");
+        for (MusicalElement musicalElement : musicalElements) {
+            sb.append(musicalElement.toLatex());
+        }
+        sb.append("\\end{track}\n");
+        return sb.toString();
+    }
 }
