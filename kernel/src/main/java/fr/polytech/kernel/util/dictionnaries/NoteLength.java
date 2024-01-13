@@ -12,4 +12,17 @@ public enum NoteLength {
     public long getDuration(int resolution) {
         return Math.round(length * resolution);
     }
+
+    public String toLatex() {
+        return switch (this) {
+            case WHOLE -> "\\longa";
+            case HALF -> "\\breve";
+            case QUARTER -> "\\quarternote";
+            case EIGHTH -> "\\eighthnote";
+            case SIXTEENTH -> "\\sixteenthnote";
+            case THIRTY_SECOND -> "\\thirtysecondnote";
+            case SIXTY_FOURTH -> "\\sixtyfourthnote";
+            case HUNDRED_TWENTY_EIGHTH -> "\\hundredtwentyeighthnote";
+        };
+    }
 }

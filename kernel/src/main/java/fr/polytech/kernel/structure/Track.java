@@ -77,4 +77,19 @@ public class Track {
                 .mapToLong(element -> element.getDuration(resolution)) //
                 .sum(); //
     }
+
+    public char[] toLatex() {
+        List<Character> latex = new ArrayList<>();
+        for (MusicalElement musicalElement : musicalElements) {
+            char[] elementLatex = musicalElement.toLatex();
+            for (char c : elementLatex) {
+                latex.add(c);
+            }
+        }
+        char[] latexArray = new char[latex.size()];
+        for (int i = 0; i < latex.size(); i++) {
+            latexArray[i] = latex.get(i);
+        }
+        return latexArray;
+    }
 }

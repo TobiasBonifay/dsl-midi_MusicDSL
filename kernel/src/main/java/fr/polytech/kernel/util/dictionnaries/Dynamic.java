@@ -19,12 +19,6 @@ public enum Dynamic {
         return velocity;
     }
 
-    /**
-     * dynamic value randomly chosen between 90% and 110% of the dynamic
-     */
-    public int slightlyRandomizedValue() {
-        return randomizedValue(velocity - (int) (velocity * 0.1), velocity + (int) (velocity * 0.1));
-    }
 
     /**
      * dynamic value randomly chosen between x% and y% of the dynamic

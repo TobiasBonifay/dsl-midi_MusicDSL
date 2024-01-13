@@ -76,11 +76,9 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
         return "%s%s%s".formatted(color.getColor(), name, LogColor.ANSI_RESET.getColor());
     }
 
-    public Object getPitch() {
-        return null;
+    @Override
+    public char[] toLatex() {
+        return String.format("\\note{%s}{%s}", this.pitch, this.noteLength.toLatex()).toCharArray();
     }
 
-    public Object getLength() {
-        return null;
-    }
 }

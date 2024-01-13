@@ -34,4 +34,9 @@ public record DrumHit(DrumSound sound) implements MusicalElement {
     public String toString() {
         return "%s".formatted(sound);
     }
+
+    @Override
+    public char[] toLatex() {
+        return new char[]{'d'};
+    }
 }

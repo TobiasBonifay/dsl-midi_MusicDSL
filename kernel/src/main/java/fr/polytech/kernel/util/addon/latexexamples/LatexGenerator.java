@@ -5,12 +5,13 @@ import fr.polytech.kernel.structure.Clip;
 
 public class LatexGenerator {
     public String generateLatex(Clip clip) {
-        StringBuilder latexDocument = new StringBuilder();
-        latexDocument.append("\\begin{music}\n"); // Assuming a LaTeX music environment
+        StringBuilder latexContent = new StringBuilder("\\begin{music}\n");
+
         for (Bar bar : clip.getBars()) {
-            //latexDocument.append(bar.toLatex()).append("\n");
+            latexContent.append(bar.toLatex());
         }
-        latexDocument.append("\\end{music}");
-        return latexDocument.toString();
+
+        latexContent.append("\\end{music}");
+        return latexContent.toString();
     }
 }

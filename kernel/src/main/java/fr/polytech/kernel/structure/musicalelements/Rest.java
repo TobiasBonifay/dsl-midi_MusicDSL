@@ -42,4 +42,9 @@ public class Rest implements MusicalElement {
     public String toString() {
         return "Rest of duration " + duration;
     }
+
+    @Override
+    public char[] toLatex() {
+        return new char[]{'r'};
+    }
 }
