@@ -91,4 +91,32 @@ public class MidiTrackManager {
     public int getTimeShift() {
         return (int) (Math.random() * timeShiftRandomness * 2) - timeShiftRandomness;
     }
+
+
+    /**
+     * Check how much time is left before the end of the bar. Allow a margin of error due to randomization.
+     * If the bar is over, return how much time has been over.
+     * If the bar is not over, return how much time is left.
+     * If matching +- margin, return 0.
+     *
+     * @param barDuration The duration of the bar in ticks
+     *                    (calculated with the time signature and the resolution)
+     * @param margin      The margin of error in ticks
+     * @param currentTick The current tick globally
+     * @return the time left before the end of the bar. If the bar is over, return how much time has been over.
+     */
+    public long howMuchTimeLeft(long barDuration, int margin, long currentTick) {
+        long timeLeft = barDuration - currentTick;
+        if (timeLeft > 0) {
+            if (timeLeft > margin) {
+                return timeLeft - margin;
+            } else if (timeLeft < -margin) {
+                return timeLeft + margin;
+            } else {
+                return 0;
+            }
+        } else {
+            return timeLeft;
+        }
+    }
 }

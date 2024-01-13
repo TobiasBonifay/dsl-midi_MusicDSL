@@ -41,19 +41,21 @@ public class Clip {
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s".formatted(name, bars.size(), midiGenerator.trackManager().getCurrentTick()));
         long currentTick = midiGenerator.trackManager().getCurrentTick();
+        int margin = midiGenerator.trackManager().getTimeShiftRandomness();
+
         for (Bar bar : bars) {
+            long barDuration = bar.calculateDuration(midiGenerator.getSequence().getResolution());
             bar.generateMidi(midiGenerator, currentTick);
-            currentTick += bar.calculateDuration(midiGenerator.getSequence().getResolution());
+            currentTick += barDuration;
         }
     }
+
 
     public void addBar(Bar bar) {
         bars.add(bar);
     }
 
     public long calculateDuration(int resolution) {
-        return bars.stream()
-                .mapToLong(bar -> bar.calculateDuration(resolution))
-                .sum();
+        return bars.stream().mapToLong(bar -> bar.calculateDuration(resolution)).sum();
     }
 }
