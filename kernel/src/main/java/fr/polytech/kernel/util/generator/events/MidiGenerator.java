@@ -40,11 +40,12 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         int resolution = trackManager.getSequence().getResolution();
         MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, startTick, resolution, velocityRandomness, timeShiftRandomness);
         for (MidiEvent event : events) {
-            if (event != null && event.getMessage() != null) {
-                trackManager.addMidiEvent(event);
-                if (event.getTick() > trackManager.getCurrentTick()) {
-                    trackManager.setCurrentTick(event.getTick());
-                }
+            if (event != null) {
+                if (event.getMessage() != null) trackManager.addMidiEvent(event);
+                // Be careful: event.getMessage is null for rest for example. but tick is not null.
+                if (event.getTick() > trackManager.getCurrentTick()) trackManager.setCurrentTick(event.getTick());
+            } else {
+                LOGGER.warning("                    - Null event (not) generated for " + midiEventGeneratable);
             }
         }
     }
