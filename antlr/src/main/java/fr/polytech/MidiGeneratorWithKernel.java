@@ -88,7 +88,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     public Void visitClip(ClipContext ctx) {
         // if time signature or tempo is not defined, use default values
         if (app.getGlobalTimeSignature() == null) app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
-        if (app.getGlobalTempo() == 0) app.setGlobalTempo(DEFAULT_TEMPO);
+        // if (app.getGlobalTempo() == 0) app.setGlobalTempo(DEFAULT_TEMPO);
         if (app.getResolution() == 0) {
             try {
                 app.setResolution(480);
@@ -109,7 +109,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitBarSequence(BarSequenceContext ctx) {
-        currentBar = new Bar("" + (currentClip.getBars().size() + 1));
+        currentBar = new Bar("" + (currentClip.getBars().size() + 1), app.getGlobalTimeSignature(), app.getGlobalTempo(), DEFAULT_VOLUME);
         super.visitBarSequence(ctx);
         currentClip.addBar(currentBar);
         return null;
@@ -117,14 +117,14 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitTempoChange(TempoChangeContext ctx) {
-        int tempo = MidiGeneratorUtils.parseBpmChange(ctx);
+        int tempoVariation = MidiGeneratorUtils.parseBpmChange(ctx);
         if (null != currentBar) {
-            this.currentBar.changeTempo(tempo);
+            this.currentBar.changeTempo(tempoVariation);
         } else {
             LOGGER.severe("Tempo change found outside of a bar OR feature not implemented");
             LOGGER.severe("Tempo change ignored");
         }
-        return super.visitTempoChange(ctx);
+        return null;// super.visitTempoChange(ctx);
     }
 
     @Override

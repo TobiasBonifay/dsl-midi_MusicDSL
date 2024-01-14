@@ -11,7 +11,7 @@ Instruments:
 
 clip Intro <- ppp:
 bar [
-    tempo - 10
+    tempo + 100
     // bpm 150
     signature 3/4
 
@@ -31,6 +31,7 @@ bar [
 
 clip Chorus:
 bar [
+    tempo - 70
     volume 90
     track trackName:
         SILENT, G4 mf, G3, SILENT
@@ -41,4 +42,5 @@ bar [
 ]
 
 Timeline:
-    Intro Chorus x 2
+    Intro
+    Chorus x 2
