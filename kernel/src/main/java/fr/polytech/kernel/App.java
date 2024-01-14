@@ -47,7 +47,7 @@ public class App {
     }
 
     public void generateClip(Clip clip) throws InvalidMidiDataException {
-        LOGGER.info("Generating MIDI for clip: " + clip.name());
+        LOGGER.info("Generating MIDI for clip: " + clip.getName());
 
         long initialTick = trackManager.getCurrentTick();
         clip.generateMidi(midiGenerator);

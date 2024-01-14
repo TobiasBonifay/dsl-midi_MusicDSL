@@ -18,7 +18,8 @@ instrumentDefinition : instrumentName=ID instrumentMidiName=INSTRUMENT 'volume' 
 
 // ----------------- CLIP -----------------
 clipSection : clip+;
-clip : 'clip' clipName=ID ':' bars=barSequence+;
+clip : 'clip' clipName=ID defaultDynamic? ':' bars=barSequence+;
+defaultDynamic : '<-' velocity=VELOCITY_SYMBOL;
 
 // ----------------- BAR -----------------
 barSequence : 'bar' '[' barContent* ']';
@@ -49,10 +50,6 @@ timelineClip : clipName=ID (WS* 'x' WS* repeatNumber=INT)?;
 // ----------------- DRUMS -----------------
 percussionSequence : percussionElement+;
 percussionElement : PERCUSSION | silence;
-
-mainSection : mainSequence;
-mainSequence : clipInstance (clipInstance)*;
-clipInstance : ID ('x' INT)?;
 
 // Lexer Rules
 fragment DIGIT : [0-9];
