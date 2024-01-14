@@ -1,0 +1,23 @@
+signature 4/4
+bpm 116
+
+Instruments:
+    synth SYNTH_STRINGS_1 volume 90
+
+clip MAIN:
+bar [
+    track kick:
+        KICK KICK KICK KICK KICK KICK KICK KICK
+
+    track snare:
+        SILENCE SNARE SILENCE SNARE SILENCE SNARE SILENCE SNARE
+
+    track hihat:
+        OPEN_HIHAT OPEN_HIHAT OPEN_HIHAT OPEN_HIHAT OPEN_HIHAT OPEN_HIHAT OPEN_HIHAT OPEN_HIHAT
+
+    track synth:
+        F#4 (1/2), SILENCE, G#4 (1/2), SILENCE (2), A4 (1/2), SILENCE, G#4 (1/2)
+]
+
+Timeline:
+    MAIN

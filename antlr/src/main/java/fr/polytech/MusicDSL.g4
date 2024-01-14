@@ -23,7 +23,7 @@ defaultDynamic : '<-' velocity=VELOCITY_SYMBOL;
 
 // ----------------- BAR -----------------
 barSequence : 'bar' '[' barContent* ']';
-barContent : (tempoChange | volumeSetting | signature | trackSequence | emptyBarContent);
+barContent : (tempoChange | bpm | volumeSetting | signature | trackSequence | emptyBarContent);
 emptyBarContent : 'EMPTY';
 
 // ----------------- TRACK -----------------

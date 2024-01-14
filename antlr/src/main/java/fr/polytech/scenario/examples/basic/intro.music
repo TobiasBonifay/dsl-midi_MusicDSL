@@ -1,7 +1,6 @@
 // This piece features a simple intro with a piano playing chords and a drum kit on a standard 4/4 time signature at 120 BPM.
 signature 4/4
 bpm 120
-// tempo +10 -> tempo outside a bar is not implemented
 timeshift 1
 velocityrandomization 10
 resolution 100
@@ -13,6 +12,7 @@ Instruments:
 clip Intro <- ppp:
 bar [
     tempo +10 // NEGATIVE tempo is allowed.. NOT WORKING
+    // bpm 150
     signature 3/4
 
     track trackName:
