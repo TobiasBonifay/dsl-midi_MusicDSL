@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+@Getter
 public class Track {
 
     private static final Logger LOGGER = Logger.getLogger(Track.class.getName());
@@ -20,23 +21,18 @@ public class Track {
     }
 
     private final String name;
-    @Getter
     private final List<MusicalElement> musicalElements = new ArrayList<>();
     private final Instrument instrument;
     @Setter
     private int defaultVolume;
     @Setter
-    private Dynamic defaultDynamic; // TODO: apply by default to all notes
+    private Dynamic defaultDynamic;
 
 
     public Track(String name, Instrument instrument) {
         this.name = name;
         this.instrument = instrument;
         this.defaultVolume = 100;
-    }
-
-    public String name() {
-        return name;
     }
 
     /**
@@ -48,6 +44,7 @@ public class Track {
         musicalElements.add(musicalElement);
     }
 
+
     /**
      * Generates the MIDI events for this track.
      * <p>
@@ -57,16 +54,17 @@ public class Track {
      * </p>
      *
      * @param midiGenerator The MIDI generator
-     * @param currentTick
+     * @param currentTick  The current tick
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
-        LOGGER.info("                    -> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument.name());
+        LOGGER.info("-> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument.name());
         int calculatedVolume = (this.defaultVolume * instrument.volume()) / 100;
-        LOGGER.info("                         -> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
+        LOGGER.info("-> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
         midiGenerator.setTrackVolume(calculatedVolume);
         midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber);
         midiGenerator.trackManager().setCurrentTick(currentTick);
+
         for (MusicalElement musicalElement : musicalElements) {
             midiGenerator.addMidiEventToTrack(musicalElement, MidiGenerator.INSTRUMENT_CHANNEL);
         }

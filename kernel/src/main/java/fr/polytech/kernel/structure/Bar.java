@@ -58,10 +58,11 @@ public class Bar {
      * </p>
      */
     public void generateMidi(MidiGenerator midiGenerator, long currentTick, Dynamic defaultDynamic) throws InvalidMidiDataException {
-        LOGGER.info("Generating MIDI for bar " + name + " at tick " + currentTick);
+        LOGGER.info("Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
 
         for (Track track : tracks) {
             track.setDefaultDynamic(defaultDynamic);
+            track.setDefaultVolume(barVolume);
             track.generateMidi(midiGenerator, currentTick);
         }
 
