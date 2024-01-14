@@ -87,12 +87,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     @Override
     public Void visitClip(ClipContext ctx) {
         // if time signature or tempo is not defined, use default values
-        if (app.getGlobalTimeSignature() == null) {
-            app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
-        }
-        if (app.getGlobalTempo() == 0) {
-            app.setGlobalTempo(DEFAULT_TEMPO);
-        }
+        if (app.getGlobalTimeSignature() == null) app.setGlobalTimeSignature(DEFAULT_TIME_SIGNATURE);
+        if (app.getGlobalTempo() == 0) app.setGlobalTempo(DEFAULT_TEMPO);
         if (app.getResolution() == 0) {
             try {
                 app.setResolution(480);
@@ -100,8 +96,11 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
                 LOGGER.warning("Error setting resolution: " + 480);
             }
         }
+
         String clipName = ctx.clipName.getText();
         Clip clip = new Clip(clipName);
+        if (ctx.defaultDynamic() != null)
+            clip.setDefaultDynamic(Dynamic.valueOf(ctx.defaultDynamic().VELOCITY_SYMBOL().getText().toUpperCase()));
         this.currentClip = clip;
         ctx.barSequence().forEach(barSequence -> barSequence.accept(this));
         clipMap.put(clipName, clip);
@@ -179,18 +178,6 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     }
 
     @Override
-    public Void visitMainSequence(MainSequenceContext ctx) {
-        ctx.clipInstance().forEach(clipInstanceCtx -> {
-            String clipName = clipInstanceCtx.ID().getText();
-            int repeat = clipInstanceCtx.INT() != null ? Integer.parseInt(clipInstanceCtx.INT().getText()) : 1;
-            for (int i = 0; i < repeat; i++) {
-                processClip(clipName);
-            }
-        });
-        return super.visitMainSequence(ctx);
-    }
-
-    @Override
     public Void visitVelocityrandomization(VelocityrandomizationContext ctx) {
         if (null != ctx.velocityrandomizationValue.getText()) {
             int velocityRandomness = Integer.parseInt(ctx.velocityrandomizationValue.getText());
@@ -220,7 +207,6 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         }
         return super.visitResolution(ctx);
     }
-
 
     private void processClip(String clipName) {
         Clip clip = clipMap.get(clipName);

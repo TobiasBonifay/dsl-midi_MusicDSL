@@ -1,8 +1,10 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;
@@ -12,7 +14,8 @@ import java.util.logging.Logger;
 @Getter
 public class Clip {
     private static final Logger LOGGER = Logger.getLogger(Clip.class.getName());
-
+    @Setter
+    private Dynamic defaultDynamic = Dynamic.MF;
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
@@ -34,13 +37,13 @@ public class Clip {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s".formatted(name, bars.size(), midiGenerator.trackManager().getCurrentTick()));
+        LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s with dynamic %s".formatted(name, bars.size(), midiGenerator.trackManager().getCurrentTick(), defaultDynamic));
         long currentTick = midiGenerator.trackManager().getCurrentTick();
         int margin = midiGenerator.trackManager().getTimeShiftRandomness();
 
         for (Bar bar : bars) {
             long barDuration = bar.calculateDuration(midiGenerator.getSequence().getResolution());
-            bar.generateMidi(midiGenerator, currentTick);
+            bar.generateMidi(midiGenerator, currentTick, defaultDynamic);
             currentTick += barDuration;
         }
     }

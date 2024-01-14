@@ -1,6 +1,7 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
@@ -56,10 +57,11 @@ public class Bar {
      * If there is time left, we log a not OK message.
      * </p>
      */
-    public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
+    public void generateMidi(MidiGenerator midiGenerator, long currentTick, Dynamic defaultDynamic) throws InvalidMidiDataException {
         LOGGER.info("Generating MIDI for bar " + name + " at tick " + currentTick);
 
         for (Track track : tracks) {
+            track.setDefaultDynamic(defaultDynamic);
             track.generateMidi(midiGenerator, currentTick);
         }
 
