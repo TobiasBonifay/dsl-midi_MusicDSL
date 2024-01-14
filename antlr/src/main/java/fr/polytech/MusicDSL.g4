@@ -7,7 +7,7 @@ globalSettings : (signature | bpm | timeshift | velocityrandomization | resoluti
 
 signature : 'signature' globalSignatureValue=FRACTION;
 bpm : 'bpm' globalBpmValue=INT;
-tempoChange : 'tempo' ('+' | '-') tempoChangeValue=INT;
+tempoChange : 'tempo' ('+' | '-') WS* tempoChangeValue=INT;
 timeshift : 'timeshift' timeshiftValue=INT;
 velocityrandomization : 'velocityrandomization' velocityrandomizationValue=INT;
 resolution : 'resolution' resolutionValue=INT;

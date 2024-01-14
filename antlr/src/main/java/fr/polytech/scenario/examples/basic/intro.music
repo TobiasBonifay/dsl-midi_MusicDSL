@@ -11,7 +11,7 @@ Instruments:
 
 clip Intro <- ppp:
 bar [
-    tempo +10 // NEGATIVE tempo is allowed.. NOT WORKING
+    tempo - 10
     // bpm 150
     signature 3/4
 
