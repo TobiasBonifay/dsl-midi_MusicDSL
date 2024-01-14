@@ -37,8 +37,8 @@ public class Clip {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s with dynamic %s".formatted(name, bars.size(), midiGenerator.trackManager().getCurrentTick(), defaultDynamic));
         long currentTick = midiGenerator.trackManager().getCurrentTick();
+        LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s with dynamic %s".formatted(name, bars.size(), currentTick, defaultDynamic));
         int margin = midiGenerator.trackManager().getTimeShiftRandomness();
 
         for (Bar bar : bars) {

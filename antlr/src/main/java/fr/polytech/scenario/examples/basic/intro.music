@@ -1,17 +1,44 @@
 // This piece features a simple intro with a piano playing chords and a drum kit on a standard 4/4 time signature at 120 BPM.
 signature 4/4
 bpm 120
+// tempo +10 -> tempo outside a bar is not implemented
+timeshift 1
+velocityrandomization 10
+resolution 100
 
 Instruments:
-    piano ACOUSTIC_GRAND_PIANO volume 80
+    piano ACOUSTIC_GRAND_PIANO volume 50
+    trackName VIOLIN volume 100
 
-clip Intro <- pp:
+clip Intro <- ppp:
 bar [
+    tempo +10 // NEGATIVE tempo is allowed.. NOT WORKING
+    signature 3/4
+
+    track trackName:
+        // empty
     track piano:
-        DO4 pp, Re#4 mf, G4 mf, mib5 ff
+        DO4, Re#4, mib5
+]
+bar [
+    track trackName:
+        rest, G4 mf (1/2), G4 mf (1/2), G3, SILENCE
+    track piano:
+        // empty
+    track drums:
+        LOW_TOM COWBELL LOW_CONGA COWBELL
+]
+
+clip Chorus:
+bar [
+    volume 90
+    track trackName:
+        SILENT, G4 mf, G3, SILENT
+    track piano:
+        do4 mf, re#4 mf, mib5 ff, REST
     track drums:
         KICK SNARE KICK SNARE
 ]
 
 Timeline:
-    Intro x 2
+    Intro Chorus x 2
