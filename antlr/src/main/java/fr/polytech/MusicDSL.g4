@@ -90,6 +90,7 @@ LATIN_NOTE : ([Dd][Oo] | [Rr][Ee] | [Mm][Ii] | [Ff][Aa] | [Ss][Oo][Ll] | [Ll][Aa
 // LATIN_NOTE : ('do' | 're' | 'mi' | 'fa' | 'sol' | 'la' | 'si') ( '#' | 'b' )? [0-9];
 
 CHORD : [A-G] ( '#' | 'b' )? [0-9] ('-' [A-G] ( '#' | 'b' )? [0-9])+;
+
 SILENCE : 'SILENCE' | 'REST' | 'PAUSE' | 'SILENT' | 'MUTE'
 | 'silence' | 'rest' | 'pause' | 'silent' | 'mute';
 
