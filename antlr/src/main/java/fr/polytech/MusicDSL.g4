@@ -50,10 +50,6 @@ timelineClip : clipName=ID (WS* 'x' WS* repeatNumber=INT)?;
 percussionSequence : percussionElement+;
 percussionElement : PERCUSSION | silence;
 
-mainSection : mainSequence;
-mainSequence : clipInstance (clipInstance)*;
-clipInstance : ID ('x' INT)?;
-
 // Lexer Rules
 fragment DIGIT : [0-9];
 INT : DIGIT+;

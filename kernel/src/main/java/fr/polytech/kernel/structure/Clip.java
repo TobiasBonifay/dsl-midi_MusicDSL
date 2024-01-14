@@ -9,23 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+@Getter
 public class Clip {
     private static final Logger LOGGER = Logger.getLogger(Clip.class.getName());
 
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
-
     private final String name;
-    @Getter
     private final List<Bar> bars = new ArrayList<>();
 
     public Clip(String name) {
         this.name = name;
-    }
-
-    public String name() {
-        return name;
     }
 
     /**
