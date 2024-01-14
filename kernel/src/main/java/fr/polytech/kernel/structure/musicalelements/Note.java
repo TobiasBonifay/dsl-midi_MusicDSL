@@ -4,6 +4,7 @@ import fr.polytech.kernel.logs.LogColor;
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.NoteBuilder;
+import fr.polytech.kernel.util.Notes;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 
@@ -77,8 +78,10 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
     }
 
     @Override
-    public char[] toLatex() {
-        return String.format("\\note{%s}{%s}", this.pitch, this.noteLength.toLatex()).toCharArray();
+    public String toLatex() {
+        // Convert the pitch and duration to MusiXTeX format
+        String latexPitch = Notes.convertPitchToLatex(this.pitch);
+        String latexDuration = this.noteLength.toLatex();
+        return String.format("\\notes %s%s ", latexPitch, latexDuration);
     }
-
 }

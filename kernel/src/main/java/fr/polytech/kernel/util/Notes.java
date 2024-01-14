@@ -79,4 +79,33 @@ public class Notes {
         }
     }
 
+    public static String convertPitchToLatex(String pitch) {
+        // Split the pitch into the note and the octave
+        String note = pitch.substring(0, 1).toLowerCase(); // Convert note to lowercase as MusiXTeX uses lowercase for notes
+        int octave = Integer.parseInt(pitch.substring(1));
+
+        // MusiXTeX represents octave changes with apostrophes and commas
+        // For example, C4 (middle C) is 'c', C5 is 'c'', C3 is 'c,' and so on
+        String octaveModifier;
+        if (octave == 4) {
+            octaveModifier = "'";
+        } else if (octave > 4) {
+            octaveModifier = "'".repeat(octave - 4);
+        } else {
+            octaveModifier = ",".repeat(4 - octave);
+        }
+
+        // Handle special cases like C# (C sharp)
+        if (note.length() > 1) {
+            // MusiXTeX uses is for # and es for b (flat)
+            if (note.charAt(1) == '#') {
+                note = note.charAt(0) + "is";
+            } else if (note.charAt(1) == 'b') {
+                note = note.charAt(0) + "es";
+            }
+        }
+
+        return note + octaveModifier;
+
+    }
 }

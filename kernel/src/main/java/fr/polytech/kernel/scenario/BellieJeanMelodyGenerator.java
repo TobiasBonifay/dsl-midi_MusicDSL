@@ -82,8 +82,8 @@ public class BellieJeanMelodyGenerator {
 
         app.setGlobalTimeSignature(new TimeSignature(4, 4));
         app.setGlobalTempo(120);
-        app.setVelocityRandomness(10); // in percent
-        app.setTimeShiftRandomness(10); // in ticks
+        app.setVelocityRandomness(0); // in percent
+        app.setTimeShiftRandomness(0); // in ticks
 
         app.generateClip(clip1);
         app.writeMidiFile("belliejean.mid");

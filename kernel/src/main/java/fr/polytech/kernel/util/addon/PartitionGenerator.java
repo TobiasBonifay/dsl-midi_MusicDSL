@@ -4,87 +4,47 @@ import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.Track;
-import fr.polytech.kernel.structure.musicalelements.Note;
-import fr.polytech.kernel.structure.musicalelements.Rest;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class PartitionGenerator {
 
-    public void createPartitionFromClip(Clip clip, String fileName){
+    private static final Logger LOGGER = Logger.getLogger(PartitionGenerator.class.getName());
+    private static final String LATEX_HEADER = """
+            \\documentclass{article}
+            \\usepackage{musixtex}
+            \\begin{document}
+            \\begin{music}
+            """;
+    private static final String LATEX_FOOTER = "\\end{music}\n" + "\\end{document}";
+
+    public void createPartitionFromClip(Clip clip, String fileName) {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".tex"))) {
-            writer.write("\\documentclass{article}\n");
-            writer.write("\\usepackage{musixtex}\n");
-            writer.write("\\begin{document}\n");
-            writer.write("\\begin{music}");
-            writer.newLine();
-            // Music starts here
-
-
-            writer.write("\\end{music}\n");
-            writer.write("\\end{document}");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public String createPartitionFromClip(Clip clip) {
-        StringBuilder latexContent = new StringBuilder();
-
-        // Start the music score
-        latexContent.append("\\begin{music}\n");
-
-        for (Bar bar : clip.getBars()) {
-            latexContent.append(processBar(bar));
-        }
-
-        // End the music score
-        latexContent.append("\\end{music}\n");
-
-        return latexContent.toString();
-    }
-
-    private String processBar(Bar bar) {
-        StringBuilder barContent = new StringBuilder();
-        barContent.append("\\startBar\n");  // LaTeX command to start a bar
-
-        for (Track track : bar.getTracks()) {
-            barContent.append(processTrack(track));
-        }
-
-        barContent.append("\\endBar\n");  // LaTeX command to end a bar
-        return barContent.toString();
-    }
-
-    private String processTrack(Track track) {
-        StringBuilder trackContent = new StringBuilder();
-
-        for (MusicalElement element : track.getMusicalElements()) {
-            if (element instanceof Note) {
-                trackContent.append(processNote((Note) element));
-            } else if (element instanceof Rest) {
-                trackContent.append(processRest((Rest) element));
+            writer.write(LATEX_HEADER);
+            for (Bar bar : clip.getBars()) {
+                // for each bar generate the right latex notation
+                writer.write("\\startpiece\n");
+                for (Track track : bar.getTracks()) {
+                    // for each track generate the right latex notation with the name
+                    int instrumentNumber = track.getInstrument().midiInstrument().getInstrumentNumber();
+                    LOGGER.info("newInstrument " + instrumentNumber);
+                    writer.write("\\instrumentnumber{" + instrumentNumber + "}\n");
+                    for (MusicalElement element : track.getMusicalElements()) {
+                        String musicalElementLatex = element.toLatex();
+                        LOGGER.info("musicalElementLatex " + musicalElementLatex);
+                        writer.write(musicalElementLatex);
+                    }
+                }
+                writer.write("\\endpiece\n");
             }
-            // Add more cases for different types of musical elements
+            writer.write(LATEX_FOOTER);
+        } catch (IOException e) {
+            LOGGER.severe("Error writing to file");
+            LOGGER.severe(e.getMessage());
         }
-
-        return trackContent.toString();
     }
-
-    private String processNote(Note note) {
-        return "";
-        //return String.format("\\note{%s}{%s} ", note.getPitch(), note.getLength().toLatex());
-        // toLatex() is a hypothetical method to convert NoteLength to a LaTeX compatible string
-    }
-
-    private String processRest(Rest rest) {
-        //return String.format("\\rest{%s} ", rest.getLength().toLatex());
-        return "";
-    }
-
-
 }

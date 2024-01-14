@@ -8,5 +8,5 @@ public interface MusicalElement {
 
     long getDuration(int resolution);
 
-    char[] toLatex();
+    String toLatex();
 }

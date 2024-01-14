@@ -44,7 +44,12 @@ public class Rest implements MusicalElement {
     }
 
     @Override
-    public char[] toLatex() {
-        return new char[]{'r'};
+    public String toLatex() {
+        // Depending on the duration, MusiXTeX has different commands for rests
+        return switch (this.duration) {
+            case WHOLE -> "\\hpause"; // Whole rest in MusiXTeX
+            case HALF -> "\\pause";  // Half rest in MusiXTeX
+            default -> String.format("\\rest{%s}", this.duration.toLatex()); // Other durations
+        };
     }
 }

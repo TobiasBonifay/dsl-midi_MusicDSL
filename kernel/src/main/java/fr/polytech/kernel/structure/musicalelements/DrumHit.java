@@ -36,7 +36,10 @@ public record DrumHit(DrumSound sound) implements MusicalElement {
     }
 
     @Override
-    public char[] toLatex() {
-        return new char[]{'d'};
+    public String toLatex() {
+        // Drum hits in MusiXTeX might be represented differently.
+        // For simplicity, you might use a custom symbol or a specific note.
+        // This is a placeholder representation.
+        return "\\drumnote{" + this.sound.name() + "}"; // Custom command for drum note, replace with actual logic
     }
 }

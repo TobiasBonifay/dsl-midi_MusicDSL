@@ -1,0 +1,34 @@
+signature 4/4
+bpm 40
+
+Instruments:
+    bassLine ELECTRIC_BASS_FINGER volume 100
+    synth SYNTH_BASS_1 volume 100
+    leadVox VOICE_OOHS volume 100
+    elecPiano STRING_ENSEMBLE_2 volume 100
+    rythmGtr ELECTRIC_GUITAR_CLEAN volume 100
+    strings2 STRING_ENSEMBLE_2 volume 100
+    clavBrass CLAVI volume 100
+    strings SYNTH_STRINGS_1 volume 100
+    bass FRETLESS_BASS volume 100
+
+clip main:
+    bar [
+        track leadVox:
+            REST(1/4), REST(1/4), REST(1/4), REST(1/4), C#3(1/4), REST(1/4), C#3(1/2), REST(1/4), C#3(1/4), REST(1/4), B2(1/4), REST(1/4), A2(1/4), REST(1/4), A2(1/4)
+        track bass:
+            F#1(1/4), REST(1/4), C#1(1/4), REST(1/4), E1(1/4), REST(1/4), F#1(1/4), REST(1/4), E1(1/4), REST(1/4), C#1(1/4), REST(1/4), B0(1/4), REST(1/4)
+        track strings:
+            A2(1/4), REST(1/4), REST(1/4), REST(1/4), REST(1/4), REST(1/4), B2(1/4), REST(1/4), REST(1/4), REST(1/4), REST(1/4), REST(1/4), REST(1/4), REST(1/4), REST(1/4), REST(1/4)
+    ]
+    bar [
+        track leadVox:
+            B2(1/2), A2(1/4), REST(1/4), C#3(1/2), A2(1/4), A2(1/4), B2(1/2), C#3(1/2), C#3(1/4), REST(1/4)
+    ]
+    bar [
+        track leadVox:
+            REST(1/4), REST(1/4), C#3(1/2), C#3(1/2), C#3(1/2), C#3(1/2), B2(1/2), A2(1/2), B2(1/2)
+    ]
+
+Timeline:
+    main x 1

@@ -105,32 +105,4 @@ public class Bar {
                 .max() //
                 .orElse(0);
     }
-
-    public char[] toLatex() {
-        return String.format("\\begin{music}\n" +
-                "\\parindent10mm\n" +
-                "\\instrumentnumber{1}\n" +
-                "\\setname1{Piano}\n" +
-                "\\setstaffs1{2}\n" +
-                "\\generalmeter{}\n" +
-                "\\generalsignature{0}\n" +
-                "\\startextract\n" +
-                "\\Notes\n" +
-                "%s\n" +
-                "\\en\n" +
-                "\\endextract\n" +
-                "\\end{music}\n", processBar()).toCharArray();
-    }
-
-    private String processBar() {
-        StringBuilder barContent = new StringBuilder();
-        barContent.append("\\startBar\n");  // LaTeX command to start a bar
-
-        for (Track track : tracks) {
-            barContent.append(track.toLatex());
-        }
-
-        barContent.append("\\endBar\n");  // LaTeX command to end a bar
-        return barContent.toString();
-    }
 }

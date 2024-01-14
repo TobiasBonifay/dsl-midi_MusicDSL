@@ -2,11 +2,18 @@ package fr.polytech.kernel;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
+import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.util.addon.PartitionGenerator;
+import fr.polytech.kernel.util.dictionnaries.Dynamic;
+import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
+import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
+import fr.polytech.kernel.util.generator.factory.NoteFactory;
 import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -16,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
@@ -23,7 +31,10 @@ public class App {
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     private final MidiGenerator midiGenerator;
+    @Getter
+    private final PartitionGenerator partitionGenerator;
     private final MidiTrackManager trackManager;
     @Getter
     private final List<Instrument> instruments = new ArrayList<>();
@@ -35,6 +46,7 @@ public class App {
     public App() throws MidiGenerationException {
         try {
             this.trackManager = new MidiTrackManager();
+            this.partitionGenerator = new PartitionGenerator();
             this.midiGenerator = new MidiGenerator(trackManager);
         } catch (InvalidMidiDataException e) {
             LOGGER.severe("Error creating MIDI generator");
@@ -56,7 +68,6 @@ public class App {
         // Update the current tick based on the duration of the clip
         trackManager.setCurrentTick(initialTick + clipDuration);
     }
-
 
     /**
      * STEP 3/3
@@ -123,5 +134,39 @@ public class App {
     public void setGlobalTempo(int tempo) {
         LOGGER.info("                    ~ with tempo: " + tempo);
         this.globalTempo = tempo;
+    }
+
+    @Deprecated // TODO: remove
+    public static void main(String[] args) throws InvalidMidiDataException, MidiGenerationException {
+        // write music sheet example
+        App app = new App();
+        app.setGlobalTempo(120);
+        app.setGlobalTimeSignature(new TimeSignature(4, 4));
+        app.setResolution(480);
+        app.setVelocityRandomness(5);
+        app.setTimeShiftRandomness(5);
+
+        final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO, 100);
+        final Track piano = new Track("Piano", pianoInstrument);
+        Stream.of("C4", "C3", "C5", "D3", "E3", "D3", "C3", "E3", "D3", "D3", "C3").map(pitch -> NoteFactory.createNote(pitch, NoteLength.HALF, Dynamic.FF, 100)).toList().forEach(piano::addMusicalElement);
+
+        final Bar bar = new Bar("The only bar", new TimeSignature(4, 4), 120, 100);
+        bar.addTrack(piano);
+
+        Clip clip1 = new Clip("Chorus");
+        clip1.addBar(bar);
+        // app.generateClip(clip1);
+        app.writeMusicSheet("test", clip1);
+    }
+
+    /**
+     * Create a music sheet from the MIDI file.
+     *
+     * @param filename The name of the file to write.
+     */
+    public void writeMusicSheet(String filename, Clip clip) {
+        String pathName = filename.replaceAll(" ", "_");
+        LOGGER.info("Writing music sheet to %s.ly".formatted(pathName));
+        this.partitionGenerator.createPartitionFromClip(clip, pathName);
     }
 }

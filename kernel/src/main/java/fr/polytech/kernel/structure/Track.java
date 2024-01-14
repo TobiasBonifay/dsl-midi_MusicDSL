@@ -19,9 +19,11 @@ public class Track {
         LoggingSetup.setupLogger(LOGGER);
     }
 
+    @Getter // for sheet music gen
     private final String name;
     @Getter
     private final List<MusicalElement> musicalElements = new ArrayList<>();
+    @Getter // for sheet music gen
     private final Instrument instrument;
     @Setter
     private int defaultVolume;
@@ -76,20 +78,5 @@ public class Track {
         return musicalElements.stream()//
                 .mapToLong(element -> element.getDuration(resolution)) //
                 .sum(); //
-    }
-
-    public char[] toLatex() {
-        List<Character> latex = new ArrayList<>();
-        for (MusicalElement musicalElement : musicalElements) {
-            char[] elementLatex = musicalElement.toLatex();
-            for (char c : elementLatex) {
-                latex.add(c);
-            }
-        }
-        char[] latexArray = new char[latex.size()];
-        for (int i = 0; i < latex.size(); i++) {
-            latexArray[i] = latex.get(i);
-        }
-        return latexArray;
     }
 }
