@@ -88,8 +88,7 @@ INSTRUMENT :'ACOUSTIC_GRAND_PIANO' | 'BRIGHT_ACOUSTIC_PIANO' | 'ELECTRIC_GRAND_P
 NOTE : [A-G] ( '#' | 'b' )? [0-9] | LATIN_NOTE;
 LATIN_NOTE : ([Dd][Oo] | [Rr][Ee] | [Mm][Ii] | [Ff][Aa] | [Ss][Oo][Ll] | [Ll][Aa] | [Ss][Ii]) ( '#' | 'b' )? [0-9];
 // LATIN_NOTE : ('do' | 're' | 'mi' | 'fa' | 'sol' | 'la' | 'si') ( '#' | 'b' )? [0-9];
-
-CHORD : [A-G] ( '#' | 'b' )? [0-9] ('-' [A-G] ( '#' | 'b' )? [0-9])+;
+CHORD : NOTE ('-' NOTE)+;
 
 SILENCE : 'SILENCE' | 'REST' | 'PAUSE' | 'SILENT' | 'MUTE'
 | 'silence' | 'rest' | 'pause' | 'silent' | 'mute';
