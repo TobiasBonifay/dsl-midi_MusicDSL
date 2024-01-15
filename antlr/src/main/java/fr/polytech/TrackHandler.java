@@ -3,6 +3,7 @@ package fr.polytech;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.structure.drums.DrumTrack;
+import fr.polytech.kernel.structure.musicalelements.Chord;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.musicalelements.Rest;
@@ -40,24 +41,19 @@ public class TrackHandler {
             return track;
         }
         trackContent.noteSequence().children.forEach(element -> {
-            if (element instanceof NoteContext) {
-                Note note = Note.builder()
-                        .noteName(((NoteContext) element).noteName.getText())
-                        .length(((NoteContext) element).noteDuration() != null
-                                ? parseNoteLength(((NoteContext) element).noteDuration().length.getText())
-                                : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH)
-                        .dynamic(((NoteContext) element).noteDynamic() != null
-                                ? ((NoteContext) element).noteDynamic().velocity.getText()
-                                : String.valueOf(Dynamic.MF))
-                        .volume(MidiGeneratorWithKernel.DEFAULT_VOLUME)
-                        .build();
-                track.addMusicalElement(note);
+            if (element instanceof ChordContext chordContext) {
+                NoteLength noteLength = chordContext.noteDuration() != null ? parseNoteLength(chordContext.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+                String dynamic = chordContext.noteDynamic() != null ? chordContext.noteDynamic().velocity.getText() : String.valueOf(Dynamic.MF);
+                String[] chordNotes = chordContext.chordName.getText().split("-");
+                Chord chord = new Chord(List.of(chordNotes), noteLength, Dynamic.valueOf(dynamic), MidiGeneratorWithKernel.DEFAULT_VOLUME);
+                track.addMusicalElement(chord);
             } else if (element instanceof SilenceContext) {
-                NoteLength noteLength = ((SilenceContext) element).noteDuration() != null
-                        ? parseNoteLength(((SilenceContext) element).noteDuration().length.getText())
-                        : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+                NoteLength noteLength = ((SilenceContext) element).noteDuration() != null ? parseNoteLength(((SilenceContext) element).noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
                 Rest rest = new Rest(noteLength);
                 track.addMusicalElement(rest);
+            } else if (element instanceof NoteContext) {
+                Note note = Note.builder().noteName(((NoteContext) element).noteName.getText()).length(((NoteContext) element).noteDuration() != null ? parseNoteLength(((NoteContext) element).noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH).dynamic(((NoteContext) element).noteDynamic() != null ? ((NoteContext) element).noteDynamic().velocity.getText() : String.valueOf(Dynamic.MF)).volume(MidiGeneratorWithKernel.DEFAULT_VOLUME).build();
+                track.addMusicalElement(note);
             }
         });
 
@@ -71,9 +67,7 @@ public class TrackHandler {
         List<PercussionElementContext> drum_hits = ctx.trackContent().percussionSequence().percussionElement();
         for (PercussionElementContext drum_hit : drum_hits) {
             DrumSound drumSound = DrumSound.valueOf(drum_hit.PERCUSSION().getText());
-            NoteLength noteLength = drum_hit.noteDuration() != null
-                    ? parseNoteLength(drum_hit.noteDuration().length.getText())
-                    : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+            NoteLength noteLength = drum_hit.noteDuration() != null ? parseNoteLength(drum_hit.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
             DrumHit drumHit = DrumFactory.createDrumHit(drumSound, noteLength);
             drumTrack.addMusicalElement(drumHit);
         }

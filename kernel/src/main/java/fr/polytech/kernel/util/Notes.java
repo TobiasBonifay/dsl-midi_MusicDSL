@@ -1,5 +1,6 @@
 package fr.polytech.kernel.util;
 
+import fr.polytech.kernel.logs.LogColor;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 
 import java.util.HashMap;
@@ -77,5 +78,22 @@ public class Notes {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid note length format: " + duration, e);
         }
+    }
+
+    public static String toStringOfNoteDuration(NoteLength duration) {
+        return switch (duration) {
+            case WHOLE -> formatDuration(LogColor.ANSI_CYAN, "WHOLE (RONDE)");
+            case HALF -> formatDuration(LogColor.ANSI_YELLOW, "HALF (BLANCHE)");
+            case QUARTER -> formatDuration(LogColor.ANSI_GREEN, "QUARTER (NOIRE)");
+            case EIGHTH -> formatDuration(LogColor.ANSI_PURPLE, "EIGHTH (CROCHE)");
+            case SIXTEENTH -> formatDuration(LogColor.ANSI_BLUE, "SIXTEENTH (DOUBLE CROCHE)");
+            case THIRTY_SECOND -> formatDuration(LogColor.ANSI_BLUE, "THIRTY_SECOND (TRIPLE CROCHE)");
+            case SIXTY_FOURTH -> formatDuration(LogColor.ANSI_BLUE, "SIXTY_FOURTH (QUADRUPLE CROCHE)");
+            default -> formatDuration(LogColor.ANSI_BLUE, "of duration " + duration);
+        };
+    }
+
+    private static String formatDuration(LogColor color, String name) {
+        return "%s%s%s".formatted(color.getColor(), name, LogColor.ANSI_RESET.getColor());
     }
 }
