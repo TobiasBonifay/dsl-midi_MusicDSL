@@ -7,3 +7,10 @@ antlr/src/main/java/fr/polytech/MusicDSL*.tokens
 
 .DS_Store
 *.midi
+.env
+.vscode
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
