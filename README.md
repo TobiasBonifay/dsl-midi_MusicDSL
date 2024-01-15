@@ -109,9 +109,9 @@ java -jar target/music-dsl-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resou
 // This piece features a simple intro with a piano playing chords and a drum kit on a standard 4/4 time signature at 120 BPM.
 signature 4/4 
 bpm 120 // set the tempo to 120 BPM. Default is 120 or 140 TODO: check
-timeshift 1 // The human like error of time in ticks. Ticks are defined using resolution or 480 by default. A quarter note is 120 ticks on 4/4 time signature.
-velocityrandomization 10 // The human like error of velocity. Velocity range is 0-127 depending on the dynamic of the note. 
-resolution 100 // To define the resolution to use. Default is 480. Please use a positive integer.
+timeshift 1 // The human like error of time in ticks. A quarter note is 120 ticks on 4/4 time signature. Default is 5.
+velocityrandomization 10 // The human like error of velocity. Velocity range is 0-127 depending on the dynamic of the note. Default is 5.
+resolution 100 // To define the resolution to use. Default is 480 Ticks. Please use a positive integer.
 
 Instruments: // define the instruments used in the piece. Drums should not be defined here.
     piano ACOUSTIC_GRAND_PIANO volume 50 // define the piano instrument with the ACOUSTIC_GRAND_PIANO soundfont and a volume of 50 (0-100).
