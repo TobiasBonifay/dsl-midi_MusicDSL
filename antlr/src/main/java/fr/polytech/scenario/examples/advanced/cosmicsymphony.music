@@ -1,6 +1,6 @@
 signature 6/8
 bpm 120
-tempo +5
+// tempo +5
 
 Instruments:
     leadSynth LEAD_6_VOICE volume 90

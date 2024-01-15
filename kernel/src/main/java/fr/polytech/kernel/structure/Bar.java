@@ -30,10 +30,6 @@ public class Bar {
     @Setter
     private long startTick;
 
-    public Bar(String name) {
-        this(name, new TimeSignature(4, 4), 140, 100);
-    }
-
     public Bar(String name, TimeSignature timeSignature, int tempo, int barVolume) {
         this.name = name;
         this.timeSignature = timeSignature;

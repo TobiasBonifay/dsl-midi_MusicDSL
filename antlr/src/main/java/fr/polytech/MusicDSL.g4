@@ -7,7 +7,7 @@ globalSettings : (signature | bpm | timeshift | velocityrandomization | resoluti
 
 signature : 'signature' globalSignatureValue=FRACTION;
 bpm : 'bpm' globalBpmValue=INT;
-tempoChange : 'tempo' ('+' | '-') tempoChangeValue=INT;
+tempoChange : 'tempo' ('+' | '-') WS* tempoChangeValue=INT;
 timeshift : 'timeshift' timeshiftValue=INT;
 velocityrandomization : 'velocityrandomization' velocityrandomizationValue=INT;
 resolution : 'resolution' resolutionValue=INT;
@@ -23,7 +23,7 @@ defaultDynamic : '<-' velocity=VELOCITY_SYMBOL;
 
 // ----------------- BAR -----------------
 barSequence : 'bar' '[' barContent* ']';
-barContent : (tempoChange | volumeSetting | signature | trackSequence | emptyBarContent);
+barContent : (tempoChange | bpm | volumeSetting | signature | trackSequence | emptyBarContent);
 emptyBarContent : 'EMPTY';
 
 // ----------------- TRACK -----------------
