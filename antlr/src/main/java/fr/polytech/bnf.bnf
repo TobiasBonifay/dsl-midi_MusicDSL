@@ -1,0 +1,69 @@
+<musicComposition> ::= <globalSettings>* <instrumentsSection> <clipSection> <timelineSection>?
+
+<globalSettings> ::= <signature> | <bpm> | <tempoChange> | <timeshift> | <velocityrandomization> | <resolution>
+
+<signature> ::= "signature" <globalSignatureValue>
+<bpm> ::= "bpm" <globalBpmValue>
+<tempoChange> ::= "tempo" ("+" | "-") <tempoChangeValue>
+<timeshift> ::= "timeshift" <timeshiftValue>
+<velocityrandomization> ::= "velocityrandomization" <velocityrandomizationValue>
+<resolution> ::= "resolution" <resolutionValue>
+
+<instrumentsSection> ::= "Instruments:" <instrumentDefinition>+
+<instrumentDefinition> ::= <instrumentName> <instrumentMidiName> "volume" <volumeInstrument>
+
+<clipSection> ::= <clip>+
+<clip> ::= "clip" <clipName> <defaultDynamic>? ":" <bars>
+<defaultDynamic> ::= "<-" <velocity>
+
+<barSequence> ::= "bar" "[" <barContent>* "]"
+<barContent> ::= <tempoChange> | <bpm> | <volumeSetting> | <signature> | <trackSequence> | <emptyBarContent>
+<emptyBarContent> ::= "EMPTY"
+
+<trackSequence> ::= <track>+
+<track> ::= "track" <trackName> ":" <trackContent>?
+<trackContent> ::= <noteSequence> | <percussionSequence>
+
+<noteSequence> ::= (<note> | <silence> | <chord>) ("," (<note> | <silence> | <chord>))*
+<note> ::= <noteName> <noteDynamic>? <noteDuration>?
+<chord> ::= <chordName> <noteDynamic>? <noteDuration>?
+<silence> ::= <SILENCE> <noteDuration>?
+
+<timelineSection> ::= "Timeline:" <timelineSequence>
+<timelineSequence> ::= <timelineClip>+
+<timelineClip> ::= <clipName> ("x" <repeatNumber>)?
+
+<percussionSequence> ::= <percussionElement>+
+<percussionElement> ::= <PERCUSSION> <noteDuration>? | <silence>
+
+<globalSignatureValue> ::= <FRACTION>
+<globalBpmValue> ::= <INT>
+<tempoChangeValue> ::= <INT>
+<timeshiftValue> ::= <INT>
+<velocityrandomizationValue> ::= <INT>
+<resolutionValue> ::= <INT>
+<instrumentName> ::= <ID>
+<instrumentMidiName> ::= <INSTRUMENT>
+<volumeInstrument> ::= <INT>
+<clipName> ::= <ID>
+<bars> ::= <barSequence>+
+<velocity ::= <VELOCITY_SYMBOL>
+<barContent> ::= <tempoChange> | <bpm> | <volumeSetting> | <signature> | <trackSequence> | <emptyBarContent>
+<trackName> ::= <ID>
+<trackContent> ::= <noteSequence> | <percussionSequence>
+<noteName> ::= <NOTE>
+<noteDynamic> ::= <VELOCITY_SYMBOL>
+<noteDuration> ::= "(" <length> ")"
+<length> ::= <FRACTION> | <INT>
+<chordName> ::= <CHORD>
+<SILENCE> ::= "SILENCE" | "REST" | "PAUSE" | "SILENT" | "MUTE"
+<PERCUSSION> ::= [liste des éléments de percussion]
+<repeatNumber> ::= <INT>
+<FRACTION> ::= <INT> "/" <INT>
+<VELOCITY_SYMBOL> ::= "ppp" | "pp" | "p" | "mp" | "mf" | "f" | "ff" | "fff"
+<INT> ::= [0-9]+
+<ID> ::= [a-zA-Z_][a-zA-Z0-9_]*
+<INSTRUMENT> ::= [liste des instruments]
+<NOTE> ::= [A-G] ( '#' | 'b' )? [0-9] | <LATIN_NOTE>
+<LATIN_NOTE> ::= ([Dd][Oo] | [Rr][Ee] | [Mm][Ii] | [Ff][Aa] | [Ss][Oo][Ll] | [Ll][Aa] | [Ss][Ii]) ( '#' | 'b' )? [0-9]
+<CHORD> ::= [A-G] ( '#' | 'b' )? [0-9] ('-' [A-G] ( '#' | 'b' )? [0-9])+
