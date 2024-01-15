@@ -10,9 +10,7 @@ import fr.polytech.kernel.util.dictionnaries.DrumSound;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
-import org.antlr.v4.runtime.RuleContext;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static fr.polytech.MusicDSLParser.*;
@@ -71,25 +69,14 @@ public class TrackHandler {
         MidiGeneratorWithKernel.LOGGER.info("Drum track found: " + trackId);
         DrumTrack drumTrack = new DrumTrack(trackId);
         List<PercussionElementContext> drum_hits = ctx.trackContent().percussionSequence().percussionElement();
-        drum_hits.stream() //
-                .map(RuleContext::getText) // get the text of the rule context
-                .filter(drumSound -> drumSound != null && !drumSound.isBlank()) // filter empty strings
-                .forEach(drumSound -> { // for each drum sound
-                    Arrays.stream(drumSound.split(",")) // split the string by comma
-                            .map(String::trim) // trim
-                            .forEach(sound -> { // for each sound
-                                // if not found in the enum, it's a silence
-                                for (DrumSound drumEnum : DrumSound.values()) {
-                                    if (drumEnum.name().equals(sound)) {
-                                        DrumHit drumHit = DrumFactory.createDrumHit(drumEnum);
-                                        drumTrack.addMusicalElement(drumHit);
-                                        return;
-                                    }
-                                }
-                                Rest rest = new Rest(MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH);
-                                drumTrack.addMusicalElement(rest);
-                            });
-                });
+        for (PercussionElementContext drum_hit : drum_hits) {
+            DrumSound drumSound = DrumSound.valueOf(drum_hit.PERCUSSION().getText());
+            NoteLength noteLength = drum_hit.noteDuration() != null
+                    ? parseNoteLength(drum_hit.noteDuration().length.getText())
+                    : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+            DrumHit drumHit = DrumFactory.createDrumHit(drumSound, noteLength);
+            drumTrack.addMusicalElement(drumHit);
+        }
         return drumTrack;
     }
 
