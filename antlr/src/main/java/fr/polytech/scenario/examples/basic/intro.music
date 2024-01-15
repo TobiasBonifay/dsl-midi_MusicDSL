@@ -18,7 +18,7 @@ bar [
     track trackName:
         // empty
     track piano:
-        DO4, Re#4, mib5
+        Do3-DO4-C5, Re#4, mib5
 ]
 bar [
     track trackName:
