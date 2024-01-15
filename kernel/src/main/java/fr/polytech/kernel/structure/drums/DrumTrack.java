@@ -4,6 +4,7 @@ import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
@@ -25,7 +26,10 @@ public class DrumTrack extends Track {
     }
 
     public void addMusicalElement(MusicalElement element) {
-        super.addMusicalElement(element);
+        if (element instanceof Note) {
+            throw new RuntimeException("Note not allowed in Drum Track declared with classical note in drum track");
+        }
+        musicalElements.add(element);
     }
 
     @Override

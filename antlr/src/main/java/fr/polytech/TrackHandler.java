@@ -54,10 +54,19 @@ public class TrackHandler {
             } else if (element instanceof NoteContext) {
                 Note note = Note.builder().noteName(((NoteContext) element).noteName.getText()).length(((NoteContext) element).noteDuration() != null ? parseNoteLength(((NoteContext) element).noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH).dynamic(((NoteContext) element).noteDynamic() != null ? ((NoteContext) element).noteDynamic().velocity.getText() : String.valueOf(Dynamic.MF)).volume(MidiGeneratorWithKernel.DEFAULT_VOLUME).build();
                 track.addMusicalElement(note);
+            } else if (element instanceof PercussionElementContext) {
+                getDrumSound(track, (PercussionElementContext) element);
             }
         });
 
         return track;
+    }
+
+    private static void getDrumSound(Track track, PercussionElementContext element) {
+        DrumSound drumSound = DrumSound.valueOf(element.PERCUSSION().getText());
+        NoteLength noteLength = element.noteDuration() != null ? parseNoteLength(element.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+        DrumHit drumHit = DrumFactory.createDrumHit(drumSound, noteLength);
+        track.addMusicalElement(drumHit);
     }
 
 
@@ -66,10 +75,7 @@ public class TrackHandler {
         DrumTrack drumTrack = new DrumTrack(trackId);
         List<PercussionElementContext> drum_hits = ctx.trackContent().percussionSequence().percussionElement();
         for (PercussionElementContext drum_hit : drum_hits) {
-            DrumSound drumSound = DrumSound.valueOf(drum_hit.PERCUSSION().getText());
-            NoteLength noteLength = drum_hit.noteDuration() != null ? parseNoteLength(drum_hit.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
-            DrumHit drumHit = DrumFactory.createDrumHit(drumSound, noteLength);
-            drumTrack.addMusicalElement(drumHit);
+            getDrumSound(drumTrack, drum_hit);
         }
         return drumTrack;
     }

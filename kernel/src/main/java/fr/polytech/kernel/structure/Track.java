@@ -1,6 +1,7 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class Track {
     }
 
     private final String name;
-    private final List<MusicalElement> musicalElements = new ArrayList<>();
+    protected final List<MusicalElement> musicalElements = new ArrayList<>();
     private final Instrument instrument;
     @Setter
     private int defaultVolume;
@@ -41,6 +42,9 @@ public class Track {
      * @param musicalElement The musicalElement to add... as Note object
      */
     public void addMusicalElement(MusicalElement musicalElement) {
+        if (musicalElement instanceof DrumHit) {
+            throw new RuntimeException("DrumHit not allowed in Track declared with classical note in track: " + name);
+        }
         musicalElements.add(musicalElement);
     }
 
