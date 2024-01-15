@@ -31,7 +31,7 @@ different aspect of music generation.
 
 ### Prerequisites
 
-- Java JDK 17 or higher //TODO: check if works with 11 or 14
+- Java JDK 17 or higher
 - Maven (for building the project)
 - ANTLR 4.8 (for parsing the DSL) //TODO: check version
 
