@@ -26,7 +26,7 @@ bar [
     track piano:
         // empty
     track drums:
-        LOW_TOM COWBELL LOW_CONGA COWBELL
+        LOW_TOM (1/2) LOW_TOM (1/2) COWBELL LOW_CONGA COWBELL
 ]
 
 clip Chorus:
@@ -38,7 +38,7 @@ bar [
     track piano:
         do4 mf, re#4 mf, mib5 ff, REST
     track drums:
-        KICK SNARE KICK SNARE
+        KICK (1/2) SNARE (1/2) SNARE KICK SNARE
 ]
 
 Timeline:
