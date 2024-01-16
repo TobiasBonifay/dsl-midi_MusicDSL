@@ -26,18 +26,20 @@ public class TrackHandler {
 
     public static MidiTrack handleTrack(TrackContext ctx, String trackId, MidiGeneratorWithKernel generator) {
         TrackContentContext trackContent = ctx.trackContent();
-        if (trackContent == null) return null;
-        if (trackContent.percussionSequence() != null) return TrackHandler.handleDrumTrack(ctx, trackId);
-        Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
-        return TrackHandler.handleInstrumentTrack(ctx, instrument, trackId);
-
+        if (trackContent == null) throw new RuntimeException("No track found for track: " + trackId);
+        else if (trackContent.percussionSequence() != null) return TrackHandler.handleDrumTrack(ctx, trackId);
+        else if (trackContent.noteSequence() != null) {
+            Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
+            if (instrument == null) {
+                MidiGeneratorWithKernel.LOGGER.info("Instrument not found for track: " + trackId);
+                throw new RuntimeException("Instrument not found for track: " + trackId);
+            }
+            return TrackHandler.handleInstrumentTrack(ctx, instrument, trackId);
+        }
+        throw new RuntimeException("No track content found for track: " + trackId);
     }
 
     private static MidiTrack handleInstrumentTrack(TrackContext ctx, Instrument instrument, String trackId) {
-        if (instrument == null) {
-            MidiGeneratorWithKernel.LOGGER.info("Instrument not found for track: " + trackId);
-            throw new RuntimeException("Instrument not found for track: " + trackId);
-        }
         MidiTrack track = trackFactory.createInstrumentTrack(trackId, instrument, MidiGeneratorWithKernel.DEFAULT_VOLUME);
 
         TrackContentContext trackContent = ctx.trackContent();

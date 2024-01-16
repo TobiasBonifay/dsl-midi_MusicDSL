@@ -208,6 +208,11 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         return super.visitResolution(ctx);
     }
 
+    /**
+     * The entry point to our logic layer. Called from the timeline visitor.
+     *
+     * @param clipName the name of the clip to generate
+     */
     private void processClip(String clipName) {
         Clip clip = clipMap.get(clipName);
         if (clip != null) {
