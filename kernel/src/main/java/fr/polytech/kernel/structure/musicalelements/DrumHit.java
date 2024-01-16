@@ -28,10 +28,9 @@ public record DrumHit(DrumSound sound, Optional<NoteLength> drumLength) implemen
     public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution, int velocityRandomization, int timeshiftRandomization) throws InvalidMidiDataException {
         int midiNote = this.sound.getMidiNote();
         long midiDuration = this.getDuration(resolution);
-        // TODO: add velocity randomization
-        // TODO: add time shift randomization
-        LOGGER.info("                        + Tick [%s +%s] -> [%s]: Drum %s (%d+-%d) -> %d".formatted(currentTick, timeshiftRandomization, currentTick + midiDuration, this, DRUM_HIT_VELOCITY, velocityRandomization, DRUM_HIT_VELOCITY));
-        MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, midiNote, DRUM_HIT_VELOCITY), currentTick + timeshiftRandomization);
+        int velocity = DRUM_HIT_VELOCITY + velocityRandomization; // TODO: randomize velocity for real.
+        LOGGER.info("                        + Tick [%s +%s] -> [%s]:  Drum %s   velocity (%d+-%d) -> %d".formatted(currentTick, timeshiftRandomization, currentTick + midiDuration, this, DRUM_HIT_VELOCITY, velocityRandomization, velocity));
+        MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, midiNote, velocity), currentTick + timeshiftRandomization);
         MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, midiNote, 0), currentTick + midiDuration); // + timeshiftRandomization
 
         return new MidiEvent[]{noteOn, noteOff};
@@ -45,5 +44,9 @@ public record DrumHit(DrumSound sound, Optional<NoteLength> drumLength) implemen
     @Override
     public String toString() {
         return "%s %s".formatted(sound, drumLength.filter(note -> note.length != NoteLength.QUARTER.length).map(Enum::toString).orElse(""));
+    }
+
+    public long getOriginalPosition() {
+
     }
 }

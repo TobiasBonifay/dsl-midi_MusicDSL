@@ -7,10 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DrumTrackManager {
-    private final List<DrumTrack> drumTracks;
 
-    public DrumTrackManager() {
-        drumTracks = new ArrayList<>();
+    private static DrumTrackManager instance;
+    private final List<DrumTrack> drumTracks = new ArrayList<>();
+
+    private DrumTrackManager() {
+        // Private constructor
+    }
+
+    public static DrumTrackManager getInstance() {
+        if (instance == null) {
+            instance = new DrumTrackManager();
+        }
+        return instance;
     }
 
     public void addDrumTrack(DrumTrack drumTrack) {

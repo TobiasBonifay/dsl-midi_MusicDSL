@@ -2,6 +2,7 @@ package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
+import fr.polytech.kernel.util.generator.events.DrumTrackManager;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,16 +15,22 @@ import java.util.logging.Logger;
 @Getter
 public class Clip {
     private static final Logger LOGGER = Logger.getLogger(Clip.class.getName());
-    @Setter
-    private Dynamic defaultDynamic = Dynamic.MF;
+
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     private final String name;
-    private final List<Bar> bars = new ArrayList<>();
+    private final List<Bar> bars;
+    @Setter
+    private DrumTrackManager drumTrackManager;
+    @Setter
+    private Dynamic defaultDynamic = Dynamic.MF;
 
     public Clip(String name) {
         this.name = name;
+        this.bars = new ArrayList<>();
+        this.drumTrackManager = DrumTrackManager.getInstance();
     }
 
     /**

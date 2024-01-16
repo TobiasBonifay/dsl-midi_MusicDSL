@@ -1,7 +1,6 @@
 package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.logs.LoggingSetup;
-import fr.polytech.kernel.structure.tracks.DrumTrack;
 import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import lombok.Getter;
@@ -20,7 +19,6 @@ public class MidiTrackManager {
         LoggingSetup.setupLogger(LOGGER);
     }
 
-    private final DrumTrackManager drumTrackManager = new DrumTrackManager();
     private final List<MidiTrack> instrumentTracks = new ArrayList<>();
 
     private Sequence sequence;
@@ -55,32 +53,6 @@ public class MidiTrackManager {
     public void addMidiEvent(MidiEvent event) {
         currentTrack.add(event);
     }
-
-    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        LOGGER.info("Generating MIDI for track: " + currentTrack);
-        LOGGER.info("    ~ with resolution: " + resolution);
-        LOGGER.info("    ~ with velocity randomness: " + velocityRandomness);
-        LOGGER.info("    ~ with time shift randomness: " + timeShiftRandomness);
-        // LOGGER.info("    ~ with time signature: " + currentTrack);
-        // LOGGER.info("    ~ with tempo: " + globalTempo);
-
-        // Set the time signature and tempo for the track
-        // setTimeSignature(globalTimeSignature);
-        // setTempo();
-
-        // Generate the MIDI for the instrument tracks
-        for (MidiTrack instrumentTrack : instrumentTracks) {
-            if (instrumentTrack instanceof DrumTrack) {
-                throw new RuntimeException("DrumTrack not allowed in MidiTrackManager declared with classical note in track: " + instrumentTrack.getName());
-            }
-            instrumentTrack.generateMidi(midiGenerator, currentTick);
-        }
-
-        // Get the aggregated drum track and generate MIDI for it
-        DrumTrack finalDrumTrack = drumTrackManager.getTheFinalDrumTrack();
-        finalDrumTrack.generateMidi(midiGenerator, currentTick);
-    }
-
 
     /**
      * Sets the time signature for the current Bar

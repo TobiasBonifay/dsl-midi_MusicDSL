@@ -26,17 +26,15 @@ public class Bar {
     @Getter
     private final String name;
     private final List<MidiTrack> instrumentTracks = new ArrayList<>();
-    private final DrumTrackManager drumTrackManager;
     private int barVolume;
     private TimeSignature timeSignature;
     private int tempo;
 
-    public Bar(DrumTrackManager drumTrackManager, String name, TimeSignature timeSignature, int tempo, int barVolume) {
+    public Bar(String name, TimeSignature timeSignature, int tempo, int barVolume) {
         this.name = name;
         this.timeSignature = timeSignature;
         this.tempo = tempo;
         this.barVolume = barVolume;
-        this.drumTrackManager = drumTrackManager;
     }
 
     /**
@@ -59,14 +57,18 @@ public class Bar {
         long currentTick = midiGenerator.trackManager().getCurrentTick();
         LOGGER.info("              Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
 
-        List<MidiTrack> tracks = getInstrumentTracks();
-        for (MidiTrack track : tracks) {
+        // generate the instrument tracks
+        for (MidiTrack track : instrumentTracks) {
             if (track instanceof Track musicTrack) {
                 musicTrack.setDefaultDynamic(defaultDynamic);
                 musicTrack.setDefaultVolume(barVolume);
             }
             track.generateMidi(midiGenerator, currentTick);
         }
+
+        // generate the drum track
+        DrumTrack finalDrumTrack = DrumTrackManager.getInstance().getTheFinalDrumTrack();
+        finalDrumTrack.generateMidi(midiGenerator, currentTick);
 
         long barDuration = calculateDuration(midiGenerator.getSequence().getResolution());
         long endingTick = currentTick + barDuration;
@@ -86,7 +88,7 @@ public class Bar {
 
     public void addTrack(MidiTrack track) {
         if (track instanceof DrumTrack drumTrack) {
-            drumTrackManager.addDrumTrack(drumTrack);
+            DrumTrackManager.getInstance().addDrumTrack(drumTrack);
             return;
         }
         instrumentTracks.add(track);
@@ -113,11 +115,5 @@ public class Bar {
                 .mapToLong(track -> track.calculateDuration(resolution)) //
                 .max() //
                 .orElse(0);
-    }
-
-    public List<MidiTrack> getInstrumentTracks() {
-        List<MidiTrack> tracksCopy = new ArrayList<>(instrumentTracks);
-        tracksCopy.add(drumTrackManager.getTheFinalDrumTrack());
-        return tracksCopy;
     }
 }
