@@ -2,12 +2,14 @@ package fr.polytech.kernel.structure.tracks;
 
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
+import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MidiTrack {
+    @Getter
     protected final String name;
     protected final List<MusicalElement> musicalElements = new ArrayList<>();
     protected int midiChannel;

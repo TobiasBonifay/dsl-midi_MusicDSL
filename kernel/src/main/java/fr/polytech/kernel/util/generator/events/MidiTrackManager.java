@@ -1,6 +1,7 @@
 package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.tracks.DrumTrack;
 import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import lombok.Getter;
@@ -32,10 +33,6 @@ public class MidiTrackManager {
     private int velocityRandomness = 5; // in percent
     @Setter
     private int timeShiftRandomness = 5; // in ticks
-
-    public void addInstrumentTrack(MidiTrack instrumentTrack) {
-        instrumentTracks.add(instrumentTrack);
-    }
 
     public MidiTrackManager() throws InvalidMidiDataException {
         this.sequence = new Sequence(Sequence.PPQ, resolution);
@@ -72,8 +69,15 @@ public class MidiTrackManager {
 
         // Generate the MIDI for the instrument tracks
         for (MidiTrack instrumentTrack : instrumentTracks) {
+            if (instrumentTrack instanceof DrumTrack) {
+                throw new RuntimeException("DrumTrack not allowed in MidiTrackManager declared with classical note in track: " + instrumentTrack.getName());
+            }
             instrumentTrack.generateMidi(midiGenerator, currentTick);
         }
+
+        // Get the aggregated drum track and generate MIDI for it
+        DrumTrack finalDrumTrack = drumTrackManager.getTheFinalDrumTrack();
+        finalDrumTrack.generateMidi(midiGenerator, currentTick);
     }
 
 

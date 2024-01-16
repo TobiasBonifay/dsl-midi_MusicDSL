@@ -59,16 +59,25 @@ public class Track extends MidiTrack {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
-        LOGGER.info("-> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument.name());
-        int calculatedVolume = (this.defaultVolume * instrument.volume()) / 100;
-        LOGGER.info("-> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
-        midiGenerator.setTrackVolume(calculatedVolume, this.midiChannel);
-        midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber, this.midiChannel);
+        LOGGER.info("                   Generating MIDI for track %s".formatted(name.toUpperCase()));
         midiGenerator.trackManager().setCurrentTick(currentTick);
 
+        // Volume
+        int calculatedVolume = (this.defaultVolume * instrument.volume()) / 100;
+        LOGGER.info("                   Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
+        midiGenerator.setTrackVolume(calculatedVolume, this.midiChannel);
+
+        // Instrument
+        int instrumentNumber = instrument.midiInstrument().instrumentNumber;
+        LOGGER.info("                   Track instrument: %s (which is %s in midi)".formatted(instrument.name(), instrumentNumber));
+        midiGenerator.setInstrumentForTrack(instrumentNumber, this.midiChannel);
+
+        LOGGER.info("                   Track dynamic: %s".formatted(defaultDynamic));
+
+        LOGGER.info("                   -> START Generating MIDI events for track %s".formatted(name.toUpperCase()));
         for (MusicalElement musicalElement : musicalElements) {
             midiGenerator.addMidiEventToTrack(musicalElement, this.midiChannel);
         }
+        LOGGER.info("                   <- END Generated MIDI events for track %s".formatted(name.toUpperCase()));
     }
-
 }

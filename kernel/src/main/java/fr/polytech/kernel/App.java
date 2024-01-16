@@ -34,6 +34,7 @@ public class App {
 
     public App() throws MidiGenerationException {
         try {
+            LOGGER.info("---- Creating App instance ----");
             this.trackManager = new MidiTrackManager();
             this.midiGenerator = new MidiGenerator(trackManager);
         } catch (InvalidMidiDataException e) {
@@ -43,11 +44,12 @@ public class App {
     }
 
     public void addInstrument(Instrument instrument) {
+        LOGGER.info("Adding instrument: " + instrument.name());
         instruments.add(instrument);
     }
 
     public void generateClip(Clip clip) throws InvalidMidiDataException {
-        LOGGER.info("Generating MIDI for clip: " + clip.getName());
+        LOGGER.info("---- Generating MIDI for clip: %s ----".formatted(clip.getName()));
 
         long initialTick = trackManager.getCurrentTick();
         clip.generateMidi(midiGenerator);
@@ -76,7 +78,7 @@ public class App {
      * @param velocityRandomness The velocity randomness in percent.
      */
     public void setVelocityRandomness(int velocityRandomness) {
-        LOGGER.info("                    ~ with velocity randomness (in percentage): " + velocityRandomness);
+        LOGGER.info("Velocity randomness %d percent.".formatted(velocityRandomness));
         this.midiGenerator.setVelocityRandomness(velocityRandomness);
     }
 
@@ -86,7 +88,7 @@ public class App {
      * @param timeShiftRandomness The time shift randomness in ticks.
      */
     public void setTimeShiftRandomness(int timeShiftRandomness) {
-        LOGGER.info("                    ~ with time shift randomness (in ticks): " + timeShiftRandomness);
+        LOGGER.info("Time shift randomness %d (in ticks).".formatted(timeShiftRandomness));
         this.midiGenerator.setTimeShiftRandomness(timeShiftRandomness);
     }
 
@@ -100,7 +102,7 @@ public class App {
      * @param resolution The resolution in ticks.
      */
     public void setResolution(int resolution) throws InvalidMidiDataException {
-        LOGGER.info("                    ~ with resolution (in ticks) for beat: " + resolution);
+        LOGGER.info("Resolution %d (in ticks) for beat".formatted(resolution));
         this.trackManager.changeMidiTrackResolution(resolution);
     }
 
@@ -110,7 +112,7 @@ public class App {
      * @param timeSignature The time signature as TimeSignature object (numerator, denominator)
      */
     public void setGlobalTimeSignature(TimeSignature timeSignature) {
-        LOGGER.info("                    ~ with time signature: " + timeSignature);
+        LOGGER.info("Time signature %s".formatted(timeSignature));
         this.globalTimeSignature = timeSignature;
     }
 
@@ -120,7 +122,7 @@ public class App {
      * @param tempo The tempo in BPM
      */
     public void setGlobalTempo(int tempo) {
-        LOGGER.info("                    ~ with tempo: " + tempo);
+        LOGGER.info("Tempo: %d".formatted(tempo));
         this.globalTempo = tempo;
     }
 }

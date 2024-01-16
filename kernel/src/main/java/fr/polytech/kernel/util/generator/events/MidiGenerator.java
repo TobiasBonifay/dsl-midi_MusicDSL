@@ -34,7 +34,7 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         long startTick = trackManager.getCurrentTick();
         int timeShiftRandomness = trackManager.getTimeShift();
         int velocityRandomness = trackManager.getVelocityRandomness();
-        LOGGER.info("                    + Tick [%s] adding MIDI event to track: %s".formatted(startTick, midiEventGeneratable));
+        LOGGER.info("                    + Tick [%s]: %s".formatted(startTick, midiEventGeneratable));
 
         int resolution = trackManager.getSequence().getResolution();
         MidiEvent[] events = midiEventGeneratable.generateMidiEvents(channel, startTick, resolution, velocityRandomness, timeShiftRandomness);
