@@ -1,12 +1,12 @@
 package fr.polytech;
 
 import fr.polytech.kernel.structure.Instrument;
-import fr.polytech.kernel.structure.Track;
-import fr.polytech.kernel.structure.drums.DrumTrack;
 import fr.polytech.kernel.structure.musicalelements.Chord;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.musicalelements.Rest;
+import fr.polytech.kernel.structure.tracks.DrumTrack;
+import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;

@@ -15,7 +15,6 @@ import java.util.logging.Logger;
  */
 public record MidiGenerator(MidiTrackManager trackManager) {
     public static final int DRUM_CHANNEL = 9;
-    public static final int INSTRUMENT_CHANNEL = 0;
     private static final Logger LOGGER = Logger.getLogger(MidiGenerator.class.getName());
 
     static {
@@ -53,14 +52,14 @@ public record MidiGenerator(MidiTrackManager trackManager) {
     public void setInstrumentForTrack(int instrumentProgramNumber, int midiChannel) throws InvalidMidiDataException {
         LOGGER.info("                    ~ Setting instrument for track: %s which is %d in MIDI on midi channel %S" //
                 .formatted(MidiInstrument.midiOf(instrumentProgramNumber), instrumentProgramNumber, midiChannel));
-        MidiEvent programChange = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentProgramNumber, 0), trackManager.getCurrentTick());
+        MidiEvent programChange = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, midiChannel, instrumentProgramNumber, 0), trackManager.getCurrentTick());
         trackManager.addMidiEvent(programChange);
     }
 
-    public void setTrackVolume(int volume) throws InvalidMidiDataException {
+    public void setTrackVolume(int volume, int midiChannel) throws InvalidMidiDataException {
         LOGGER.info("                    ~ with volume for track: " + volume);
         ShortMessage volumeMessage = new ShortMessage();
-        volumeMessage.setMessage(ShortMessage.CONTROL_CHANGE, 0, 7, volume);
+        volumeMessage.setMessage(ShortMessage.CONTROL_CHANGE, midiChannel, 7, volume);
         MidiEvent volumeEvent = new MidiEvent(volumeMessage, trackManager.getCurrentTick());
         trackManager.addMidiEvent(volumeEvent);
     }

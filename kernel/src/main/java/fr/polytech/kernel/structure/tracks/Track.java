@@ -1,6 +1,8 @@
-package fr.polytech.kernel.structure;
+package fr.polytech.kernel.structure.tracks;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.Instrument;
+import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
@@ -8,23 +10,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 @Getter
-public class Track {
-
-    private final int midiChannel;
+public class Track extends MidiTrack {
 
     private static final Logger LOGGER = Logger.getLogger(Track.class.getName());
 
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
-
-    private final String name;
-    protected final List<MusicalElement> musicalElements = new ArrayList<>();
     private final Instrument instrument;
     @Setter
     private int defaultVolume;
@@ -32,11 +27,10 @@ public class Track {
     private Dynamic defaultDynamic;
 
 
-    public Track(String name, Instrument instrument, int midiChannel) {
-        this.name = name;
+    public Track(String name, Instrument instrument, int midiChannel, int defaultVolume) {
+        super(name, midiChannel);
         this.instrument = instrument;
-        this.midiChannel = midiChannel;
-        this.defaultVolume = 100;
+        this.defaultVolume = defaultVolume;
     }
 
     /**
@@ -48,7 +42,7 @@ public class Track {
         if (musicalElement instanceof DrumHit) {
             throw new RuntimeException("DrumHit not allowed in Track declared with classical note in track: " + name);
         }
-        musicalElements.add(musicalElement);
+        super.addMusicalElement(musicalElement);
     }
 
 
@@ -68,19 +62,13 @@ public class Track {
         LOGGER.info("-> Generating MIDI for track " + name.toUpperCase() + " with instrument " + instrument.name());
         int calculatedVolume = (this.defaultVolume * instrument.volume()) / 100;
         LOGGER.info("-> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
-        midiGenerator.setTrackVolume(calculatedVolume);
+        midiGenerator.setTrackVolume(calculatedVolume, this.midiChannel);
         midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber, this.midiChannel);
         midiGenerator.trackManager().setCurrentTick(currentTick);
 
         for (MusicalElement musicalElement : musicalElements) {
-            midiGenerator.addMidiEventToTrack(musicalElement, MidiGenerator.INSTRUMENT_CHANNEL);
+            midiGenerator.addMidiEventToTrack(musicalElement, this.midiChannel);
         }
-    }
-
-    public long calculateDuration(int resolution) {
-        return musicalElements.stream()//
-                .mapToLong(element -> element.getDuration(resolution)) //
-                .sum(); //
     }
 
 }

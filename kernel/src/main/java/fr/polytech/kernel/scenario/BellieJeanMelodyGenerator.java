@@ -2,11 +2,15 @@ package fr.polytech.kernel.scenario;
 
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
-import fr.polytech.kernel.structure.*;
-import fr.polytech.kernel.structure.drums.DrumTrack;
+import fr.polytech.kernel.structure.Bar;
+import fr.polytech.kernel.structure.Clip;
+import fr.polytech.kernel.structure.Instrument;
+import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.musicalelements.Rest;
+import fr.polytech.kernel.structure.tracks.DrumTrack;
+import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.*;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
