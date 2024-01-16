@@ -1,23 +1,42 @@
 const express = require('express');
 const cors = require('cors');
-const multer = require('multer');
+const { v4: uuidv4 } = require('uuid');
 const { exec } = require('child_process');
+const fs = require('fs');
 const app = express();
-const upload = multer({ dest: 'uploads/' });
 
 app.use(cors());
+app.use(express.json());
 
-app.post('/convert', upload.single('textFile'), (req, res) => {
+app.post('/convert', (req, res) => {
+    console.log(`POST /convert`)
+
+
     const jarPath = './midi-converter.jar';
-    const inputPath = req.file.path;
-    const outputPath = inputPath + '.midi';
+    const text = req.body.text;
 
-    exec(`java -jar ${jarPath} ${inputPath}`, (error, stdout, stderr) => {
+    //temp files
+    const uniqueId = uuidv4();
+
+    const tempFilePath = `${uniqueId}.txt`;
+    fs.writeFileSync(tempFilePath, text);
+
+    //todo: generate unique file name in java
+    const outputPath = `test.midi`;
+
+    exec(`java -jar ${jarPath} ${tempFilePath}`, (error, stdout, stderr) => {
+        // delete temp txt file
+        fs.unlinkSync(tempFilePath);
+
         if (error) {
             console.error(`exec error: ${error}`);
             return res.status(500).send('Error during file conversion');
         }
-        res.download(outputPath);
+
+        res.download(outputPath, () => {
+            // delete midi file
+            fs.unlinkSync(outputPath);
+        });
     });
 });
 
