@@ -9,7 +9,7 @@ import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.musicalelements.Rest;
-import fr.polytech.kernel.structure.tracks.DrumTrack;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.*;
 import fr.polytech.kernel.util.generator.events.ChannelManager;
@@ -42,7 +42,9 @@ public class BellieJeanMelodyGenerator {
         // Create tracks
         final TrackFactory trackFactory = new TrackFactory(new ChannelManager());
 
-        final DrumTrack drumTrack = trackFactory.createDrumTrack("Drum Track");
+        final MidiTrack drumTrack = trackFactory.createDrumTrack("Drum Track");
+        final MidiTrack drumTrack2 = trackFactory.createDrumTrack("Drum Track 2");
+
         final Track basstrack = trackFactory.createInstrumentTrack("Bass Line", bassLine, 100);
         final Track synthtrack = trackFactory.createInstrumentTrack("Synth", synth, 100);
 
@@ -62,7 +64,8 @@ public class BellieJeanMelodyGenerator {
         createLeadVoxSequence16().forEach(leadVoxTrack16::addMusicalElement);
         createLeadVoxSequence17().forEach(leadVoxTrack17::addMusicalElement);
         createStringsSequence().forEach(stringsTrack::addMusicalElement);
-        //createDrumsSequence().forEach(drumTrack::addDrumHit);
+        createDrumsSequence().forEach(drumTrack::addMusicalElement);
+        createDrumsSequence2().forEach(drumTrack2::addMusicalElement);
         //createBassNoteSequence().forEach(basstrack::addNote);
         //createBassNoteSequence2().forEach(basstrack::addNote);
         //createLeadBillieJeanNoteSequence1().forEach(synthtrack::addNote);
@@ -147,7 +150,21 @@ public class BellieJeanMelodyGenerator {
     }
 
     private static List<DrumHit> createDrumsSequence() {
-        return Stream.of(DrumFactory.createDrumHit(DrumSound.KICK), DrumFactory.createDrumHit(DrumSound.SNARE), DrumFactory.createDrumHit(DrumSound.KICK), DrumFactory.createDrumHit(DrumSound.SNARE)).toList();
+        return Stream.of(
+                DrumFactory.createDrumHit(DrumSound.KICK, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.SNARE, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.KICK, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.SNARE, NoteLength.QUARTER)
+        ).toList();
+    }
+
+    private static List<DrumHit> createDrumsSequence2() {
+        return Stream.of(
+                DrumFactory.createDrumHit(DrumSound.OPEN_HIHAT, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.OPEN_HIHAT, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.OPEN_HIHAT, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.OPEN_HIHAT, NoteLength.QUARTER)
+        ).toList();
     }
 
     /**

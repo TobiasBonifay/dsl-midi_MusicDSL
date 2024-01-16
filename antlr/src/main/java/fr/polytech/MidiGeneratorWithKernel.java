@@ -6,7 +6,7 @@ import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
-import fr.polytech.kernel.structure.tracks.Track;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
@@ -153,7 +153,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
                 LOGGER.info("No track content found for track: " + trackCtx.trackName.getText());
                 return;
             }
-            Track track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
+            MidiTrack track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
             this.currentBar.addTrack(track);
         });
         return super.visitTrackSequence(ctx);

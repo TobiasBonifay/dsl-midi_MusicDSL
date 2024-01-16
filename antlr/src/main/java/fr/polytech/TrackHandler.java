@@ -6,11 +6,13 @@ import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.structure.tracks.DrumTrack;
-import fr.polytech.kernel.structure.tracks.Track;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
+import fr.polytech.kernel.util.generator.events.ChannelManager;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
+import fr.polytech.kernel.util.generator.factory.TrackFactory;
 
 import java.util.List;
 
@@ -19,21 +21,24 @@ import static fr.polytech.kernel.util.Notes.parseNoteLength;
 
 public class TrackHandler {
 
-    public static Track handleTrack(TrackContext ctx, String trackId, MidiGeneratorWithKernel generator) {
+    private static final TrackFactory trackFactory = new TrackFactory(new ChannelManager());
+
+
+    public static MidiTrack handleTrack(TrackContext ctx, String trackId, MidiGeneratorWithKernel generator) {
         TrackContentContext trackContent = ctx.trackContent();
-        if (trackContent == null) return new Track(trackId, null);
+        if (trackContent == null) return null;
         if (trackContent.percussionSequence() != null) return TrackHandler.handleDrumTrack(ctx, trackId);
         Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
         return TrackHandler.handleInstrumentTrack(ctx, instrument, trackId);
 
     }
 
-    private static Track handleInstrumentTrack(TrackContext ctx, Instrument instrument, String trackId) {
+    private static MidiTrack handleInstrumentTrack(TrackContext ctx, Instrument instrument, String trackId) {
         if (instrument == null) {
             MidiGeneratorWithKernel.LOGGER.info("Instrument not found for track: " + trackId);
             throw new RuntimeException("Instrument not found for track: " + trackId);
         }
-        Track track = new Track(trackId, instrument);
+        MidiTrack track = trackFactory.createInstrumentTrack(trackId, instrument, MidiGeneratorWithKernel.DEFAULT_VOLUME);
 
         TrackContentContext trackContent = ctx.trackContent();
         if (trackContent.noteSequence() == null) {
@@ -62,7 +67,7 @@ public class TrackHandler {
         return track;
     }
 
-    private static void getDrumSound(Track track, PercussionElementContext element) {
+    private static void getDrumSound(MidiTrack track, PercussionElementContext element) {
         DrumSound drumSound = DrumSound.valueOf(element.PERCUSSION().getText());
         NoteLength noteLength = element.noteDuration() != null ? parseNoteLength(element.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
         DrumHit drumHit = DrumFactory.createDrumHit(drumSound, noteLength);
@@ -70,7 +75,7 @@ public class TrackHandler {
     }
 
 
-    private static Track handleDrumTrack(TrackContext ctx, String trackId) {
+    private static DrumTrack handleDrumTrack(TrackContext ctx, String trackId) {
         MidiGeneratorWithKernel.LOGGER.info("Drum track found: " + trackId);
         DrumTrack drumTrack = new DrumTrack(trackId);
         List<PercussionElementContext> drum_hits = ctx.trackContent().percussionSequence().percussionElement();

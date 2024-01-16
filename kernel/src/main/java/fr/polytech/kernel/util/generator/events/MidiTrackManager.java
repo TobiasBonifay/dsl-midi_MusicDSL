@@ -1,11 +1,14 @@
 package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.sound.midi.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Getter
@@ -16,17 +19,23 @@ public class MidiTrackManager {
         LoggingSetup.setupLogger(LOGGER);
     }
 
+    private final DrumTrackManager drumTrackManager = new DrumTrackManager();
+    private final List<MidiTrack> instrumentTracks = new ArrayList<>();
+
     private Sequence sequence;
     private Track currentTrack;
     @Setter
     private long currentTick;
     @Setter
     private int resolution = 480; // in ticks per beat
-    @Getter
     @Setter
     private int velocityRandomness = 5; // in percent
     @Setter
     private int timeShiftRandomness = 5; // in ticks
+
+    public void addInstrumentTrack(MidiTrack instrumentTrack) {
+        instrumentTracks.add(instrumentTrack);
+    }
 
     public MidiTrackManager() throws InvalidMidiDataException {
         this.sequence = new Sequence(Sequence.PPQ, resolution);
@@ -48,6 +57,25 @@ public class MidiTrackManager {
     public void addMidiEvent(MidiEvent event) {
         currentTrack.add(event);
     }
+
+    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
+        LOGGER.info("Generating MIDI for track: " + currentTrack);
+        LOGGER.info("    ~ with resolution: " + resolution);
+        LOGGER.info("    ~ with velocity randomness: " + velocityRandomness);
+        LOGGER.info("    ~ with time shift randomness: " + timeShiftRandomness);
+        // LOGGER.info("    ~ with time signature: " + currentTrack);
+        // LOGGER.info("    ~ with tempo: " + globalTempo);
+
+        // Set the time signature and tempo for the track
+        // setTimeSignature(globalTimeSignature);
+        // setTempo();
+
+        // Generate the MIDI for the instrument tracks
+        for (MidiTrack instrumentTrack : instrumentTracks) {
+            instrumentTrack.generateMidi(midiGenerator, currentTick);
+        }
+    }
+
 
     /**
      * Sets the time signature for the current Bar

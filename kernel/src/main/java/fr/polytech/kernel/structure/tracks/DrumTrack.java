@@ -2,7 +2,7 @@ package fr.polytech.kernel.structure.tracks;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.MusicalElement;
-import fr.polytech.kernel.structure.musicalelements.Note;
+import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -18,24 +18,33 @@ public class DrumTrack extends MidiTrack {
         LoggingSetup.setupLogger(LOGGER);
     }
 
-    public DrumTrack(String name, int midiChannel) {
-        super(name, midiChannel);
+    public DrumTrack(String name) {
+        super(name, MidiGenerator.DRUM_CHANNEL);
     }
 
+    @Override
     public void addMusicalElement(MusicalElement element) {
-        if (element instanceof Note) {
-            throw new RuntimeException("Note not allowed in Drum Track declared with classical note in drum track");
+        if (!(element instanceof DrumHit)) {
+            throw new RuntimeException("Only DrumHit elements are allowed in DrumTrack: " + name);
         }
         super.addMusicalElement(element);
     }
 
     @Override
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
-        LOGGER.info("                -> Generating MIDI for drum track " + this.name.toUpperCase());
+        LOGGER.info("                -> Generating MIDI for drum track " + name.toUpperCase());
         midiGenerator.trackManager().setCurrentTick(currentTick);
 
         for (MusicalElement element : musicalElements) {
-            midiGenerator.addMidiEventToTrack(element, MidiGenerator.DRUM_CHANNEL);
+            midiGenerator.addMidiEventToTrack(element, midiChannel);
         }
+    }
+
+    public DrumHit[] getDrumHits() {
+        return musicalElements.stream().map(element -> (DrumHit) element).toArray(DrumHit[]::new);
+    }
+
+    public void addDrumHit(DrumHit drumHit) {
+        musicalElements.add(drumHit);
     }
 }

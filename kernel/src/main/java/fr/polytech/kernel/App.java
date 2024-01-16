@@ -101,7 +101,6 @@ public class App {
      */
     public void setResolution(int resolution) throws InvalidMidiDataException {
         LOGGER.info("                    ~ with resolution (in ticks) for beat: " + resolution);
-        // this.trackManager.setResolution(resolution);
         this.trackManager.changeMidiTrackResolution(resolution);
     }
 

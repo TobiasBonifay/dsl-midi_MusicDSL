@@ -7,11 +7,13 @@ import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
-import fr.polytech.kernel.structure.tracks.DrumTrack;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.*;
+import fr.polytech.kernel.util.generator.events.ChannelManager;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
+import fr.polytech.kernel.util.generator.factory.TrackFactory;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
@@ -27,9 +29,12 @@ public class DrumsMelodyGenerator {
 
 
         // Create tracks
-        final Track pianoTrack = new Track("Piano", pianoInstrument, 0);
-        final DrumTrack drumTrack = new DrumTrack("Drums");
-        final Track violinTrack = new Track("Violin", violinInstrument, 1);
+        final TrackFactory trackFactory = new TrackFactory(new ChannelManager());
+
+        final Track pianoTrack = trackFactory.createInstrumentTrack("Piano", pianoInstrument, 100);
+        final MidiTrack drumTrack = trackFactory.createDrumTrack("Drums kicksnare");
+        final MidiTrack drumTrack2 = trackFactory.createDrumTrack("Drums hihat");
+        final Track violinTrack = trackFactory.createInstrumentTrack("Violin", violinInstrument, 100);
         // violinTrack.setDefaultDynamic(Dynamic.PP); // should work
         // violinTrack.setVolume(50); // should work
 

@@ -2,6 +2,7 @@ package fr.polytech.kernel.util.generator.factory;
 
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.tracks.DrumTrack;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.generator.events.ChannelManager;
 
@@ -21,7 +22,7 @@ public class TrackFactory {
         return new Track(name, instrument, channel, volume);
     }
 
-    public DrumTrack createDrumTrack(String name) {
-        return new DrumTrack(name, ChannelManager.DRUM_CHANNEL);
+    public MidiTrack createDrumTrack(String name) {
+        return new DrumTrack(name);
     }
 }
