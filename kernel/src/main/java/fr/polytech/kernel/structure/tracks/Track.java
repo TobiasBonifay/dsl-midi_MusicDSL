@@ -68,9 +68,7 @@ public class Track extends MidiTrack {
         midiGenerator.setTrackVolume(calculatedVolume, this.midiChannel);
 
         // Instrument
-        int instrumentNumber = instrument.midiInstrument().instrumentNumber;
-        LOGGER.info("                   Track instrument: %s (which is %s in midi)".formatted(instrument.name(), instrumentNumber));
-        midiGenerator.setInstrumentForTrack(instrumentNumber, this.midiChannel);
+        midiGenerator.setInstrumentForTrack(instrument, this.midiChannel);
 
         LOGGER.info("                   Track dynamic: %s".formatted(defaultDynamic));
 

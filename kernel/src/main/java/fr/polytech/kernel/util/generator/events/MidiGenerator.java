@@ -1,8 +1,8 @@
 package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.MusicalElement;
-import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
@@ -49,9 +49,9 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         }
     }
 
-    public void setInstrumentForTrack(int instrumentProgramNumber, int midiChannel) throws InvalidMidiDataException {
-        LOGGER.info("                    ~ Setting instrument for track: %s which is %d in MIDI on midi channel %S" //
-                .formatted(MidiInstrument.midiOf(instrumentProgramNumber), instrumentProgramNumber, midiChannel));
+    public void setInstrumentForTrack(Instrument instrument, int midiChannel) throws InvalidMidiDataException {
+        int instrumentProgramNumber = instrument.midiInstrument().instrumentNumber;
+        LOGGER.info("                    ~ Setting instrument %s for track: %s which is %d in MIDI on midi channel %S".formatted(instrument.midiInstrument(), instrument.name(), instrumentProgramNumber, midiChannel));
         MidiEvent programChange = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, midiChannel, instrumentProgramNumber, 0), trackManager.getCurrentTick());
         trackManager.addMidiEvent(programChange);
     }
@@ -65,12 +65,12 @@ public record MidiGenerator(MidiTrackManager trackManager) {
     }
 
     public void setVelocityRandomness(int velocityRandomness) {
-        // LOGGER.info("                    ~ with velocity randomness for track: " + velocityRandomness);
+        LOGGER.info("Velocity randomness %d percent.".formatted(velocityRandomness));
         trackManager.setVelocityRandomness(velocityRandomness);
     }
 
     public void setTimeShiftRandomness(int timeShiftRandomness) {
-        //  LOGGER.info("                    ~ with time shift randomness for track: " + timeShiftRandomness);
+        LOGGER.info("Time shift randomness %d (in ticks).".formatted(timeShiftRandomness));
         trackManager.setTimeShiftRandomness(timeShiftRandomness);
     }
 }

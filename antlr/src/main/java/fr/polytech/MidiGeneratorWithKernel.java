@@ -91,6 +91,9 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
             }
         }
 
+        if (ctx.clipName == null) {
+            throw new RuntimeException("No clip name found");
+        }
         String clipName = ctx.clipName.getText();
         Clip clip = new Clip(clipName);
         if (ctx.defaultDynamic() != null)
@@ -143,7 +146,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         List<TrackContext> tracks = ctx.track();
         tracks.forEach(trackCtx -> {
             if (trackCtx.trackContent() == null) {
-                throw new RuntimeException("No track content found for track: " + trackCtx.trackName.getText());
+                // empty track
+                return;
             }
             MidiTrack track = TrackHandler.handleTrack(trackCtx, this);
             this.currentBar.addTrack(track);

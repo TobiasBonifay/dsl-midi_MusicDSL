@@ -55,7 +55,8 @@ public class Bar {
      * If there is time left, we log a not OK message.
      * </p>
      */
-    public void generateMidi(MidiGenerator midiGenerator, long currentTick, Dynamic defaultDynamic) throws InvalidMidiDataException {
+    public void generateMidi(MidiGenerator midiGenerator, Dynamic defaultDynamic) throws InvalidMidiDataException {
+        long currentTick = midiGenerator.trackManager().getCurrentTick();
         LOGGER.info("              Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
 
         for (MidiTrack track : tracks) {

@@ -23,6 +23,7 @@ public class App {
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     private final MidiGenerator midiGenerator;
     private final MidiTrackManager trackManager;
     @Getter
@@ -44,16 +45,17 @@ public class App {
     }
 
     public void addInstrument(Instrument instrument) {
-        LOGGER.info("Adding instrument: " + instrument.name());
+        LOGGER.info("Referencing instrument: " + instrument.name());
         instruments.add(instrument);
     }
 
     public void generateClip(Clip clip) throws InvalidMidiDataException {
         LOGGER.info("---- Generating MIDI for clip: %s ----".formatted(clip.getName()));
+        int resolution = this.midiGenerator.getSequence().getResolution();
 
         long initialTick = trackManager.getCurrentTick();
-        clip.generateMidi(midiGenerator);
-        long clipDuration = clip.calculateDuration(midiGenerator.getSequence().getResolution());
+        clip.generateMidi(midiGenerator, resolution);
+        long clipDuration = clip.calculateDuration(resolution);
 
         // Update the current tick based on the duration of the clip
         trackManager.setCurrentTick(initialTick + clipDuration);
@@ -61,8 +63,6 @@ public class App {
 
 
     /**
-     * STEP 3/3
-     *
      * @param filename The name of the file to write.
      * @throws IOException If there is a problem writing the file.
      */
@@ -72,25 +72,6 @@ public class App {
         MidiSystem.write(this.midiGenerator.trackManager().getSequence(), 1, new File(pathName + ".midi"));
     }
 
-    /**
-     * Set the velocity randomness for the MIDI generator.
-     *
-     * @param velocityRandomness The velocity randomness in percent.
-     */
-    public void setVelocityRandomness(int velocityRandomness) {
-        LOGGER.info("Velocity randomness %d percent.".formatted(velocityRandomness));
-        this.midiGenerator.setVelocityRandomness(velocityRandomness);
-    }
-
-    /**
-     * Set the time shift randomness for the MIDI generator.
-     *
-     * @param timeShiftRandomness The time shift randomness in ticks.
-     */
-    public void setTimeShiftRandomness(int timeShiftRandomness) {
-        LOGGER.info("Time shift randomness %d (in ticks).".formatted(timeShiftRandomness));
-        this.midiGenerator.setTimeShiftRandomness(timeShiftRandomness);
-    }
 
     public int getResolution() {
         return this.midiGenerator.getSequence().getResolution();
@@ -102,8 +83,25 @@ public class App {
      * @param resolution The resolution in ticks.
      */
     public void setResolution(int resolution) throws InvalidMidiDataException {
-        LOGGER.info("Resolution %d (in ticks) for beat".formatted(resolution));
         this.trackManager.changeMidiTrackResolution(resolution);
+    }
+
+    /**
+     * Set the velocity randomness for the MIDI generator.
+     *
+     * @param velocityRandomness The velocity randomness in percent.
+     */
+    public void setVelocityRandomness(int velocityRandomness) {
+        this.midiGenerator.setVelocityRandomness(velocityRandomness);
+    }
+
+    /**
+     * Set the time shift randomness for the MIDI generator.
+     *
+     * @param timeShiftRandomness The time shift randomness in ticks.
+     */
+    public void setTimeShiftRandomness(int timeShiftRandomness) {
+        this.midiGenerator.setTimeShiftRandomness(timeShiftRandomness);
     }
 
     /**

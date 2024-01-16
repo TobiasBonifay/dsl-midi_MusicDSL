@@ -36,14 +36,14 @@ public class Clip {
      * @param midiGenerator The MIDI generator
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
-    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
+    public void generateMidi(MidiGenerator midiGenerator, int resolution) throws InvalidMidiDataException {
         long currentTick = midiGenerator.trackManager().getCurrentTick();
         LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s with dynamic %s".formatted(name, bars.size(), currentTick, defaultDynamic));
         int margin = midiGenerator.trackManager().getTimeShiftRandomness();
 
         for (Bar bar : bars) {
-            long barDuration = bar.calculateDuration(midiGenerator.getSequence().getResolution());
-            bar.generateMidi(midiGenerator, currentTick, defaultDynamic);
+            long barDuration = bar.calculateDuration(resolution);
+            bar.generateMidi(midiGenerator, defaultDynamic);
             currentTick += barDuration;
         }
     }

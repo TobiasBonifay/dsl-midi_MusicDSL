@@ -45,6 +45,7 @@ public class MidiTrackManager {
      * Bad idea to change the resolution after the track has been created
      */
     public void changeMidiTrackResolution(int resolution) throws InvalidMidiDataException {
+        LOGGER.info("Resolution %d (in ticks) for beat".formatted(resolution));
         this.resolution = resolution;
         this.sequence = new Sequence(Sequence.PPQ, resolution);
         this.currentTrack = sequence.createTrack();
