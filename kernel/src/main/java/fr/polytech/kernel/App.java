@@ -5,6 +5,7 @@ import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
+import fr.polytech.kernel.util.generator.events.DrumTrackManager;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
 import lombok.Getter;
@@ -122,5 +123,9 @@ public class App {
     public void setGlobalTempo(int tempo) {
         LOGGER.info("Tempo: %d".formatted(tempo));
         this.globalTempo = tempo;
+    }
+
+    public DrumTrackManager getDrumTrackManager() {
+        return this.midiGenerator.trackManager().getDrumTrackManager();
     }
 }

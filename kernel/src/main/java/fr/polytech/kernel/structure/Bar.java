@@ -25,18 +25,18 @@ public class Bar {
 
     @Getter
     private final String name;
-    private final List<MidiTrack> tracks = new ArrayList<>();
+    private final List<MidiTrack> instrumentTracks = new ArrayList<>();
     private final DrumTrackManager drumTrackManager;
     private int barVolume;
     private TimeSignature timeSignature;
     private int tempo;
 
-    public Bar(String name, TimeSignature timeSignature, int tempo, int barVolume) {
+    public Bar(DrumTrackManager drumTrackManager, String name, TimeSignature timeSignature, int tempo, int barVolume) {
         this.name = name;
         this.timeSignature = timeSignature;
         this.tempo = tempo;
         this.barVolume = barVolume;
-        this.drumTrackManager = new DrumTrackManager();
+        this.drumTrackManager = drumTrackManager;
     }
 
     /**
@@ -59,6 +59,7 @@ public class Bar {
         long currentTick = midiGenerator.trackManager().getCurrentTick();
         LOGGER.info("              Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
 
+        List<MidiTrack> tracks = getInstrumentTracks();
         for (MidiTrack track : tracks) {
             if (track instanceof Track musicTrack) {
                 musicTrack.setDefaultDynamic(defaultDynamic);
@@ -88,7 +89,7 @@ public class Bar {
             drumTrackManager.addDrumTrack(drumTrack);
             return;
         }
-        tracks.add(track);
+        instrumentTracks.add(track);
     }
 
     public void withTimeSignature(TimeSignature signature) {
@@ -108,14 +109,14 @@ public class Bar {
     }
 
     public long calculateDuration(int resolution) {
-        return tracks.stream() //
+        return instrumentTracks.stream() //
                 .mapToLong(track -> track.calculateDuration(resolution)) //
                 .max() //
                 .orElse(0);
     }
 
-    public List<MidiTrack> getTracks() {
-        List<MidiTrack> tracksCopy = new ArrayList<>(tracks);
+    public List<MidiTrack> getInstrumentTracks() {
+        List<MidiTrack> tracksCopy = new ArrayList<>(instrumentTracks);
         tracksCopy.add(drumTrackManager.getTheFinalDrumTrack());
         return tracksCopy;
     }
