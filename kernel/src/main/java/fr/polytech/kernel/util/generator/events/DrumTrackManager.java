@@ -24,6 +24,7 @@ public class DrumTrackManager {
                 drumTrack.addDrumHit(drumHit);
             }
         }
+        drumTracks.clear();
         return drumTrack;
     }
 }
