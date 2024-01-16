@@ -6,7 +6,7 @@ Instruments:
     synth SYNTH_STRINGS_1 volume 90
     voice LEAD_6_VOICE volume 90
 
-clip INTRO:
+clip NO_MELODY:
 bar [
     track hihat:
         CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2)
@@ -27,13 +27,23 @@ bar [
         KICK SNARE KICK SNARE KICK SNARE
 ]
 
-//clip FAMOUS_MELODY:
-//bar [
-//    track voice:
-//        F#4 (1/2), F#4 (1/2), E4 (1/2), C#4, F#4 (1/2), F#4, E4, C#4
-//]
+clip VOICE:
+bar [
+    track voice:
+        F#4 (1/2), F#4 (1/2), E4 (1/2), C#4, F#4 (1/2), F#4, E4, C#4
+
+    track synth:
+        F#4 (1/2), SILENCE, G#4 (1/2), SILENCE (2), A4 (1/2), SILENCE, G#4 (1/2)
+
+    track hihat:
+        CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2) CH (1/2)
+
+    track kick_snare:
+        KICK SNARE KICK SNARE KICK SNARE
+]
 
 Timeline:
-    INTRO
-    //FAMOUS_MELODY
+    NO_MELODY
     MAIN
+    NO_MELODY
+    VOICE
