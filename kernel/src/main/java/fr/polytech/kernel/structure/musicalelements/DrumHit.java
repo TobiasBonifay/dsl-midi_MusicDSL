@@ -32,7 +32,7 @@ public record DrumHit(DrumSound sound, Optional<NoteLength> drumLength) implemen
         // TODO: add time shift randomization
         LOGGER.info("                        + Tick [%s +%s] -> [%s]: Drum %s (%d+-%d) -> %d".formatted(currentTick, timeshiftRandomization, currentTick + midiDuration, this, DRUM_HIT_VELOCITY, velocityRandomization, DRUM_HIT_VELOCITY));
         MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, midiNote, DRUM_HIT_VELOCITY), currentTick + timeshiftRandomization);
-        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, midiNote, 0), currentTick + midiDuration + timeshiftRandomization);
+        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, midiNote, 0), currentTick + midiDuration); // + timeshiftRandomization
 
         return new MidiEvent[]{noteOn, noteOff};
     }

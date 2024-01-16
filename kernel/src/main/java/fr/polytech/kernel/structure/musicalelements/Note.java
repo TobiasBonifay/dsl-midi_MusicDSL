@@ -45,7 +45,7 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
         int theDynamic = dynamic.randomizedValueInPercent(velocityRandomization);
         LOGGER.info("                        + Tick [%s +%s] -> [%s]: Note %s (%d+-%d) -> %d".formatted(currentTick, timeShift, currentTick + midiDuration, this, defaultValueVelocity, velocityRandomization, theDynamic));
         MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, parseNote(pitch), theDynamic), currentTick + timeShift);
-        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, parseNote(pitch), 0), currentTick + midiDuration + timeShift);
+        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, parseNote(pitch), 0), currentTick + midiDuration); // + timeShift
 
         return new MidiEvent[]{noteOn, noteOff};
     }
