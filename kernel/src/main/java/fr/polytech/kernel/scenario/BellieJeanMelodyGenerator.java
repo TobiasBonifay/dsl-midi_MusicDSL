@@ -35,18 +35,18 @@ public class BellieJeanMelodyGenerator {
 
         // Create tracks
         final DrumTrack drumTrack = new DrumTrack("drumKit");
-        final Track basstrack = new Track("Bass line", bassLine);
-        final Track synthtrack = new Track("Synth", synth);
+        final Track basstrack = new Track("Bass line", bassLine, 1);
+        final Track synthtrack = new Track("Synth", synth, 2);
 
-        final Track leadVoxTrack = new Track("Lead Vox Line", leadVox);
-        final Track leadVoxTrack16 = new Track("Lead Vox Line 16", leadVox);
-        final Track leadVoxTrack17 = new Track("Lead Vox Line 17", leadVox);
-        final Track elecPianoTrack = new Track("Elec Piano", elecPiano);
-        final Track rythmGtrTrack = new Track("Rythm Gtr Line", rythmGtr);
-        final Track strings2Track = new Track("String Ensemble 2 Line", strings2);
-        final Track clavBrassTrack = new Track("Clav Brass Line", clavBrass);
-        final Track stringsTrack = new Track("Synth Strings Line", strings);
-        final Track bassTrack = new Track("Bass Line", bass);
+        final Track leadVoxTrack = new Track("Lead Vox Line", leadVox, 3);
+        final Track leadVoxTrack16 = new Track("Lead Vox Line 16", leadVox, 4);
+        final Track leadVoxTrack17 = new Track("Lead Vox Line 17", leadVox, 5);
+        final Track elecPianoTrack = new Track("Elec Piano", elecPiano, 0);
+        final Track rythmGtrTrack = new Track("Rythm Gtr Line", rythmGtr, 6);
+        final Track strings2Track = new Track("String Ensemble 2 Line", strings2, 7);
+        final Track clavBrassTrack = new Track("Clav Brass Line", clavBrass, 8);
+        final Track stringsTrack = new Track("Synth Strings Line", strings, 11);
+        final Track bassTrack = new Track("Bass Line", bass, 12);
 
         // Add notes to tracks
         createLeadVoxSequence().forEach(leadVoxTrack::addMusicalElement);

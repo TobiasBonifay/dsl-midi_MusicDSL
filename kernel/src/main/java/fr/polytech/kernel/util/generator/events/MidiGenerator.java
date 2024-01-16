@@ -50,8 +50,9 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         }
     }
 
-    public void setInstrumentForTrack(int instrumentProgramNumber) throws InvalidMidiDataException {
-        LOGGER.info("                    ~ Setting instrument for track: %s which is %d in MIDI.".formatted(MidiInstrument.midiOf(instrumentProgramNumber), instrumentProgramNumber));
+    public void setInstrumentForTrack(int instrumentProgramNumber, int midiChannel) throws InvalidMidiDataException {
+        LOGGER.info("                    ~ Setting instrument for track: %s which is %d in MIDI on midi channel %S" //
+                .formatted(MidiInstrument.midiOf(instrumentProgramNumber), instrumentProgramNumber, midiChannel));
         MidiEvent programChange = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentProgramNumber, 0), trackManager.getCurrentTick());
         trackManager.addMidiEvent(programChange);
     }

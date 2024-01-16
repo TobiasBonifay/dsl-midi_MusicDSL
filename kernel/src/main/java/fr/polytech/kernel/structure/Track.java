@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 @Getter
 public class Track {
 
+    private final int midiChannel;
+
     private static final Logger LOGGER = Logger.getLogger(Track.class.getName());
 
     static {
@@ -30,9 +32,10 @@ public class Track {
     private Dynamic defaultDynamic;
 
 
-    public Track(String name, Instrument instrument) {
+    public Track(String name, Instrument instrument, int midiChannel) {
         this.name = name;
         this.instrument = instrument;
+        this.midiChannel = midiChannel;
         this.defaultVolume = 100;
     }
 
@@ -66,7 +69,7 @@ public class Track {
         int calculatedVolume = (this.defaultVolume * instrument.volume()) / 100;
         LOGGER.info("-> Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
         midiGenerator.setTrackVolume(calculatedVolume);
-        midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber);
+        midiGenerator.setInstrumentForTrack(this.instrument.midiInstrument().instrumentNumber, this.midiChannel);
         midiGenerator.trackManager().setCurrentTick(currentTick);
 
         for (MusicalElement musicalElement : musicalElements) {
