@@ -3,6 +3,7 @@ package fr.polytech.kernel.structure.tracks;
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
+import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -32,19 +33,22 @@ public class DrumTrack extends MidiTrack {
 
     @Override
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
-        LOGGER.info("                   Generating MIDI for DRUM track %s".formatted(name.toUpperCase()));
+        LOGGER.info("                   -> START Generating MIDI events for track %s".formatted(name.toUpperCase()));
         midiGenerator.trackManager().setCurrentTick(currentTick);
 
-        LOGGER.info("                   -> START Generating MIDI events for track %s".formatted(name.toUpperCase()));
+        LOGGER.info("-> START Generating MIDI events for track %s".formatted(name.toUpperCase()));
         for (MusicalElement element : musicalElements) {
-            midiGenerator.addMidiEventToTrack(element, midiChannel);
+            if (element instanceof DrumHit drumHit) {
+                midiGenerator.addMidiEventToTrack(drumHit, midiChannel);
+            } else if (element instanceof Rest rest) {
+                midiGenerator.addMidiEventToTrack(rest, midiChannel);
+            } else {
+                throw new RuntimeException("Invalid element type in DrumTrack: " + name);
+            }
         }
         LOGGER.info("                   <- END Generated MIDI events for track %s".formatted(name.toUpperCase()));
     }
 
-    public DrumHit[] getDrumHits() {
-        return musicalElements.stream().map(element -> (DrumHit) element).toArray(DrumHit[]::new);
-    }
 
     public void addDrumHit(DrumHit drumHit) {
         musicalElements.add(drumHit);

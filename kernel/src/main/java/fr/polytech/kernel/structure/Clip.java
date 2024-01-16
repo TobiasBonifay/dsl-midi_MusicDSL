@@ -1,8 +1,8 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
-import fr.polytech.kernel.util.generator.events.DrumTrackManager;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,15 +22,14 @@ public class Clip {
 
     private final String name;
     private final List<Bar> bars;
-    @Setter
-    private DrumTrackManager drumTrackManager;
+    private final List<DrumHit> mergedDrumHits = new ArrayList<>();
+
     @Setter
     private Dynamic defaultDynamic = Dynamic.MF;
 
     public Clip(String name) {
         this.name = name;
         this.bars = new ArrayList<>();
-        this.drumTrackManager = DrumTrackManager.getInstance();
     }
 
     /**
@@ -43,15 +42,10 @@ public class Clip {
      * @param midiGenerator The MIDI generator
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
-    public void generateMidi(MidiGenerator midiGenerator, int resolution) throws InvalidMidiDataException {
-        long currentTick = midiGenerator.trackManager().getCurrentTick();
-        LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s with dynamic %s".formatted(name, bars.size(), currentTick, defaultDynamic));
-        int margin = midiGenerator.trackManager().getTimeShiftRandomness();
-
+    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
+        LOGGER.info("        Generating MIDI for clip %s with %d bars with dynamic %s".formatted(name, bars.size(), defaultDynamic));
         for (Bar bar : bars) {
-            long barDuration = bar.calculateDuration(resolution);
             bar.generateMidi(midiGenerator, defaultDynamic);
-            currentTick += barDuration;
         }
     }
 

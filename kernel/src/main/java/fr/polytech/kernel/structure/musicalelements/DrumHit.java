@@ -8,13 +8,12 @@ import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.ShortMessage;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
  * Represents a single drum hit. It's like a note, but for drums.
  */
-public record DrumHit(DrumSound sound, Optional<NoteLength> drumLength) implements MusicalElement {
+public record DrumHit(DrumSound sound, NoteLength drumLength) implements MusicalElement {
 
     private static final Logger LOGGER = Logger.getLogger(DrumHit.class.getName());
 
@@ -38,15 +37,11 @@ public record DrumHit(DrumSound sound, Optional<NoteLength> drumLength) implemen
 
     @Override
     public long getDuration(int resolution) {
-        return Math.round(resolution * drumLength.orElse(NoteLength.QUARTER).length);
+        return Math.round(resolution * drumLength.length);
     }
 
     @Override
     public String toString() {
-        return "%s %s".formatted(sound, drumLength.filter(note -> note.length != NoteLength.QUARTER.length).map(Enum::toString).orElse(""));
-    }
-
-    public long getOriginalPosition() {
-
+        return "%s %s".formatted(sound, drumLength);
     }
 }

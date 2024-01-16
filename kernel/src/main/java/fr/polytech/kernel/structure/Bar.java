@@ -1,12 +1,12 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.tracks.DrumTrack;
 import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
-import fr.polytech.kernel.util.generator.events.DrumTrackManager;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
 
@@ -25,7 +25,10 @@ public class Bar {
 
     @Getter
     private final String name;
+    @Getter
     private final List<MidiTrack> instrumentTracks = new ArrayList<>();
+    @Getter
+    private final List<DrumHit> drumHits = new ArrayList<>();
     private int barVolume;
     private TimeSignature timeSignature;
     private int tempo;
@@ -65,11 +68,6 @@ public class Bar {
             }
             track.generateMidi(midiGenerator, currentTick);
         }
-
-        // generate the drum track
-        DrumTrack finalDrumTrack = DrumTrackManager.getInstance().getTheFinalDrumTrack();
-        finalDrumTrack.generateMidi(midiGenerator, currentTick);
-
         long barDuration = calculateDuration(midiGenerator.getSequence().getResolution());
         long endingTick = currentTick + barDuration;
 
@@ -88,7 +86,6 @@ public class Bar {
 
     public void addTrack(MidiTrack track) {
         if (track instanceof DrumTrack drumTrack) {
-            DrumTrackManager.getInstance().addDrumTrack(drumTrack);
             return;
         }
         instrumentTracks.add(track);

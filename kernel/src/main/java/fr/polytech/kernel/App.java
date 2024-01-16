@@ -54,7 +54,7 @@ public class App {
         int resolution = this.midiGenerator.getSequence().getResolution();
 
         long initialTick = trackManager.getCurrentTick();
-        clip.generateMidi(midiGenerator, resolution);
+        clip.generateMidi(midiGenerator);
         long clipDuration = clip.calculateDuration(resolution);
 
         // Update the current tick based on the duration of the clip
