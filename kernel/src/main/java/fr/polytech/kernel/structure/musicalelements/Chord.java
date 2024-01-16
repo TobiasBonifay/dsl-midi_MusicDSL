@@ -35,7 +35,7 @@ public record Chord(List<String> pitch, NoteLength noteLength, Dynamic dynamic, 
     public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution, int velocityRandomization, int timeShift) throws InvalidMidiDataException {
         long midiDuration = noteLength.getDuration(resolution);
         int theDynamic = dynamic.randomizedValueInPercent(velocityRandomization);
-        LOGGER.info("                                                   with dynamic %s and time shift %s".formatted(theDynamic, timeShift));
+        LOGGER.info("                       + Tick [%s +%s] -> [%s]: %s (%d+-%d) -> %d".formatted(currentTick, timeShift, currentTick + midiDuration, this, dynamic.value(), velocityRandomization, theDynamic));
         MidiEvent[] midiEvents = new MidiEvent[pitch.size() * 2];
         for (int i = 0; i < pitch.size(); i++) {
             MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, parseNote(pitch.get(i)), theDynamic), currentTick + timeShift);
