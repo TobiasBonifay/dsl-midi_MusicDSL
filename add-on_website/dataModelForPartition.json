@@ -9,10 +9,12 @@
           "notes" : [
             {
               "pitch" : "c",
+              "octave" : "4",
               "duration" : "q"
             },
             {
               "pitch" : "b",
+              "octave" : "3",
               "duration" : "q"
             }
           ]
