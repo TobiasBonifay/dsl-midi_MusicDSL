@@ -106,6 +106,7 @@ public class TrackHandler {
     private static DrumHit getDrumSound(PercussionElementContext element) {
         DrumSound drumSound = DrumSound.valueOf(element.PERCUSSION().getText());
         NoteLength noteLength = element.noteDuration() != null ? parseNoteLength(element.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
-        return DrumFactory.createDrumHit(drumSound, noteLength);
+        Dynamic dynamic = element.noteDynamic() != null ? Dynamic.valueOf(element.noteDynamic().velocity.getText().toUpperCase()) : Dynamic.MF;
+        return DrumFactory.createDrumHit(drumSound, noteLength, dynamic);
     }
 }
