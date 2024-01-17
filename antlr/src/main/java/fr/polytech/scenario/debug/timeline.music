@@ -11,7 +11,7 @@ Instruments:
 clip MAIN:
 bar [
     track bassLine:
-        F#3, SILENCE (1/4), F#3 (1/4), SILENCE (1/2), G#3 // Repetitive bassline notes
+        F#3, SILENCE (1/4), F#3 (1/4), SILENCE (1/2), G#3 // Repetitive bassline noteDTOS
     track synth:
 
     track drumKit:

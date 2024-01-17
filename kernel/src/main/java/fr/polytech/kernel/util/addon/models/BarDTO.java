@@ -2,11 +2,11 @@ package fr.polytech.kernel.util.addon.models;
 
 import java.util.List;
 
-public class Bar {
+public class BarDTO {
 
     private String name;
     private String timeSignature;
-    private List<Track> tracks;
+    private List<TrackDTO> trackDTOS;
 
     // Getter and Setter methods
 
@@ -26,12 +26,12 @@ public class Bar {
         this.timeSignature = timeSignature;
     }
 
-    public List<Track> getTracks() {
-        return tracks;
+    public List<TrackDTO> getTracks() {
+        return trackDTOS;
     }
 
-    public void setTracks(List<Track> tracks) {
-        this.tracks = tracks;
+    public void setTracks(List<TrackDTO> trackDTOS) {
+        this.trackDTOS = trackDTOS;
     }
 
 }

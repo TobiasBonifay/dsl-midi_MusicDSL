@@ -2,10 +2,10 @@ package fr.polytech.kernel.util.addon.models;
 
 import java.util.List;
 
-public class Track {
+public class TrackDTO {
 
     private String trackName;
-    private List<Note> notes;
+    private List<NoteDTO> noteDTOS;
 
     // Getter and Setter methods
 
@@ -17,12 +17,12 @@ public class Track {
         this.trackName = trackName;
     }
 
-    public List<Note> getNotes() {
-        return notes;
+    public List<NoteDTO> getNotes() {
+        return noteDTOS;
     }
 
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
+    public void setNotes(List<NoteDTO> noteDTOS) {
+        this.noteDTOS = noteDTOS;
     }
 
 }

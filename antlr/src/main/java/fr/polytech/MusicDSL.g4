@@ -18,7 +18,7 @@ instrumentDefinition : instrumentName=ID instrumentMidiName=INSTRUMENT 'volume' 
 
 // ----------------- CLIP -----------------
 clipSection : clip+;
-clip : 'clip' clipName=ID defaultDynamic? ':' bars=barSequence+;
+clip : 'clip' clipName=ID defaultDynamic? ':' barDTOS=barSequence+;
 defaultDynamic : '<-' velocity=VELOCITY_SYMBOL;
 
 // ----------------- BAR -----------------

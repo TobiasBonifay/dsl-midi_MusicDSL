@@ -1,6 +1,6 @@
 package fr.polytech.kernel.util.addon.models;
 
-public class Note {
+public class NoteDTO {
     private String pitch;
     private String octave;
     private String duration;
