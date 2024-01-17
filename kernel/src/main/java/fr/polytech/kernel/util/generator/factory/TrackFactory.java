@@ -6,20 +6,16 @@ import fr.polytech.kernel.structure.tracks.DrumTrack;
 import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.generator.events.ChannelManager;
+import lombok.Getter;
 
 import java.util.logging.Logger;
 
-public class TrackFactory {
+@Getter
+public record TrackFactory(ChannelManager channelManager) {
     private static final Logger LOGGER = Logger.getLogger(TrackFactory.class.getName());
 
     static {
         LoggingSetup.setupLogger(LOGGER);
-    }
-
-    private final ChannelManager channelManager;
-
-    public TrackFactory(ChannelManager channelManager) {
-        this.channelManager = channelManager;
     }
 
     public Track createInstrumentTrack(String name, Instrument instrument, int volume) {

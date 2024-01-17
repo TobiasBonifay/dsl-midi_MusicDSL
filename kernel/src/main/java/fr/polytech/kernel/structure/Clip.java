@@ -1,7 +1,6 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
-import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
@@ -22,7 +21,6 @@ public class Clip {
 
     private final String name;
     private final List<Bar> bars;
-    private final List<DrumHit> mergedDrumHits = new ArrayList<>();
 
     @Setter
     private Dynamic defaultDynamic = Dynamic.MF;

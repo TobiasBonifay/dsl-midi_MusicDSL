@@ -102,4 +102,8 @@ public class TrackHandler {
         NoteLength noteLength = element.noteDuration() != null ? parseNoteLength(element.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
         return DrumFactory.createDrumHit(drumSound, noteLength);
     }
+
+    private static void resetChannelManager() {
+        trackFactory.channelManager().reset();
+    }
 }
