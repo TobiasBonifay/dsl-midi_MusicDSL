@@ -42,6 +42,6 @@ public record DrumHit(DrumSound sound, NoteLength drumLength) implements Musical
 
     @Override
     public String toString() {
-        return "%s      of %s".formatted(DrumSound.fromString(sound.name()), drumLength != NoteLength.QUARTER ? "BEAT" : drumLength.length + " BEAT");
+        return "%s      of %s BEAT".formatted(DrumSound.fromString(sound.name()), drumLength == NoteLength.QUARTER ? "" : drumLength.length);
     }
 }
