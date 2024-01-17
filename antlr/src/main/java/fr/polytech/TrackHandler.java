@@ -12,6 +12,7 @@ import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.TrackFactory;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.List;
 
@@ -31,6 +32,58 @@ public class TrackHandler {
         NoteLength noteLength = element.noteDuration() != null ? parseNoteLength(element.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
         Dynamic dynamic = element.noteDynamic() != null ? Dynamic.valueOf(element.noteDynamic().velocity.getText().toUpperCase()) : defaultDynamic;
         return DrumFactory.createDrumHit(drumSound, noteLength, dynamic);
+    }
+
+    public MidiTrack handleTrack(TrackContext ctx, MidiGeneratorWithKernel generator, Dynamic defaultDynamic) {
+        String trackId = ctx.trackName.getText();
+        TrackContentContext trackContent = ctx.trackContent();
+
+        if (trackContent == null) {
+            throw new RuntimeException("No track content for track: " + trackId);
+        }
+
+        if (trackContent.percussionSequence() != null) {
+            return handleDrumTrack(trackContent, trackId, defaultDynamic);
+        } else if (trackContent.noteSequence() != null) {
+            Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
+            return handleInstrumentTrack(trackContent, instrument, trackId, defaultDynamic);
+        } else {
+            throw new RuntimeException("Unknown track content for track: " + trackId);
+        }
+    }
+
+    private MidiTrack handleInstrumentTrack(TrackContentContext trackContent, Instrument instrument, String trackId, Dynamic defaultDynamic) {
+        MidiTrack track = trackFactory.createInstrumentTrack(trackId, instrument, MidiGeneratorWithKernel.DEFAULT_VOLUME);
+        processTrackContent(trackContent, track, defaultDynamic);
+        return track;
+    }
+
+    private MidiTrack handleDrumTrack(TrackContentContext trackContent, String trackId, Dynamic defaultDynamic) {
+        MidiTrack drumTrack = trackFactory.createDrumTrack(trackId);
+        trackContent.percussionSequence().children.forEach(element -> {
+            if (element instanceof PercussionElementContext percussionElementContext) {
+                DrumHit dh = getDrumSound(percussionElementContext, defaultDynamic);
+                drumTrack.addMusicalElement(dh);
+            }
+        });
+        return drumTrack;
+    }
+
+    private void processTrackContent(TrackContentContext trackContent, MidiTrack track, Dynamic defaultDynamic) {
+        for (ParseTree element : trackContent.noteSequence().children) {
+            if (element.getText().trim().replaceAll(",", "").isBlank()) continue;
+            final MusicalElement musicalElement;
+            if (element instanceof ChordContext chordContext) {
+                musicalElement = getChord(chordContext, defaultDynamic);
+            } else if (element instanceof SilenceContext silenceContext) {
+                musicalElement = getRest(silenceContext);
+            } else if (element instanceof NoteContext noteContext) {
+                musicalElement = getNote(noteContext, defaultDynamic);
+            } else {
+                throw new RuntimeException("Unknown element type in track content: " + element.getText());
+            }
+            track.addMusicalElement(musicalElement);
+        }
     }
 
     private static Note getNote(NoteContext noteContext, Dynamic defaultDynamic) {
@@ -56,69 +109,10 @@ public class TrackHandler {
         return new Chord(List.of(chordNotes), noteLength, dynamic, MidiGeneratorWithKernel.DEFAULT_VOLUME);
     }
 
-    public MidiTrack handleTrack(TrackContext ctx, MidiGeneratorWithKernel generator, Dynamic defaultDynamic) {
-        TrackHandler trackHandler = new TrackHandler(trackFactory);
-
-        TrackContentContext trackContent = ctx.trackContent();
-        String trackId = ctx.trackName.getText();
-        if (trackContent == null || trackId == null) {
-            throw new RuntimeException("No track found: " + trackId);
-        } else if (trackContent.percussionSequence() != null) {
-            return handleDrumTrack(ctx.trackContent(), trackId, defaultDynamic);
-        } else if (trackContent.noteSequence() != null) {
-            Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
-            if (instrument == null) {
-                throw new RuntimeException("Instrument not found for track: " + trackId);
-            }
-            return trackHandler.handleInstrumentTrack(ctx, instrument, trackId, defaultDynamic);
-        }
-        throw new RuntimeException("No track content found for track: " + trackId);
-    }
-
-    private MidiTrack handleDrumTrack(TrackContentContext trackContent, String trackId, Dynamic defaultTrackDynamic) {
-        if (trackContent.percussionSequence() == null) {
-            throw new RuntimeException("No percussion sequence found for track: " + trackId);
-        }
-        final MidiTrack drumTrack = trackFactory.createDrumTrack(trackId);
-        trackContent.percussionSequence().children.forEach(element -> {
-            if (element instanceof PercussionElementContext percussionElementContext) {
-                DrumHit dh = getDrumSound(percussionElementContext, defaultTrackDynamic);
-                drumTrack.addMusicalElement(dh);
-            } else {
-                throw new RuntimeException("Unknown element found in drum track: " + element.getText());
-            }
-        });
-        return drumTrack;
-    }
-
-    private MidiTrack handleInstrumentTrack(TrackContext ctx, Instrument instrument, String trackId, Dynamic trackDefaultDynamic) {
-        MidiTrack track = trackFactory.createInstrumentTrack(trackId, instrument, MidiGeneratorWithKernel.DEFAULT_VOLUME);
-
-        TrackContentContext trackContent = ctx.trackContent();
-        if (trackContent.noteSequence() == null) {
-            throw new RuntimeException("No note sequence found for track: " + trackId);
-        }
-        processTrackContent(trackContent, track, trackDefaultDynamic);
-        return track;
-    }
-
-    private void processTrackContent(TrackContentContext trackContent, MidiTrack track, Dynamic defaultDynamic) {
-        trackContent.noteSequence().children.forEach(element -> {
-            if (element.getText().trim().replaceAll(",", "").isBlank()) return;
-            final MusicalElement musicalElement;
-            if (element instanceof ChordContext chordContext) {
-                musicalElement = getChord(chordContext, defaultDynamic);
-            } else if (element instanceof SilenceContext silenceContext) {
-                NoteLength noteLength = silenceContext.noteDuration() != null ? parseNoteLength(silenceContext.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
-                musicalElement = new Rest(noteLength);
-            } else if (element instanceof NoteContext noteContext) {
-                musicalElement = getNote(noteContext, defaultDynamic);
-            } else if (element instanceof PercussionElementContext percussionElementContext) {
-                musicalElement = getDrumSound(percussionElementContext, defaultDynamic);
-            } else {
-                throw new RuntimeException("Unknown element type in track content: " + element.getText());
-            }
-            track.addMusicalElement(musicalElement);
-        });
+    private Rest getRest(SilenceContext silenceContext) {
+        NoteLength noteLength = silenceContext.noteDuration() != null
+                ? parseNoteLength(silenceContext.noteDuration().length.getText())
+                : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+        return new Rest(noteLength);
     }
 }
