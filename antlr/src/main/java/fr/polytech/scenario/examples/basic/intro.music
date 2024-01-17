@@ -1,7 +1,7 @@
 // This piece features a simple intro with a piano playing chords and a drum kit on a standard 4/4 time signature at 120 BPM.
 signature 4/4
 bpm 120
-timeshift 100
+timeshift 0
 velocityrandomization 10
 resolution 100
 
@@ -15,6 +15,8 @@ bar [
     // bpm 150
     signature 3/4
 
+    track drum0:
+        KICK (1/2) SNARE (1/2) SNARE KICK SNARE
     track trackName:
         // empty
     track piano:
@@ -25,8 +27,10 @@ bar [
         rest, G4 mf (1/2), G4 mf (1/2), G3, SILENCE
     track piano:
         // empty
-    track drums:
+    track drums1:
         LOW_TOM (1/2) LOW_TOM (1/2) COWBELL LOW_CONGA COWBELL
+    track drums2:
+        OPEN_HI_HAT OH OH OH
 ]
 
 clip Chorus:
@@ -38,9 +42,9 @@ bar [
     track piano:
         do4 mf, re#4 mf, mib5 ff, REST
     track drums:
-        KICK (1/2) SNARE (1/2) SNARE KICK SNARE
+        KICK (1/2) pp SNARE (1/2) SNARE KICK SNARE
 ]
 
 Timeline:
     Intro
-    Chorus x 2
+    Chorus

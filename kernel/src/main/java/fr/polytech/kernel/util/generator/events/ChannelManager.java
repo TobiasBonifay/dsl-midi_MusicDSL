@@ -12,7 +12,7 @@ public class ChannelManager {
             return channelMap.get(trackName);
         }
 
-        int channel = channelMap.size() + 1;
+        int channel = channelMap.size();
         while (channel == 9 || channel == 10) {
             channel++;
         }

@@ -93,13 +93,16 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
             }
         }
 
-        if (ctx.clipName == null) {
+        if (ctx.clipName == null || ctx.clipName.getText().trim().isBlank()) {
             throw new RuntimeException("No clip name found");
         }
         String clipName = ctx.clipName.getText();
         Clip clip = new Clip(clipName);
-        if (ctx.defaultDynamic() != null)
-            clip.setDefaultDynamic(Dynamic.valueOf(ctx.defaultDynamic().VELOCITY_SYMBOL().getText().toUpperCase()));
+        Dynamic clipDefaultDynamic = DEFAULT_DYNAMIC;
+        if (ctx.defaultDynamic() != null) {
+            clipDefaultDynamic = Dynamic.valueOf(ctx.defaultDynamic().VELOCITY_SYMBOL().getText().toUpperCase());
+        }
+        clip.setDefaultDynamic(clipDefaultDynamic);
         this.currentClip = clip;
         ctx.barSequence().forEach(barSequence -> barSequence.accept(this));
         clipMap.put(clipName, clip);
@@ -109,7 +112,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitBarSequence(BarSequenceContext ctx) {
-        currentBar = new Bar("" + (currentClip.getBars().size() + 1), app.getGlobalTimeSignature(), app.getGlobalTempo(), DEFAULT_VOLUME);
+        Dynamic barDefaultDynamic = currentClip.getDefaultDynamic();
+        currentBar = new Bar("" + (currentClip.getBars().size() + 1), app.getGlobalTimeSignature(), app.getGlobalTempo(), DEFAULT_VOLUME, barDefaultDynamic);
         super.visitBarSequence(ctx);
         currentClip.addBar(currentBar);
         app.getChannelManager().reset();
@@ -157,7 +161,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
                 // empty track
                 return;
             }
-            MidiTrack track = trackHandler.handleTrack(trackCtx, this);
+            MidiTrack track = trackHandler.handleTrack(trackCtx, this, currentClip.getDefaultDynamic());
             this.currentBar.addTrack(track);
         });
         return super.visitTrackSequence(ctx);

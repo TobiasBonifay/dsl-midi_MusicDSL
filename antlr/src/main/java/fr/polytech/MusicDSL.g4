@@ -49,7 +49,7 @@ timelineClip : clipName=ID (WS* 'x' WS* repeatNumber=INT)?;
 
 // ----------------- DRUMS -----------------
 percussionSequence : percussionElement+;
-percussionElement : PERCUSSION noteDuration? | silence;
+percussionElement : PERCUSSION noteDuration? noteDynamic? | silence;
 
 // Lexer Rules
 fragment DIGIT : [0-9];

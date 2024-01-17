@@ -25,6 +25,11 @@ public class NoteBuilder {
         return this;
     }
 
+    public NoteBuilder dynamic(Dynamic i) {
+        if (i != null) this.dynamic = i;
+        return this;
+    }
+
     public NoteBuilder volume(int i) {
         this.volume = i;
         return this;
