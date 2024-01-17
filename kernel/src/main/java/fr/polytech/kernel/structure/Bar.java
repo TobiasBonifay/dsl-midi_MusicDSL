@@ -1,15 +1,16 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.tracks.DrumTrack;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
+import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.sound.midi.InvalidMidiDataException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 import java.util.logging.Logger;
 
 public class Bar {
@@ -23,12 +24,10 @@ public class Bar {
     @Getter
     private final String name;
     @Getter
-    private final List<Track> tracks = new ArrayList<>();
+    private final Stack<MidiTrack> tracks = new Stack<>();
     private int barVolume;
     private TimeSignature timeSignature;
     private int tempo;
-    @Setter
-    private long startTick;
 
     public Bar(String name, TimeSignature timeSignature, int tempo, int barVolume) {
         this.name = name;
@@ -53,15 +52,18 @@ public class Bar {
      * If there is time left, we log a not OK message.
      * </p>
      */
-    public void generateMidi(MidiGenerator midiGenerator, long currentTick, Dynamic defaultDynamic) throws InvalidMidiDataException {
-        LOGGER.info("Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
+    public void generateMidi(MidiGenerator midiGenerator, Dynamic defaultDynamic) throws InvalidMidiDataException {
+        long currentTick = midiGenerator.trackManager().getCurrentTick();
+        LOGGER.info("              Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
 
-        for (Track track : tracks) {
-            track.setDefaultDynamic(defaultDynamic);
-            track.setDefaultVolume(barVolume);
+        // generate the instrument tracks
+        for (MidiTrack track : tracks) {
+            if (track instanceof Track musicTrack) {
+                musicTrack.setDefaultDynamic(defaultDynamic);
+                musicTrack.setDefaultVolume(barVolume);
+            }
             track.generateMidi(midiGenerator, currentTick);
         }
-
         long barDuration = calculateDuration(midiGenerator.getSequence().getResolution());
         long endingTick = currentTick + barDuration;
 
@@ -78,8 +80,12 @@ public class Bar {
     }
 
 
-    public void addTrack(Track track) {
-        tracks.add(track);
+    public void addTrack(MidiTrack track) {
+        if (track instanceof DrumTrack) {
+            tracks.add(track);
+        } else {
+            tracks.add(0, track);
+        }
     }
 
     public void withTimeSignature(TimeSignature signature) {
@@ -99,7 +105,7 @@ public class Bar {
     }
 
     public long calculateDuration(int resolution) {
-        return tracks.stream()//
+        return tracks.stream() //
                 .mapToLong(track -> track.calculateDuration(resolution)) //
                 .max() //
                 .orElse(0);

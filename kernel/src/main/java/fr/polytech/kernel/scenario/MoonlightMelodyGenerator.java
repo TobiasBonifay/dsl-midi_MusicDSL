@@ -5,13 +5,15 @@ import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
-import fr.polytech.kernel.structure.Track;
 import fr.polytech.kernel.structure.musicalelements.Note;
+import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
+import fr.polytech.kernel.util.generator.events.ChannelManager;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
+import fr.polytech.kernel.util.generator.factory.TrackFactory;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
@@ -26,7 +28,8 @@ public class MoonlightMelodyGenerator {
         app.setGlobalTempo(120);
 
         final Instrument pianoInstrument = new Instrument("Piano", MidiInstrument.ACOUSTIC_GRAND_PIANO, 100);
-        final Track piano = new Track("Piano", pianoInstrument);
+        final TrackFactory trackFactory = new TrackFactory(new ChannelManager());
+        final Track piano = trackFactory.createInstrumentTrack("Piano", pianoInstrument, 100);
         createNoteSequence().forEach(piano::addMusicalElement);
 
         final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100);

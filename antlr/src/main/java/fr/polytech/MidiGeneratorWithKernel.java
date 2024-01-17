@@ -2,15 +2,16 @@ package fr.polytech;
 
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
-import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
-import fr.polytech.kernel.structure.Track;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
+import fr.polytech.kernel.util.generator.events.ChannelManager;
+import fr.polytech.kernel.util.generator.factory.TrackFactory;
 import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static fr.polytech.MusicDSLParser.*;
 
@@ -26,15 +26,11 @@ import static fr.polytech.MusicDSLParser.*;
 public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     public static final Dynamic DEFAULT_DYNAMIC = Dynamic.MF;
-    public static final Logger LOGGER = Logger.getLogger(MidiGeneratorWithKernel.class.getName());
     public static final int DEFAULT_VOLUME = 100;
     public static final NoteLength DEFAULT_NOTE_LENGTH = NoteLength.QUARTER;
     private static final int DEFAULT_TEMPO = 140;
     private static final TimeSignature DEFAULT_TIME_SIGNATURE = new TimeSignature(4, 4);
 
-    static {
-        LoggingSetup.setupLogger(LOGGER);
-    }
 
     private final Map<String, Clip> clipMap = new HashMap<>();
     private final App app;
@@ -48,8 +44,8 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
     @Override
     public Void visitBpm(BpmContext ctx) {
         if (ctx.globalBpmValue == null) {
-            LOGGER.info("Global BPM value is missing");
-            return super.visitBpm(ctx);
+            throw new RuntimeException("No global BPM value found");
+            // return super.visitBpm(ctx);
         }
         int bpm = Integer.parseInt(ctx.globalBpmValue.getText());
         this.app.setGlobalTempo(bpm);
@@ -67,17 +63,17 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
                 instrument = new Instrument(instrumentName, midiInstrument, volume);
             }
             this.app.addInstrument(instrument);
-            LOGGER.info("Instrument defined: " + instrumentName);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Instrument not found: " + ctx.instrumentMidiName.getText());
+            throw new RuntimeException("Instrument not found: " + ctx.instrumentMidiName.getText());
         }
         return super.visitInstrumentDefinition(ctx);
     }
 
     @Override
     public Void visitTrack(TrackContext ctx) {
-        String trackId = ctx.trackName.getText();
-        TrackHandler.handleTrack(ctx, trackId, this);
+        // String trackId = ctx.trackName.getText();
+        // TrackHandler.handleTrack(ctx, trackId, this);
+        // see 157
         return null;
     }
 
@@ -93,10 +89,13 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
             try {
                 app.setResolution(480);
             } catch (InvalidMidiDataException e) {
-                LOGGER.warning("Error setting resolution: " + 480);
+                throw new RuntimeException("Error setting resolution. " + e.getMessage());
             }
         }
 
+        if (ctx.clipName == null) {
+            throw new RuntimeException("No clip name found");
+        }
         String clipName = ctx.clipName.getText();
         Clip clip = new Clip(clipName);
         if (ctx.defaultDynamic() != null)
@@ -104,6 +103,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         this.currentClip = clip;
         ctx.barSequence().forEach(barSequence -> barSequence.accept(this));
         clipMap.put(clipName, clip);
+        app.getChannelManager().reset();
         return null;
     }
 
@@ -112,6 +112,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         currentBar = new Bar("" + (currentClip.getBars().size() + 1), app.getGlobalTimeSignature(), app.getGlobalTempo(), DEFAULT_VOLUME);
         super.visitBarSequence(ctx);
         currentClip.addBar(currentBar);
+        app.getChannelManager().reset();
         return null;
     }
 
@@ -121,8 +122,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         if (null != currentBar) {
             this.currentBar.changeTempo(tempoVariation);
         } else {
-            LOGGER.severe("Tempo change found outside of a bar OR feature not implemented");
-            LOGGER.severe("Tempo change ignored");
+            throw new RuntimeException("No current bar found. Tempo change must be in a bar.");
         }
         return null;// super.visitTempoChange(ctx);
     }
@@ -147,13 +147,17 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitTrackSequence(TrackSequenceContext ctx) {
+        ChannelManager channelManager = app.getChannelManager();
+        TrackFactory trackFactory = new TrackFactory(channelManager);
+        TrackHandler trackHandler = new TrackHandler(trackFactory);
+
         List<TrackContext> tracks = ctx.track();
         tracks.forEach(trackCtx -> {
             if (trackCtx.trackContent() == null) {
-                LOGGER.info("No track content found for track: " + trackCtx.trackName.getText());
+                // empty track
                 return;
             }
-            Track track = TrackHandler.handleTrack(trackCtx, trackCtx.trackName.getText(), this);
+            MidiTrack track = trackHandler.handleTrack(trackCtx, this);
             this.currentBar.addTrack(track);
         });
         return super.visitTrackSequence(ctx);
@@ -202,22 +206,27 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
             try {
                 this.app.setResolution(resolution);
             } catch (InvalidMidiDataException e) {
-                LOGGER.warning("Error setting resolution: " + resolution);
+                throw new RuntimeException("Error setting resolution. " + e.getMessage());
             }
         }
         return super.visitResolution(ctx);
     }
 
+    /**
+     * The entry point to our logic layer. Called from the timeline visitor.
+     *
+     * @param clipName the name of the clip to generate
+     */
     private void processClip(String clipName) {
         Clip clip = clipMap.get(clipName);
         if (clip != null) {
             try {
                 app.generateClip(clip);
             } catch (InvalidMidiDataException e) {
-                LOGGER.warning("Error generating MIDI for clip: " + clipName);
+                throw new RuntimeException("Error generating clip: " + clipName + ". " + e.getMessage());
             }
         } else {
-            LOGGER.warning("Clip not found: " + clipName);
+            throw new RuntimeException("Clip not found: " + clipName);
         }
     }
 

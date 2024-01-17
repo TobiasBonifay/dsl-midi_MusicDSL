@@ -14,16 +14,20 @@ import java.util.logging.Logger;
 @Getter
 public class Clip {
     private static final Logger LOGGER = Logger.getLogger(Clip.class.getName());
-    @Setter
-    private Dynamic defaultDynamic = Dynamic.MF;
+
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
+
     private final String name;
-    private final List<Bar> bars = new ArrayList<>();
+    private final List<Bar> bars;
+
+    @Setter
+    private Dynamic defaultDynamic = Dynamic.MF;
 
     public Clip(String name) {
         this.name = name;
+        this.bars = new ArrayList<>();
     }
 
     /**
@@ -37,14 +41,9 @@ public class Clip {
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
-        long currentTick = midiGenerator.trackManager().getCurrentTick();
-        LOGGER.info("        Generating MIDI for clip %s with %d bars at tick %s with dynamic %s".formatted(name, bars.size(), currentTick, defaultDynamic));
-        int margin = midiGenerator.trackManager().getTimeShiftRandomness();
-
+        LOGGER.info("        Generating MIDI for clip %s with %d bars with dynamic %s".formatted(name, bars.size(), defaultDynamic));
         for (Bar bar : bars) {
-            long barDuration = bar.calculateDuration(midiGenerator.getSequence().getResolution());
-            bar.generateMidi(midiGenerator, currentTick, defaultDynamic);
-            currentTick += barDuration;
+            bar.generateMidi(midiGenerator, defaultDynamic);
         }
     }
 

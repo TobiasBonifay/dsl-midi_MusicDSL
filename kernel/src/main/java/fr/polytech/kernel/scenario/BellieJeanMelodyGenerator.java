@@ -2,14 +2,20 @@ package fr.polytech.kernel.scenario;
 
 import fr.polytech.kernel.App;
 import fr.polytech.kernel.exceptions.MidiGenerationException;
-import fr.polytech.kernel.structure.*;
-import fr.polytech.kernel.structure.drums.DrumTrack;
+import fr.polytech.kernel.structure.Bar;
+import fr.polytech.kernel.structure.Clip;
+import fr.polytech.kernel.structure.Instrument;
+import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.musicalelements.Rest;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
+import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.*;
+import fr.polytech.kernel.util.generator.events.ChannelManager;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.NoteFactory;
+import fr.polytech.kernel.util.generator.factory.TrackFactory;
 
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
@@ -34,19 +40,23 @@ public class BellieJeanMelodyGenerator {
         // Drum instrument
 
         // Create tracks
-        final DrumTrack drumTrack = new DrumTrack("drumKit");
-        final Track basstrack = new Track("Bass line", bassLine);
-        final Track synthtrack = new Track("Synth", synth);
+        final TrackFactory trackFactory = new TrackFactory(new ChannelManager());
 
-        final Track leadVoxTrack = new Track("Lead Vox Line", leadVox);
-        final Track leadVoxTrack16 = new Track("Lead Vox Line 16", leadVox);
-        final Track leadVoxTrack17 = new Track("Lead Vox Line 17", leadVox);
-        final Track elecPianoTrack = new Track("Elec Piano", elecPiano);
-        final Track rythmGtrTrack = new Track("Rythm Gtr Line", rythmGtr);
-        final Track strings2Track = new Track("String Ensemble 2 Line", strings2);
-        final Track clavBrassTrack = new Track("Clav Brass Line", clavBrass);
-        final Track stringsTrack = new Track("Synth Strings Line", strings);
-        final Track bassTrack = new Track("Bass Line", bass);
+        final MidiTrack drumTrack = trackFactory.createDrumTrack("Drum Track");
+        final MidiTrack drumTrack2 = trackFactory.createDrumTrack("Drum Track 2");
+
+        final Track basstrack = trackFactory.createInstrumentTrack("Bass Line", bassLine, 100);
+        final Track synthtrack = trackFactory.createInstrumentTrack("Synth", synth, 100);
+
+        final Track leadVoxTrack = trackFactory.createInstrumentTrack("Lead Vox Line", leadVox, 100);
+        final Track leadVoxTrack16 = trackFactory.createInstrumentTrack("Lead Vox Line 16", leadVox, 4);
+        final Track leadVoxTrack17 = trackFactory.createInstrumentTrack("Lead Vox Line 17", leadVox, 5);
+        final Track elecPianoTrack = trackFactory.createInstrumentTrack("Elec Piano Line", elecPiano, 100);
+        final Track rythmGtrTrack = trackFactory.createInstrumentTrack("Rythm Gtr Line", rythmGtr, 100);
+        final Track strings2Track = trackFactory.createInstrumentTrack("String Ensemble 2 Line", strings2, 100);
+        final Track clavBrassTrack = trackFactory.createInstrumentTrack("Clav Brass Line", clavBrass, 100);
+        final Track stringsTrack = trackFactory.createInstrumentTrack("Synth Strings Line", strings, 100);
+        final Track bassTrack = trackFactory.createInstrumentTrack("Bass Line", bass, 100);
 
         // Add notes to tracks
         createLeadVoxSequence().forEach(leadVoxTrack::addMusicalElement);
@@ -54,7 +64,8 @@ public class BellieJeanMelodyGenerator {
         createLeadVoxSequence16().forEach(leadVoxTrack16::addMusicalElement);
         createLeadVoxSequence17().forEach(leadVoxTrack17::addMusicalElement);
         createStringsSequence().forEach(stringsTrack::addMusicalElement);
-        //createDrumsSequence().forEach(drumTrack::addDrumHit);
+        createDrumsSequence().forEach(drumTrack::addMusicalElement);
+        createDrumsSequence2().forEach(drumTrack2::addMusicalElement);
         //createBassNoteSequence().forEach(basstrack::addNote);
         //createBassNoteSequence2().forEach(basstrack::addNote);
         //createLeadBillieJeanNoteSequence1().forEach(synthtrack::addNote);
@@ -139,7 +150,21 @@ public class BellieJeanMelodyGenerator {
     }
 
     private static List<DrumHit> createDrumsSequence() {
-        return Stream.of(DrumFactory.createDrumHit(DrumSound.KICK), DrumFactory.createDrumHit(DrumSound.SNARE), DrumFactory.createDrumHit(DrumSound.KICK), DrumFactory.createDrumHit(DrumSound.SNARE)).toList();
+        return Stream.of(
+                DrumFactory.createDrumHit(DrumSound.KICK, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.SNARE, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.KICK, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.SNARE, NoteLength.QUARTER)
+        ).toList();
+    }
+
+    private static List<DrumHit> createDrumsSequence2() {
+        return Stream.of(
+                DrumFactory.createDrumHit(DrumSound.OPEN_HIHAT, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.OPEN_HIHAT, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.OPEN_HIHAT, NoteLength.QUARTER),
+                DrumFactory.createDrumHit(DrumSound.OPEN_HIHAT, NoteLength.QUARTER)
+        ).toList();
     }
 
     /**

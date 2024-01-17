@@ -41,10 +41,11 @@ public record Note(String pitch, NoteLength noteLength, Dynamic dynamic, int vol
     @Override
     public MidiEvent[] generateMidiEvents(int channel, long currentTick, int resolution, int velocityRandomization, int timeShift) throws InvalidMidiDataException {
         long midiDuration = noteLength.getDuration(resolution);
+        int defaultValueVelocity = dynamic.value();
         int theDynamic = dynamic.randomizedValueInPercent(velocityRandomization);
-        LOGGER.info("                                                   with dynamic %s and time shift %s".formatted(theDynamic, timeShift));
+        LOGGER.info("                        + Tick [%s +%s] -> [%s]: Note %s (%d+-%d) -> %d".formatted(currentTick, timeShift, currentTick + midiDuration, this, defaultValueVelocity, velocityRandomization, theDynamic));
         MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, parseNote(pitch), theDynamic), currentTick + timeShift);
-        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, parseNote(pitch), 0), currentTick + midiDuration + timeShift);
+        MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, parseNote(pitch), 0), currentTick + midiDuration); // + timeShift
 
         return new MidiEvent[]{noteOn, noteOff};
     }

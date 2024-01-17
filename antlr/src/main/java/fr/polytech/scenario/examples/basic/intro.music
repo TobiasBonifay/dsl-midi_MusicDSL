@@ -1,7 +1,7 @@
 // This piece features a simple intro with a piano playing chords and a drum kit on a standard 4/4 time signature at 120 BPM.
 signature 4/4
 bpm 120
-timeshift 1
+timeshift 100
 velocityrandomization 10
 resolution 100
 

@@ -1,11 +1,14 @@
 package fr.polytech.kernel.util.generator.events;
 
 import fr.polytech.kernel.logs.LoggingSetup;
+import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.sound.midi.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Getter
@@ -16,13 +19,14 @@ public class MidiTrackManager {
         LoggingSetup.setupLogger(LOGGER);
     }
 
+    private final List<MidiTrack> instrumentTracks = new ArrayList<>();
+
     private Sequence sequence;
     private Track currentTrack;
     @Setter
     private long currentTick;
     @Setter
     private int resolution = 480; // in ticks per beat
-    @Getter
     @Setter
     private int velocityRandomness = 5; // in percent
     @Setter
@@ -37,11 +41,9 @@ public class MidiTrackManager {
 
     /**
      * Bad idea to change the resolution after the track has been created
-     *
-     * @param resolution
-     * @throws InvalidMidiDataException
      */
     public void changeMidiTrackResolution(int resolution) throws InvalidMidiDataException {
+        LOGGER.info("Resolution %d (in ticks) for beat".formatted(resolution));
         this.resolution = resolution;
         this.sequence = new Sequence(Sequence.PPQ, resolution);
         this.currentTrack = sequence.createTrack();
@@ -90,33 +92,5 @@ public class MidiTrackManager {
      */
     public int getTimeShift() {
         return (int) (Math.random() * timeShiftRandomness * 2) - timeShiftRandomness;
-    }
-
-
-    /**
-     * Check how much time is left before the end of the bar. Allow a margin of error due to randomization.
-     * If the bar is over, return how much time has been over.
-     * If the bar is not over, return how much time is left.
-     * If matching +- margin, return 0.
-     *
-     * @param barDuration The duration of the bar in ticks
-     *                    (calculated with the time signature and the resolution)
-     * @param margin      The margin of error in ticks
-     * @param currentTick The current tick globally
-     * @return the time left before the end of the bar. If the bar is over, return how much time has been over.
-     */
-    public long howMuchTimeLeft(long barDuration, int margin, long currentTick) {
-        long timeLeft = barDuration - currentTick;
-        if (timeLeft > 0) {
-            if (timeLeft > margin) {
-                return timeLeft - margin;
-            } else if (timeLeft < -margin) {
-                return timeLeft + margin;
-            } else {
-                return 0;
-            }
-        } else {
-            return timeLeft;
-        }
     }
 }
