@@ -27,7 +27,7 @@ public record DrumHit(DrumSound sound, NoteLength drumLength,
         int midiNote = this.sound.getMidiNote();
         long midiDuration = this.getDuration(resolution);
         int randomizedVelocity = dynamic.randomizedValueInPercent(velocityRandomization);
-        LOGGER.info("                        + Tick [%s +%s] -> [%s]:  Drum %s   velocity (%d+-%d) -> %d".formatted(currentTick, timeshiftRandomization, currentTick + midiDuration, this, dynamic.value(), velocityRandomization, randomizedVelocity));
+        LOGGER.info("                        + Tick [%s +%s] -> [%s]:  Drum %s   velocity %s (%d+-%d) -> %d".formatted(currentTick, timeshiftRandomization, currentTick + midiDuration, this, dynamic, dynamic.value(), velocityRandomization, randomizedVelocity));
         MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, midiNote, randomizedVelocity), currentTick + timeshiftRandomization);
         MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, midiNote, 0), currentTick + midiDuration);
 

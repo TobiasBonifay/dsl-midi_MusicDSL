@@ -161,7 +161,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
                 // empty track
                 return;
             }
-            MidiTrack track = trackHandler.handleTrack(trackCtx, this);
+            MidiTrack track = trackHandler.handleTrack(trackCtx, this, currentClip.getDefaultDynamic());
             this.currentBar.addTrack(track);
         });
         return super.visitTrackSequence(ctx);
