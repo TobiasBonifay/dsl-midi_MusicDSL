@@ -112,6 +112,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         currentBar = new Bar("" + (currentClip.getBars().size() + 1), app.getGlobalTimeSignature(), app.getGlobalTempo(), DEFAULT_VOLUME);
         super.visitBarSequence(ctx);
         currentClip.addBar(currentBar);
+        app.getChannelManager().reset();
         return null;
     }
 
