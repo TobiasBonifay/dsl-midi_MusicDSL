@@ -3,10 +3,17 @@ const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const { exec } = require('child_process');
 const fs = require('fs');
+const path = require('path');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+//serve unique front file
+app.get('/', (req, res) => {
+    const indexPath = path.join(__dirname, 'index.html'); // Remplacez 'chemin/vers/index.html' par le chemin réel de votre fichier index.html
+    res.sendFile(indexPath);
+});
 
 app.post('/convert', (req, res) => {
     console.log(`POST /convert`)

@@ -5,12 +5,17 @@ located in `antlr/target`
 
 2. Build docker image
 ```bash
-docker build -t server .
+docker build -t igormel/dsl-editor .
 ```
 
 3. Run server in a container
 ```bash
-docker run --name backend -p 80:80 server
+docker run --name backend -p 80:80 igormel/dsl-editor
 ```
 
 4. Open [index.html](index.html) in browser
+
+## How to push to docker hub
+```bash
+docker push igormel/dsl-editor
+```

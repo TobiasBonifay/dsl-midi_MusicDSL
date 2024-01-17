@@ -2,6 +2,7 @@ FROM node:latest
 
 WORKDIR /app
 
+COPY index.html index.html
 COPY package.json package.json
 COPY server.js server.js
 # file in ../antlr/target/antlr-1.0-SNAPSHOT-jar-with-dependencies.jar
