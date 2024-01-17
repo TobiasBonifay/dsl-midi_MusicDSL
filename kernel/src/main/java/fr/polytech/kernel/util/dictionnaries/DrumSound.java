@@ -59,4 +59,15 @@ public enum DrumSound {
     DrumSound(int midiNote) {
         this.midiNote = midiNote;
     }
+
+    public static String fromString(String name) {
+        // return the first enum value that match the midinote of the given string for instance "BASS_DRUM_1" will return "BASS DRUM" because they have the same midinote and we use the first one.
+        int midiNote = DrumSound.valueOf(name).getMidiNote();
+        for (DrumSound drumSound : DrumSound.values()) {
+            if (drumSound.getMidiNote() == midiNote) {
+                return drumSound.name().replace("_", " ");
+            }
+        }
+        return null;
+    }
 }
