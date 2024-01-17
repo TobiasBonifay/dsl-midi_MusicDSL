@@ -1,0 +1,24 @@
+{
+  "bars" :
+    [ {"bar" : {
+      "name" : "bar1",
+      "timeSignature" : "4/3",
+      "tracks" : [
+        {
+          "trackName" : "Piano",
+          "notes" : [
+            {
+              "pitch" : "c",
+              "duration" : "q"
+            },
+            {
+              "pitch" : "b",
+              "duration" : "q"
+            }
+          ]
+        }
+      ]
+    }
+    } ],
+  "timeSignatureGlobal" : "4/4"
+}
