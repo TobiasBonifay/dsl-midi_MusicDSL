@@ -25,15 +25,17 @@ public class Bar {
     private final String name;
     @Getter
     private final Stack<MidiTrack> tracks = new Stack<>();
+    private final Dynamic defaultDynamic;
     private int barVolume;
     private TimeSignature timeSignature;
     private int tempo;
 
-    public Bar(String name, TimeSignature timeSignature, int tempo, int barVolume) {
+    public Bar(String name, TimeSignature timeSignature, int tempo, int barVolume, Dynamic barDefaultDynamic) {
         this.name = name;
         this.timeSignature = timeSignature;
         this.tempo = tempo;
         this.barVolume = barVolume;
+        this.defaultDynamic = barDefaultDynamic;
     }
 
     /**
@@ -52,7 +54,7 @@ public class Bar {
      * If there is time left, we log a not OK message.
      * </p>
      */
-    public void generateMidi(MidiGenerator midiGenerator, Dynamic defaultDynamic) throws InvalidMidiDataException {
+    public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         long currentTick = midiGenerator.trackManager().getCurrentTick();
         LOGGER.info("              Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
 

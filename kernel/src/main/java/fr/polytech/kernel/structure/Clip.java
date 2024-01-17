@@ -23,7 +23,7 @@ public class Clip {
     private final List<Bar> bars;
 
     @Setter
-    private Dynamic defaultDynamic = Dynamic.MF;
+    private Dynamic defaultDynamic;
 
     public Clip(String name) {
         this.name = name;
@@ -43,7 +43,7 @@ public class Clip {
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         LOGGER.info("        Generating MIDI for clip %s with %d bars with dynamic %s".formatted(name, bars.size(), defaultDynamic));
         for (Bar bar : bars) {
-            bar.generateMidi(midiGenerator, defaultDynamic);
+            bar.generateMidi(midiGenerator);
         }
     }
 
