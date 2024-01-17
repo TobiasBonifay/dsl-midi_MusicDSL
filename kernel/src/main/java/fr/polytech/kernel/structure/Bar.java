@@ -1,7 +1,6 @@
 package fr.polytech.kernel.structure;
 
 import fr.polytech.kernel.logs.LoggingSetup;
-import fr.polytech.kernel.structure.musicalelements.DrumHit;
 import fr.polytech.kernel.structure.tracks.DrumTrack;
 import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.structure.tracks.Track;
@@ -11,8 +10,7 @@ import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 import java.util.logging.Logger;
 
 public class Bar {
@@ -26,9 +24,7 @@ public class Bar {
     @Getter
     private final String name;
     @Getter
-    private final List<MidiTrack> instrumentTracks = new ArrayList<>();
-    @Getter
-    private final List<DrumHit> drumHits = new ArrayList<>();
+    private final Stack<MidiTrack> tracks = new Stack<>();
     private int barVolume;
     private TimeSignature timeSignature;
     private int tempo;
@@ -61,7 +57,7 @@ public class Bar {
         LOGGER.info("              Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
 
         // generate the instrument tracks
-        for (MidiTrack track : instrumentTracks) {
+        for (MidiTrack track : tracks) {
             if (track instanceof Track musicTrack) {
                 musicTrack.setDefaultDynamic(defaultDynamic);
                 musicTrack.setDefaultVolume(barVolume);
@@ -85,10 +81,11 @@ public class Bar {
 
 
     public void addTrack(MidiTrack track) {
-        if (track instanceof DrumTrack drumTrack) {
-            return;
+        if (track instanceof DrumTrack) {
+            tracks.add(track);
+        } else {
+            tracks.add(0, track);
         }
-        instrumentTracks.add(track);
     }
 
     public void withTimeSignature(TimeSignature signature) {
@@ -108,7 +105,7 @@ public class Bar {
     }
 
     public long calculateDuration(int resolution) {
-        return instrumentTracks.stream() //
+        return tracks.stream() //
                 .mapToLong(track -> track.calculateDuration(resolution)) //
                 .max() //
                 .orElse(0);

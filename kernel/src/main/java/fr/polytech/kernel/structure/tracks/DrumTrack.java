@@ -36,7 +36,6 @@ public class DrumTrack extends MidiTrack {
         LOGGER.info("                   -> START Generating MIDI events for track %s".formatted(name.toUpperCase()));
         midiGenerator.trackManager().setCurrentTick(currentTick);
 
-        LOGGER.info("-> START Generating MIDI events for track %s".formatted(name.toUpperCase()));
         for (MusicalElement element : musicalElements) {
             if (element instanceof DrumHit drumHit) {
                 midiGenerator.addMidiEventToTrack(drumHit, midiChannel);
@@ -47,10 +46,5 @@ public class DrumTrack extends MidiTrack {
             }
         }
         LOGGER.info("                   <- END Generated MIDI events for track %s".formatted(name.toUpperCase()));
-    }
-
-
-    public void addDrumHit(DrumHit drumHit) {
-        musicalElements.add(drumHit);
     }
 }
