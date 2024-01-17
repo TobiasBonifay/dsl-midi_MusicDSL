@@ -10,7 +10,6 @@ import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.dictionnaries.DrumSound;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
-import fr.polytech.kernel.util.generator.events.ChannelManager;
 import fr.polytech.kernel.util.generator.factory.DrumFactory;
 import fr.polytech.kernel.util.generator.factory.TrackFactory;
 
@@ -27,7 +26,7 @@ public class TrackHandler {
         this.trackFactory = trackFactory;
     }
 
-    public MidiTrack handleTrack(TrackContext ctx, MidiGeneratorWithKernel generator, ChannelManager channelManager) {
+    public MidiTrack handleTrack(TrackContext ctx, MidiGeneratorWithKernel generator) {
         TrackHandler trackHandler = new TrackHandler(trackFactory);
 
         TrackContentContext trackContent = ctx.trackContent();

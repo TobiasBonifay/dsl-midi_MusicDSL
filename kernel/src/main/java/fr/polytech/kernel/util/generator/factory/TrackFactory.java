@@ -23,7 +23,6 @@ public record TrackFactory(ChannelManager channelManager) {
     }
 
     public MidiTrack createDrumTrack(String name) {
-        // Directly request a drum channel from the ChannelManager
         int channel = channelManager.getDrumChannel(name);
         LOGGER.info("Initializing drum track %s on channel %d".formatted(name.toUpperCase(), channel));
         return new DrumTrack(name, channel);
