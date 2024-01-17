@@ -17,12 +17,15 @@ public record TrackFactory(ChannelManager channelManager) {
     }
 
     public Track createInstrumentTrack(String name, Instrument instrument, int volume) {
-        int channel = channelManager.getNextAvailableChannel();
+        int channel = channelManager.getNextAvailableChannel(name);
         LOGGER.info("Initializing instrument track %s on channel %d".formatted(name.toUpperCase(), channel));
         return new Track(name, instrument, channel, volume);
     }
 
     public MidiTrack createDrumTrack(String name) {
-        return new DrumTrack(name);
+        // Directly request a drum channel from the ChannelManager
+        int channel = channelManager.getDrumChannel(name);
+        LOGGER.info("Initializing drum track %s on channel %d".formatted(name.toUpperCase(), channel));
+        return new DrumTrack(name, channel);
     }
 }

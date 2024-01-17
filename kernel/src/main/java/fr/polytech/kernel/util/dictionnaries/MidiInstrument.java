@@ -20,12 +20,7 @@ public enum MidiInstrument {
         this.instrumentNumber = instrumentNumber;
     }
 
-    public static String midiOf(int instrumentProgramNumber) {
-        for (MidiInstrument instrument : MidiInstrument.values()) {
-            if (instrument.instrumentNumber == instrumentProgramNumber) {
-                return instrument.name();
-            }
-        }
-        return "Unknown instrument";
+    public boolean isDrum() {
+        return this == PERCUSSION_IS_NOT_AN_INSTRUMENT;
     }
 }

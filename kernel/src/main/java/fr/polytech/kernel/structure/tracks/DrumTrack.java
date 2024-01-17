@@ -19,8 +19,8 @@ public class DrumTrack extends MidiTrack {
         LoggingSetup.setupLogger(LOGGER);
     }
 
-    public DrumTrack(String name) {
-        super(name, MidiGenerator.DRUM_CHANNEL);
+    public DrumTrack(String name, int midiChannel) {
+        super(name, midiChannel);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class DrumTrack extends MidiTrack {
                 throw new RuntimeException("Invalid element type in DrumTrack: " + name);
             }
         }
-        LOGGER.info("                   <- END Generated MIDI events for track %s".formatted(name.toUpperCase()));
+        LOGGER.info("                   <- END Generated MIDI events for drum track %s".formatted(name.toUpperCase()));
     }
 }

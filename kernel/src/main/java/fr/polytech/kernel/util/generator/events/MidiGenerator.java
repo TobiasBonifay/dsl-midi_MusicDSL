@@ -14,7 +14,6 @@ import java.util.logging.Logger;
  * Handles the generation of MIDI events
  */
 public record MidiGenerator(MidiTrackManager trackManager) {
-    public static final int DRUM_CHANNEL = 9;
     private static final Logger LOGGER = Logger.getLogger(MidiGenerator.class.getName());
 
     static {
