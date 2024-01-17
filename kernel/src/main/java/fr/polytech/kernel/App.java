@@ -5,6 +5,7 @@ import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
+import fr.polytech.kernel.util.generator.events.ChannelManager;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 import fr.polytech.kernel.util.generator.events.MidiTrackManager;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+@Getter
 public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
@@ -24,18 +26,18 @@ public class App {
         LoggingSetup.setupLogger(LOGGER);
     }
 
+    private final ChannelManager channelManager;
     private final MidiGenerator midiGenerator;
     private final MidiTrackManager trackManager;
-    @Getter
-    private final List<Instrument> instruments = new ArrayList<>();
-    @Getter
+    private final List<Instrument> instruments;
     private TimeSignature globalTimeSignature;
-    @Getter
     private int globalTempo;
 
     public App() throws MidiGenerationException {
         try {
             LOGGER.info("---- Creating App instance ----");
+            this.instruments = new ArrayList<>();
+            this.channelManager = new ChannelManager();
             this.trackManager = new MidiTrackManager();
             this.midiGenerator = new MidiGenerator(trackManager);
         } catch (InvalidMidiDataException e) {

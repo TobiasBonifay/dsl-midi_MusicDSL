@@ -10,6 +10,8 @@ import fr.polytech.kernel.util.dictionnaries.Dynamic;
 import fr.polytech.kernel.util.dictionnaries.MidiInstrument;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
 import fr.polytech.kernel.util.dictionnaries.TimeSignature;
+import fr.polytech.kernel.util.generator.events.ChannelManager;
+import fr.polytech.kernel.util.generator.factory.TrackFactory;
 import lombok.Getter;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -101,6 +103,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         this.currentClip = clip;
         ctx.barSequence().forEach(barSequence -> barSequence.accept(this));
         clipMap.put(clipName, clip);
+        app.getChannelManager().reset();
         return null;
     }
 
@@ -143,13 +146,17 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
 
     @Override
     public Void visitTrackSequence(TrackSequenceContext ctx) {
+        ChannelManager channelManager = app.getChannelManager();
+        TrackFactory trackFactory = new TrackFactory(channelManager);
+        TrackHandler trackHandler = new TrackHandler(trackFactory);
+
         List<TrackContext> tracks = ctx.track();
         tracks.forEach(trackCtx -> {
             if (trackCtx.trackContent() == null) {
                 // empty track
                 return;
             }
-            MidiTrack track = TrackHandler.handleTrack(trackCtx, this);
+            MidiTrack track = trackHandler.handleTrack(trackCtx, this, channelManager);
             this.currentBar.addTrack(track);
         });
         return super.visitTrackSequence(ctx);

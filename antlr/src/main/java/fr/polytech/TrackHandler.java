@@ -20,25 +20,32 @@ import static fr.polytech.MusicDSLParser.*;
 import static fr.polytech.kernel.util.Notes.parseNoteLength;
 
 public class TrackHandler {
-    private static final TrackFactory trackFactory = new TrackFactory(new ChannelManager());
 
-    public static MidiTrack handleTrack(TrackContext ctx, MidiGeneratorWithKernel generator) {
+    private final TrackFactory trackFactory;
+
+    public TrackHandler(TrackFactory trackFactory) {
+        this.trackFactory = trackFactory;
+    }
+
+    public MidiTrack handleTrack(TrackContext ctx, MidiGeneratorWithKernel generator, ChannelManager channelManager) {
+        TrackHandler trackHandler = new TrackHandler(trackFactory);
+
         TrackContentContext trackContent = ctx.trackContent();
         String trackId = ctx.trackName.getText();
         if (trackContent == null || trackId == null) throw new RuntimeException("No track found: " + trackId);
         else if (trackContent.percussionSequence() != null)
-            return TrackHandler.handleDrumTrack(ctx.trackContent(), trackId);
+            return this.handleDrumTrack(ctx.trackContent(), trackId);
         else if (trackContent.noteSequence() != null) {
             Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
             if (instrument == null) {
                 throw new RuntimeException("Instrument not found for track: " + trackId);
             }
-            return TrackHandler.handleInstrumentTrack(ctx, instrument, trackId);
+            return trackHandler.handleInstrumentTrack(ctx, instrument, trackId);
         }
         throw new RuntimeException("No track content found for track: " + trackId);
     }
 
-    private static MidiTrack handleInstrumentTrack(TrackContext ctx, Instrument instrument, String trackId) {
+    private MidiTrack handleInstrumentTrack(TrackContext ctx, Instrument instrument, String trackId) {
         MidiTrack track = trackFactory.createInstrumentTrack(trackId, instrument, MidiGeneratorWithKernel.DEFAULT_VOLUME);
 
         TrackContentContext trackContent = ctx.trackContent();
@@ -49,7 +56,23 @@ public class TrackHandler {
         return track;
     }
 
-    private static void processTrackContent(TrackContentContext trackContent, MidiTrack track) {
+    private MidiTrack handleDrumTrack(TrackContentContext trackContent, String trackId) {
+        if (trackContent.percussionSequence() == null) {
+            throw new RuntimeException("No percussion sequence found for track: " + trackId);
+        }
+        final MidiTrack drumTrack = trackFactory.createDrumTrack(trackId);
+        trackContent.percussionSequence().children.forEach(element -> {
+            if (element instanceof PercussionElementContext percussionElementContext) {
+                DrumHit dh = getDrumSound(percussionElementContext);
+                drumTrack.addMusicalElement(dh);
+            } else {
+                throw new RuntimeException("Unknown element found in drum track: " + element.getText());
+            }
+        });
+        return drumTrack;
+    }
+
+    private void processTrackContent(TrackContentContext trackContent, MidiTrack track) {
         trackContent.noteSequence().children.forEach(element -> {
             if (element.getText().trim().replaceAll(",", "").isBlank()) return;
             final MusicalElement musicalElement;
@@ -79,22 +102,6 @@ public class TrackHandler {
                 .dynamic(noteContext.noteDynamic() != null ? noteContext.noteDynamic().velocity.getText() : String.valueOf(Dynamic.MF)) //
                 .volume(MidiGeneratorWithKernel.DEFAULT_VOLUME) //
                 .build();
-    }
-
-    private static MidiTrack handleDrumTrack(TrackContentContext trackContent, String trackId) {
-        if (trackContent.percussionSequence() == null) {
-            throw new RuntimeException("No percussion sequence found for track: " + trackId);
-        }
-        final MidiTrack drumTrack = trackFactory.createDrumTrack(trackId);
-        trackContent.percussionSequence().children.forEach(element -> {
-            if (element instanceof PercussionElementContext percussionElementContext) {
-                DrumHit dh = getDrumSound(percussionElementContext);
-                drumTrack.addMusicalElement(dh);
-            } else {
-                throw new RuntimeException("Unknown element found in drum track: " + element.getText());
-            }
-        });
-        return drumTrack;
     }
 
     private static DrumHit getDrumSound(PercussionElementContext element) {
