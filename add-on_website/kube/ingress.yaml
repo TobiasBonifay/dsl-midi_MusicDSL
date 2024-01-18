@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: ingress
+  namespace: musicml
+spec:
+  rules:
+  - host: musicml.orch-team-d.pns-projects.fr.eu.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: musicml-service
+            port:
+              number: 80

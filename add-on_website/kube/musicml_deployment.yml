@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: musicml-deployment
+  namespace: musicml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: musicml-app
+  template:
+    metadata:
+      labels:
+        app: musicml-app
+    spec:
+      containers:
+        - name: musicml-container
+          image: igormel/dsl-editor:latest
+          ports:
+            - containerPort: 80

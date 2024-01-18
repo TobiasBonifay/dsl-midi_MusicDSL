@@ -13,9 +13,20 @@ docker build -t igormel/dsl-editor .
 docker run --name backend -p 80:80 igormel/dsl-editor
 ```
 
-4. Open [index.html](index.html) in browser
+4. Open http://localhost:80 in browser
 
 ## How to push to docker hub
 ```bash
 docker push igormel/dsl-editor
+```
+
+## How to deploy to kubernetes
+```bash
+kubectl apply -f kube/musicml_deployment.yaml
+```
+
+If the tag of the image is unchanged (`latest` for example) then you need to force the deployment of the new image in
+the cluster:
+```bash
+kubectl rollout restart deployment musicml-deployment -n musicml
 ```

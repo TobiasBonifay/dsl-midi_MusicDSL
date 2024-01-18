@@ -18,7 +18,9 @@
     document.getElementById('sendButton').addEventListener('click', function() {
         var text = document.getElementById('textArea').value;
 
-        fetch('http://localhost:80/convert', {
+        const fetchUrl = window.location.hostname === 'localhost' ? 'http://localhost:80' : 'https://musicml.orch-team-d.pns-projects.fr.eu.org';
+
+        fetch( fetchUrl + "/convert", {
             method: 'POST',
             body: JSON.stringify({ text: text }),
             headers: {
