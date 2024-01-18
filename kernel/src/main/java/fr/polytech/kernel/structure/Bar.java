@@ -57,6 +57,8 @@ public class Bar {
     public void generateMidi(MidiGenerator midiGenerator) throws InvalidMidiDataException {
         long currentTick = midiGenerator.trackManager().getCurrentTick();
         LOGGER.info("              Generating MIDI for bar %s at tick %d with dynamic %s and volume %d and time signature %s and tempo %d".formatted(name, currentTick, defaultDynamic, barVolume, timeSignature, tempo));
+        midiGenerator.trackManager().setTimeSignature(timeSignature);
+        midiGenerator.trackManager().setTempo(tempo);
 
         // generate the instrument tracks
         for (MidiTrack track : tracks) {

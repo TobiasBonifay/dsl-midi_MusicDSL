@@ -58,11 +58,18 @@ public class Track extends MidiTrack {
      * @param currentTick  The current tick
      * @throws InvalidMidiDataException If the MIDI data is invalid
      */
+    @Override
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
+        midiGenerator.setTrackName(name);
+
         LOGGER.info("                   Generating MIDI for track %s".formatted(name.toUpperCase()));
         midiGenerator.trackManager().setCurrentTick(currentTick);
 
         // Volume
+        if (instrument == null) {
+            throw new IllegalStateException("Instrument not set for track: " + name);
+        }
+
         int calculatedVolume = (this.defaultVolume * instrument.volume()) / 100;
         LOGGER.info("                   Track volume %d instrument volume %d -> calculated volume %d".formatted(defaultVolume, instrument.volume(), calculatedVolume));
         midiGenerator.setTrackVolume(calculatedVolume, this.midiChannel);

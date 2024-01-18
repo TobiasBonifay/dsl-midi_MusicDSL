@@ -2,7 +2,9 @@ package fr.polytech.kernel.structure.tracks;
 
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.MusicalElement;
+import fr.polytech.kernel.structure.musicalelements.Chord;
 import fr.polytech.kernel.structure.musicalelements.DrumHit;
+import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.util.generator.events.MidiGenerator;
 
@@ -25,14 +27,17 @@ public class DrumTrack extends MidiTrack {
 
     @Override
     public void addMusicalElement(MusicalElement element) {
-        if (!(element instanceof DrumHit)) {
+        if (element instanceof Note || element instanceof Chord) {
             throw new RuntimeException("Only DrumHit elements are allowed in DrumTrack: " + name);
+        } else {
+            super.addMusicalElement(element);
         }
-        super.addMusicalElement(element);
     }
 
     @Override
     public void generateMidi(MidiGenerator midiGenerator, long currentTick) throws InvalidMidiDataException {
+        midiGenerator.setTrackName(name);
+
         LOGGER.info("                   -> START Generating MIDI events for track %s".formatted(name.toUpperCase()));
         midiGenerator.trackManager().setCurrentTick(currentTick);
 

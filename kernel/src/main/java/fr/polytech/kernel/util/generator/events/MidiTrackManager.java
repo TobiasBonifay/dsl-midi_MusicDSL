@@ -65,6 +65,7 @@ public class MidiTrackManager {
         MetaMessage tsMessage = new MetaMessage();
         tsMessage.setMessage(0x58, timeSignature.toMidiData(), 4);
         currentTrack.add(new MidiEvent(tsMessage, currentTick));
+        // TODO: make sure this method is called.
     }
 
     /**
@@ -89,8 +90,10 @@ public class MidiTrackManager {
 
     /**
      * The time shift is a random value between -timeShiftRandomness and +timeShiftRandomness
+     * No negative time shift is allowed.
      */
     public int getTimeShift() {
-        return (int) (Math.random() * timeShiftRandomness * 2) - timeShiftRandomness;
+        int shift = (int) (Math.random() * timeShiftRandomness * 2) - timeShiftRandomness;
+        return Math.toIntExact(Math.max(shift, -currentTick));
     }
 }

@@ -28,10 +28,26 @@ public class TrackHandler {
     }
 
     private static DrumHit getDrumSound(PercussionElementContext element, Dynamic defaultDynamic) {
+        if (element.PERCUSSION() == null) {
+            throw new RuntimeException("Invalid drum sound: " + element.getText());
+        }
         DrumSound drumSound = DrumSound.valueOf(element.PERCUSSION().getText());
         NoteLength noteLength = element.noteDuration() != null ? parseNoteLength(element.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
         Dynamic dynamic = element.noteDynamic() != null ? Dynamic.valueOf(element.noteDynamic().velocity.getText().toUpperCase()) : defaultDynamic;
         return DrumFactory.createDrumHit(drumSound, noteLength, dynamic);
+    }
+
+    private static Note getNote(NoteContext noteContext, Dynamic defaultDynamic) {
+        Dynamic dynamic = noteContext.noteDynamic() != null ? Dynamic.valueOf(noteContext.noteDynamic().velocity.getText().toUpperCase()) : defaultDynamic;
+        return Note.builder().noteName(noteContext.noteName.getText()).length(noteContext.noteDuration() != null ? parseNoteLength(noteContext.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH) //
+                .dynamic(dynamic).volume(MidiGeneratorWithKernel.DEFAULT_VOLUME).build();
+    }
+
+    private static Chord getChord(ChordContext chordContext, Dynamic defaultDynamic) {
+        NoteLength noteLength = chordContext.noteDuration() != null ? parseNoteLength(chordContext.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+        Dynamic dynamic = chordContext.noteDynamic() != null ? Dynamic.valueOf(chordContext.noteDynamic().velocity.getText()) : defaultDynamic;
+        String[] chordNotes = chordContext.chordName.getText().split("-");
+        return new Chord(List.of(chordNotes), noteLength, dynamic, MidiGeneratorWithKernel.DEFAULT_VOLUME);
     }
 
     public MidiTrack handleTrack(TrackContext ctx, MidiGeneratorWithKernel generator, Dynamic defaultDynamic) {
@@ -46,6 +62,9 @@ public class TrackHandler {
             return handleDrumTrack(trackContent, trackId, defaultDynamic);
         } else if (trackContent.noteSequence() != null) {
             Instrument instrument = InstrumentFinder.findInstrument(generator.getApp(), trackId);
+            if (instrument == null) {
+                throw new RuntimeException("No instrument found for track: " + trackId + " the instrument must be defined before the track.");
+            }
             return handleInstrumentTrack(trackContent, instrument, trackId, defaultDynamic);
         } else {
             throw new RuntimeException("Unknown track content for track: " + trackId);
@@ -60,59 +79,38 @@ public class TrackHandler {
 
     private MidiTrack handleDrumTrack(TrackContentContext trackContent, String trackId, Dynamic defaultDynamic) {
         MidiTrack drumTrack = trackFactory.createDrumTrack(trackId);
-        trackContent.percussionSequence().children.forEach(element -> {
+        for (ParseTree element : trackContent.percussionSequence().children) {
             if (element instanceof PercussionElementContext percussionElementContext) {
-                DrumHit dh = getDrumSound(percussionElementContext, defaultDynamic);
-                drumTrack.addMusicalElement(dh);
+                if (percussionElementContext.PERCUSSION() == null) {
+                    NoteLength noteLength = percussionElementContext.noteDuration() != null ? parseNoteLength(percussionElementContext.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+                    Rest rest = new Rest(noteLength);
+                    drumTrack.addMusicalElement(rest);
+                } else {
+                    DrumHit dh = getDrumSound(percussionElementContext, defaultDynamic);
+                    drumTrack.addMusicalElement(dh);
+                }
             }
-        });
+        }
         return drumTrack;
     }
 
     private void processTrackContent(TrackContentContext trackContent, MidiTrack track, Dynamic defaultDynamic) {
         for (ParseTree element : trackContent.noteSequence().children) {
             if (element.getText().trim().replaceAll(",", "").isBlank()) continue;
-            final MusicalElement musicalElement;
+            MusicalElement musicalElement = null;
             if (element instanceof ChordContext chordContext) {
                 musicalElement = getChord(chordContext, defaultDynamic);
             } else if (element instanceof SilenceContext silenceContext) {
                 musicalElement = getRest(silenceContext);
             } else if (element instanceof NoteContext noteContext) {
                 musicalElement = getNote(noteContext, defaultDynamic);
-            } else {
-                throw new RuntimeException("Unknown element type in track content: " + element.getText());
             }
-            track.addMusicalElement(musicalElement);
+            if (musicalElement != null) track.addMusicalElement(musicalElement);
         }
     }
 
-    private static Note getNote(NoteContext noteContext, Dynamic defaultDynamic) {
-        Dynamic dynamic = noteContext.noteDynamic() != null
-                ? Dynamic.valueOf(noteContext.noteDynamic().velocity.getText().toUpperCase())
-                : defaultDynamic;
-        return Note.builder()
-                .noteName(noteContext.noteName.getText())
-                .length(noteContext.noteDuration() != null ? parseNoteLength(noteContext.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH) //
-                .dynamic(dynamic)
-                .volume(MidiGeneratorWithKernel.DEFAULT_VOLUME)
-                .build();
-    }
-
-    private static Chord getChord(ChordContext chordContext, Dynamic defaultDynamic) {
-        NoteLength noteLength = chordContext.noteDuration() != null
-                ? parseNoteLength(chordContext.noteDuration().length.getText())
-                : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
-        Dynamic dynamic = chordContext.noteDynamic() != null
-                ? Dynamic.valueOf(chordContext.noteDynamic().velocity.getText())
-                : defaultDynamic;
-        String[] chordNotes = chordContext.chordName.getText().split("-");
-        return new Chord(List.of(chordNotes), noteLength, dynamic, MidiGeneratorWithKernel.DEFAULT_VOLUME);
-    }
-
     private Rest getRest(SilenceContext silenceContext) {
-        NoteLength noteLength = silenceContext.noteDuration() != null
-                ? parseNoteLength(silenceContext.noteDuration().length.getText())
-                : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+        NoteLength noteLength = silenceContext.noteDuration() != null ? parseNoteLength(silenceContext.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
         return new Rest(noteLength);
     }
 }

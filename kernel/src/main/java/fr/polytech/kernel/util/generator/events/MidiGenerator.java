@@ -4,10 +4,7 @@ import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.Instrument;
 import fr.polytech.kernel.structure.MusicalElement;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiEvent;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.ShortMessage;
+import javax.sound.midi.*;
 import java.util.logging.Logger;
 
 /**
@@ -46,10 +43,20 @@ public record MidiGenerator(MidiTrackManager trackManager) {
         }
     }
 
+    public void setTrackName(String trackName) throws InvalidMidiDataException {
+        MetaMessage trackNameMeta = new MetaMessage();
+        trackNameMeta.setMessage(0x03, trackName.getBytes(), trackName.length());
+        long currentTick = trackManager.getCurrentTick();
+        MidiEvent trackNameEvent = new MidiEvent(trackNameMeta, currentTick);
+        trackManager.addMidiEvent(trackNameEvent);
+    }
+
     public void setInstrumentForTrack(Instrument instrument, int midiChannel) throws InvalidMidiDataException {
         int instrumentProgramNumber = instrument.midiInstrument().instrumentNumber;
         LOGGER.info("                    ~ Setting instrument %s for track: %s which is %d in MIDI on midi channel %S".formatted(instrument.midiInstrument(), instrument.name(), instrumentProgramNumber, midiChannel));
-        MidiEvent programChange = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE, midiChannel, instrumentProgramNumber, 0), trackManager.getCurrentTick());
+        ShortMessage instrumentMessage = new ShortMessage();
+        instrumentMessage.setMessage(ShortMessage.PROGRAM_CHANGE, midiChannel, instrumentProgramNumber, 0);
+        MidiEvent programChange = new MidiEvent(instrumentMessage, trackManager.getCurrentTick());
         trackManager.addMidiEvent(programChange);
     }
 
