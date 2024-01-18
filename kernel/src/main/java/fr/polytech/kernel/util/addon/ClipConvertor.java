@@ -1,5 +1,6 @@
 package fr.polytech.kernel.util.addon;
 
+import fr.polytech.kernel.App;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.MusicalElement;
@@ -16,7 +17,7 @@ import java.io.IOException;
 
 public class ClipConvertor {
 
-    public void convertClipToJSON(Clip clip) {
+    public void convertClipToJSON(Clip clip, App app) {
         MusicData musicData = new MusicData();
 
         for (Bar bar : clip.getBars()){
@@ -30,7 +31,7 @@ public class ClipConvertor {
                     Note n = (Note) note;
                     String pitch = n.pitch();
                     noteDTO.setPitch(pitch.substring(0,1).toLowerCase()); // From C4 to c
-                    noteDTO.setDuration(n.noteLength().toString());
+                    noteDTO.setDuration(String.valueOf(n.noteLength().getDuration(1)));
                     noteDTO.setOctave(String.valueOf(pitch.charAt(pitch.length()-1)));
                     trackDTO.getNotes().add(noteDTO);
                 }
@@ -38,6 +39,8 @@ public class ClipConvertor {
             }
             musicData.getBars().add(barDTO);
         }
+
+        musicData.setTimeSignatureGlobal(app.getGlobalTimeSignature().toString());
 
         // Serialize to JSON using Jackson
         ObjectMapper objectMapper = new ObjectMapper();

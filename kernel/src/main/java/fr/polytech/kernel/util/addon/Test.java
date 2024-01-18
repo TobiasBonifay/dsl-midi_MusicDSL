@@ -5,7 +5,6 @@ import fr.polytech.kernel.exceptions.MidiGenerationException;
 import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.Instrument;
-import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.Note;
 import fr.polytech.kernel.structure.tracks.Track;
 import fr.polytech.kernel.util.dictionnaries.Dynamic;
@@ -44,7 +43,7 @@ public class Test {
         app.setGlobalTempo(120);
 
         ClipConvertor clipConvertor = new ClipConvertor();
-        clipConvertor.convertClipToJSON(clip1);
+        clipConvertor.convertClipToJSON(clip1, app);
     }
 
     private static List<Note> createLeadVoxSequence(){

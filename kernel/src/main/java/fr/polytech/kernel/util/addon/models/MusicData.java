@@ -1,11 +1,17 @@
 package fr.polytech.kernel.util.addon.models;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MusicData {
     private List<BarDTO> barDTOS;
     private String timeSignatureGlobal;
+
+    public MusicData() {
+        this.barDTOS = new ArrayList<>();
+        this.timeSignatureGlobal = "4/4";
+    }
 
     // Getter and Setter methods
 
