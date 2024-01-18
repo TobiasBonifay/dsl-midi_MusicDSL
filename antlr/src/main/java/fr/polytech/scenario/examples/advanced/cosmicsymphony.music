@@ -19,7 +19,7 @@ bar [
         E3 f (1/2), SILENCE (1/2), A3 mf (1/2),
         D3 p (1/2), SILENCE (1/2), G3 mf (1/2)
     track drumKit:
-        KICK SNARE KICK SNARE KICK SNARE
+        KICK, SNARE, KICK, SNARE, KICK, SNARE
 ]
 
 clip CosmicCrescendo:
@@ -34,7 +34,7 @@ bar [
         C3 f (1/2), SILENCE (1/2), F3 mf (1/2),
         G3 p (1/2), SILENCE (1/2), B3 mf (1/2)
     track drumKit:
-        KICK SNARE KICK SNARE KICK SNARE
+        KICK, SNARE, KICK, SNARE, KICK, SNARE
 ]
 
 Timeline:

@@ -1,0 +1,76 @@
+signature 4/4
+bpm 140
+timeshift 5
+velocityrandomization 20
+resolution 480
+
+Instruments:
+    piano ACOUSTIC_GRAND_PIANO volume 85
+    guitar ELECTRIC_GUITAR_CLEAN volume 75
+    bass ELECTRIC_BASS_PICK volume 70
+
+clip Intro <- mf:
+bar [
+    track piano:
+        C4-E4-G4, A3-C4-E4, F3-A3-C4
+    track bass:
+        C2, A1, F1
+    track drums:
+        KICK, SNARE, KICK, SNARE
+]
+
+clip Verse <- mp:
+bar [
+    track piano:
+        D4-F4-A4, B3-D4-G4, G3-B3-D4
+    track guitar:
+        D3-F3-A3, B2-D3-G3, G2-B2-D3
+    track bass:
+        D2, B1, G1
+    track drums:
+        SNARE, KICK, SNARE, KICK
+]
+
+clip Chorus <- f:
+bar [
+    track piano:
+        G4-B4-D5, E4-G4-C5, C4-E4-G4
+    track guitar:
+        G3-B3-D4, E3-G3-C4, C3-E3-G3
+    track bass:
+        G2, E2, C2
+    track drums:
+        KICK, SNARE, OPEN_HI_HAT, CRASH_CYMBAL_1
+]
+
+clip Bridge <- p:
+bar [
+    track piano:
+        A3-C4-F4, G3-B3-E4, F3-A3-D4
+    track guitar:
+        A2-C3-F3, G2-B2-E3, F2-A2-D3
+    track bass:
+        A1, G1, F1
+    track drums:
+        TOM, TOM, SNARE, CRASH_CYMBAL_1
+]
+
+clip Outro <- mp:
+bar [
+    track piano:
+        E4-A4-C5, F4-B4-D5, G4-C5-E5
+    track guitar:
+        E3-A3-C4, F3-B3-D4, G3-C4-E4
+    track bass:
+        E2, F2, G2
+    track drums:
+        KICK, SNARE, KICK, SNARE
+]
+
+Timeline:
+    Intro x 2
+    Verse x 3
+    Chorus x 4
+    Bridge x 2
+    Chorus x 2
+    Outro x 2
