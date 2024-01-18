@@ -33,7 +33,7 @@ volumeSetting : 'volume' trackVolume=INT;
 // inherited signature
 trackSequence : track+;
 track : 'track' trackName=ID ':' trackContent?;
-trackContent : (noteSequence | percussionSequence);
+trackContent : (percussionSequence | noteSequence);
 // ----------------- NOTE -----------------
 noteSequence : (note | silence | chord | percussionElement) (',' (note | silence | chord | percussionElement))*;
 noteDynamic : velocity=VELOCITY_SYMBOL;
@@ -48,7 +48,7 @@ timelineSequence : timelineClip+ WS*;
 timelineClip : clipName=ID (WS* 'x' WS* repeatNumber=INT)?;
 
 // ----------------- DRUMS -----------------
-percussionSequence : percussionElement+;
+percussionSequence : percussionElement (',' percussionElement)*;
 percussionElement : PERCUSSION noteDuration? noteDynamic? | silence;
 
 // Lexer Rules
