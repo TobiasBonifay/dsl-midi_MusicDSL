@@ -32,7 +32,7 @@ public class MoonlightMelodyGenerator {
         final Track piano = trackFactory.createInstrumentTrack("Piano", pianoInstrument, 100);
         createNoteSequence().forEach(piano::addMusicalElement);
 
-        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100);
+        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100, Dynamic.MF);
         bar1.addTrack(piano);
 
         Clip clip1 = new Clip("Chorus");

@@ -73,7 +73,7 @@ public class BellieJeanMelodyGenerator {
 
         // Create bars
         final Clip clip1 = new Clip("main");
-        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100);
+        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100, Dynamic.MF);
         bar1.addTrack(leadVoxTrack);
         bar1.addTrack(bassTrack);
         bar1.addTrack(stringsTrack);
@@ -81,12 +81,12 @@ public class BellieJeanMelodyGenerator {
         clip1.addBar(bar1);
         clip1.addBar(bar1);
 
-        final Bar bar2 = new Bar("Bar 2", new TimeSignature(4, 4), 120, 100);
+        final Bar bar2 = new Bar("Bar 2", new TimeSignature(4, 4), 120, 100, Dynamic.MF);
         bar2.addTrack(leadVoxTrack16);
 
         clip1.addBar(bar2);
 
-        final Bar bar3 = new Bar("Bar 3", new TimeSignature(4, 4), 120, 100);
+        final Bar bar3 = new Bar("Bar 3", new TimeSignature(4, 4), 120, 100, Dynamic.MF);
         bar3.addTrack(leadVoxTrack17);
 
         clip1.addBar(bar3);

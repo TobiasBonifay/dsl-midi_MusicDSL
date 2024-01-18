@@ -45,11 +45,11 @@ public class DrumsMelodyGenerator {
 
         // Create bars
         final Clip clip1 = new Clip("Chorus");
-        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100);
+        final Bar bar1 = new Bar("Bar 1", new TimeSignature(4, 4), 120, 100, Dynamic.MF);
         bar1.addTrack(pianoTrack);
         bar1.addTrack(drumTrack);
 
-        final Bar bar2 = new Bar("Bar 2", new TimeSignature(3, 8), 140, 100);
+        final Bar bar2 = new Bar("Bar 2", new TimeSignature(3, 8), 140, 100, Dynamic.MF);
         bar2.addTrack(violinTrack);
         bar2.addTrack(drumTrack);
 
@@ -63,7 +63,7 @@ public class DrumsMelodyGenerator {
     }
 
     private static List<DrumHit> createDrumsSequence() {
-        return Stream.of(DrumFactory.createDrumHit(DrumSound.KICK), DrumFactory.createDrumHit(DrumSound.SNARE), DrumFactory.createDrumHit(DrumSound.KICK), DrumFactory.createDrumHit(DrumSound.SNARE)).toList();
+        return Stream.of(DrumFactory.createDrumHit(DrumSound.KICK, NoteLength.WHOLE), DrumFactory.createDrumHit(DrumSound.SNARE, NoteLength.WHOLE), DrumFactory.createDrumHit(DrumSound.KICK, NoteLength.WHOLE), DrumFactory.createDrumHit(DrumSound.SNARE, NoteLength.WHOLE)).toList();
     }
 
     private static List<Note> createPianoSequence() {
