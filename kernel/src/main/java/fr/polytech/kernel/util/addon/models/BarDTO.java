@@ -1,5 +1,6 @@
 package fr.polytech.kernel.util.addon.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BarDTO {
@@ -10,6 +11,8 @@ public class BarDTO {
 
     public BarDTO(String name) {
         this.name = name;
+        this.timeSignature = "4/4";
+        this.trackDTOS = new ArrayList<>();
     }
 
     // Getter and Setter methods
