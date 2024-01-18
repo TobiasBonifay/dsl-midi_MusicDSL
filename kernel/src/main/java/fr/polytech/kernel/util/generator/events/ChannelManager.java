@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class ChannelManager {
     private final Map<String, Integer> channelMap = new HashMap<>();
-    private boolean drumChannel9Used = false;
 
     public int getNextAvailableChannel(String trackName) {
         if (channelMap.containsKey(trackName)) {
@@ -13,7 +12,7 @@ public class ChannelManager {
         }
 
         int channel = channelMap.size();
-        while (channel == 9 || channel == 10) {
+        if (channel == 9) {
             channel++;
         }
 
@@ -26,24 +25,10 @@ public class ChannelManager {
     }
 
     public int getDrumChannel(String trackName) {
-        if (channelMap.containsKey(trackName)) {
-            return channelMap.get(trackName);
-        }
-
-        int channel;
-        if (!drumChannel9Used) {
-            channel = 9; // MIDI channel 10 for drums, but 9 in 0-based indexing
-            drumChannel9Used = true;
-        } else {
-            channel = 10; // Additional drum channel
-        }
-
-        channelMap.put(trackName, channel);
-        return channel;
+        return 9;
     }
 
     public void reset() {
         channelMap.clear();
-        drumChannel9Used = false;
     }
 }
