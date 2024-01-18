@@ -1,11 +1,17 @@
 package fr.polytech.kernel.util.addon.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrackDTO {
 
     private String trackName;
     private List<NoteDTO> noteDTOS;
+
+    public TrackDTO() {
+        this.trackName = "trackName";
+        this.noteDTOS = new ArrayList<>();
+    }
 
     // Getter and Setter methods
 

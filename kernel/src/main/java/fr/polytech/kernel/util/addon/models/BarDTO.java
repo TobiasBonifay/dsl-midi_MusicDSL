@@ -8,6 +8,10 @@ public class BarDTO {
     private String timeSignature;
     private List<TrackDTO> trackDTOS;
 
+    public BarDTO(String name) {
+        this.name = name;
+    }
+
     // Getter and Setter methods
 
     public String getName() {

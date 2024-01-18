@@ -19,7 +19,7 @@ import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
-
+/*
 public class DrumsMelodyGenerator {
     public static void main(String[] args) throws IOException, MidiGenerationException, InvalidMidiDataException {
         final App app = new App();
@@ -70,4 +70,4 @@ public class DrumsMelodyGenerator {
         return Stream.of("C3", "C3", "C3", "D3", "E3", "D3", "C3", "E3", "D3", "D3", "C3")
                 .map(pitch -> NoteFactory.createNote(pitch, NoteLength.QUARTER, Dynamic.FF, 75)).toList();
     }
-}
+}*/

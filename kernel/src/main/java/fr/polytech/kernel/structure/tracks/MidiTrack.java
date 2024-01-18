@@ -30,4 +30,8 @@ public abstract class MidiTrack {
                 .mapToLong(element -> element.getDuration(resolution)) //
                 .sum(); //
     }
+
+    public List<MusicalElement> getMusicalElements() {
+        return musicalElements;
+    }
 }
