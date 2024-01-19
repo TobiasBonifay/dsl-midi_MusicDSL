@@ -37,10 +37,13 @@ public record Chord(List<String> pitch, NoteLength noteLength, Dynamic dynamic, 
         int theDynamic = dynamic.randomizedValueInPercent(velocityRandomization);
         long endTime = currentTick + midiDuration; // + timeShift
         LOGGER.info("                       + Tick [%s +%s] -> [%s]: %s (%d+-%d) -> %d".formatted(currentTick, timeShift, endTime, this, dynamic.value(), velocityRandomization, theDynamic));
-        MidiEvent[] midiEvents = new MidiEvent[pitch.size() * 2];
-        for (int i = 0; i < pitch.size(); i++) {
-            MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, parseNote(pitch.get(i)), theDynamic), currentTick + timeShift);
-            MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, parseNote(pitch.get(i)), 0), endTime);
+        int notesNb = pitch.size();
+        MidiEvent[] midiEvents = new MidiEvent[notesNb * 2];
+        for (int i = 0; i < notesNb; i++) {
+            String note = pitch.get(i);
+            int noteMidi = parseNote(note);
+            MidiEvent noteOn = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, channel, noteMidi, theDynamic), currentTick + timeShift);
+            MidiEvent noteOff = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, channel, noteMidi, 0), endTime);
             midiEvents[i * 2] = noteOn;
             midiEvents[i * 2 + 1] = noteOff;
         }

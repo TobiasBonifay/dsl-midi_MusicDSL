@@ -1,82 +1,49 @@
 signature 4/4
-bpm 120
+bpm 116
 resolution 96
 timeshift 0
 velocityrandomization 10
 
 Instruments:
-    Track1 ACOUSTIC_GRAND_PIANO volume 100
-    Track2 ACOUSTIC_GRAND_PIANO volume 100
-    Track3 VOICE_OOHS volume 100
-    Track4 ELECTRIC_PIANO_2 volume 100
-    Track5 ELECTRIC_GUITAR_CLEAN volume 100
-    Track6 CLAVI volume 100
-    Track7 FRETLESS_BASS volume 100
-    Track9 SYNTH_STRINGS_1 volume 100
-    Track10 SYNTH_STRINGS_2 volume 100
+    fretless_bass FRETLESS_BASS volume 100
+    synth SYNTH_STRINGS_1 volume 100
 
 clip bar1:
 bar [
-    track Track7:
-        C#3 (1/4) fff, F#3 (1/4) fff, C#3 (1/4) fff, E3 (1/4) fff,
-        F#3 (1/4) fff, E3 (1/4) fff, C#3 (1/4) fff, B2 (1/4) fff,
-        C#3 (1/4) fff, F#3 (1/4) fff, C#3 (1/4) fff, E3 (1/4) fff,
-        F#3 (1/4) fff, E3 (1/4) fff, C#3 (1/4) fff, B2 (1/4) fff,
-        C#3 (1/4) fff
-    track Track8:
-        CLOSED_HI_HAT (1/8) mp, BASS_DRUM_1 (1/8) f, CLOSED_HI_HAT (1/8) mf, CLOSED_HI_HAT (1/8) p,
-        ELECTRIC_SNARE (1/8) ff, CLOSED_HI_HAT (1/8) mf, CLOSED_HI_HAT (1/8) p, BASS_DRUM_1 (1/8) f,
-        CLOSED_HI_HAT (1/8) mp, CLOSED_HI_HAT (1/8) p, ELECTRIC_SNARE (1/8) ff, CLOSED_HI_HAT (1/8) mf,
-        CRASH_CYMBAL_1 (1/8) p, CLOSED_HI_HAT (1/8) mp, BASS_DRUM_1 (1/8) f, CRASH_CYMBAL_1 (1/8) p,
-        CLOSED_HI_HAT (1/8) mp, CRASH_CYMBAL_1 (1/8) p, CLOSED_HI_HAT (1/8) p, ELECTRIC_SNARE (1/8) ff,
-        CRASH_CYMBAL_1 (1/8) pp, CLOSED_HI_HAT (1/8) mf, CRASH_CYMBAL_1 (1/8) p, CLOSED_HI_HAT (1/8) p,
-        BASS_DRUM_1 (1/8) f, CRASH_CYMBAL_1 (1/8) pp, CLOSED_HI_HAT (1/8) mp, CRASH_CYMBAL_1 (1/8) mp,
-        CLOSED_HI_HAT (1/8) p, ELECTRIC_SNARE (1/8) ff, CRASH_CYMBAL_1 (1/8) p, CLOSED_HI_HAT (1/8) mp,
-        CRASH_CYMBAL_1 (1/8) mf, CLOSED_HI_HAT (1/8) p, BASS_DRUM_1 (1/8) f, CRASH_CYMBAL_1 (1/8) p,
-        CLOSED_HI_HAT (1/8) mf
-]
+// track hi_hat :
+////  CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+////  CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+////  CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+////  CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+////  CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+////  CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+////  CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2)
 
-clip bar2:
-bar [
-    track Track7:
-        C#3 (1/4) fff, F#3 (1/4) fff, C#3 (1/4) fff, E3 (1/4) fff,
-        F#3 (1/4) fff, E3 (1/4) fff, C#3 (1/4) fff, B2 (1/4) fff,
-        C#3 (1/4) fff, F#3 (1/4) fff, C#3 (1/4) fff, E3 (1/4) fff,
-        F#3 (1/4) fff, E3 (1/4) fff, C#3 (1/4) fff, B2 (1/4) fff,
-        C#3 (1/4) fff
-    track Track8:
-        CLOSED_HI_HAT (1/8) mp, BASS_DRUM_1 (1/8) f, CLOSED_HI_HAT (1/8) mf, CLOSED_HI_HAT (1/8) p,
-        ELECTRIC_SNARE (1/8) ff, CLOSED_HI_HAT (1/8) mf, CLOSED_HI_HAT (1/8) p, BASS_DRUM_1 (1/8) f,
-        CLOSED_HI_HAT (1/8) mp, CLOSED_HI_HAT (1/8) p, ELECTRIC_SNARE (1/8) ff, CLOSED_HI_HAT (1/8) mf,
-        CRASH_CYMBAL_1 (1/8) p, CLOSED_HI_HAT (1/8) mp, BASS_DRUM_1 (1/8) f, CRASH_CYMBAL_1 (1/8) p,
-        CLOSED_HI_HAT (1/8) mp, CRASH_CYMBAL_1 (1/8) p, CLOSED_HI_HAT (1/8) p, ELECTRIC_SNARE (1/8) ff,
-        CRASH_CYMBAL_1 (1/8) pp, CLOSED_HI_HAT (1/8) mf, CRASH_CYMBAL_1 (1/8) p, CLOSED_HI_HAT (1/8) p,
-        BASS_DRUM_1 (1/8) f, CRASH_CYMBAL_1 (1/8) pp, CLOSED_HI_HAT (1/8) mp, CRASH_CYMBAL_1 (1/8) mp,
-        CLOSED_HI_HAT (1/8) p, ELECTRIC_SNARE (1/8) ff, CRASH_CYMBAL_1 (1/8) p, CLOSED_HI_HAT (1/8) mp,
-        CRASH_CYMBAL_1 (1/8) mf, CLOSED_HI_HAT (1/8) p, BASS_DRUM_1 (1/8) f, CRASH_CYMBAL_1 (1/8) p,
-        CLOSED_HI_HAT (1/8) mf
-]
-clip bar3:
-bar [
-    track Track6:
-        F#2 (1/2) ff, F#2 (1/2) ff, // beat 1
-        F#2 (1/2) ff, F#2 (1/2) ff, // beat 2
-        F#2 (1/2) ff, F#2 (1/2) ff, // beat 3
-        F#2 (1/2) ff, F#2 (1/2) ff  // beat 4
-    track Track7:
-        C#3 (1/8) fff, F#3 (1/4) fff, C#3 (1/4) fff, E3 (1/4) fff, // beat 1
-        F#3 (1/4) fff, E3 (1/4) fff, C#3 (1/4) fff, B2 (1/4) fff, // beat 2
-        C#3 (1/4) fff, F#3 (1/4) fff, C#3 (1/4) fff, E3 (1/4) fff, // beat 3
-        F#3 (1/4) fff, E3 (1/4) fff, C#3 (1/4) fff, B2 (1/4) fff, // beat 4
-        C#3 (1/4) fff
-    track Track8:
-        REST(1/4), CLOSED_HI_HAT (1/8) mf, REST(1/16), BASS_DRUM_1 (1/8) f, REST(1/8), CLOSED_HI_HAT (1/8) mf, REST(1/8), ELECTRIC_SNARE (1/8) ff,
-        REST(1/8), CLOSED_HI_HAT (1/8) mf, REST(1/8), BASS_DRUM_1 (1/8) f, REST(1/8), CLOSED_HI_HAT (1/8) mf, REST(1/8), ELECTRIC_SNARE (1/8) ff,
-        REST(1/8), CLOSED_HI_HAT (1/8) mf, REST(1/8), BASS_DRUM_1 (1/8) f, REST(1/8), CLOSED_HI_HAT (1/8) mf, REST(1/8), ELECTRIC_SNARE (1/8) ff,
-        REST(1/8), CLOSED_HI_HAT (1/8) mf, REST(1/8), BASS_DRUM_1 (1/8) f, REST(1/8), CLOSED_HI_HAT (1/8) mf, REST(1/8), ELECTRIC_SNARE (1/8) ff
+// track kick_snare :
+////  KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE
+// track fretless_bass :
+////  F#3 (1/2) fff, C#3 (1/2) fff, E3 (1/2) fff, F#3 (1/2) fff,
+////  E3 (1/2) fff, C#3 (1/2) fff, B2 (1/2) fff, C#3 (1/2) fff,
+////  F#3 (1/2) fff, C#3 (1/2) fff, E3 (1/2) fff, F#3 (1/2) fff,
+////  E3 (1/2) fff, C#3 (1/2) fff, B2 (1/2) fff, C#3 (1/2) fff,
+////  F#3 (1/2) fff, C#3 (1/2) fff, E3 (1/2) fff, F#3 (1/2) fff,
+////  E3 (1/2) fff, C#3 (1/2) fff, B2 (1/2) fff, C#3 (1/2) fff,
+////  F#3 (1/2) fff, C#3 (1/2) fff, E3 (1/2) fff, F#3 (1/2) fff,
+////  E3 (1/2) fff, C#3 (1/2) fff, B2 (1/2) fff, C#3 (1/2) fff
+
+    track synth:
+        SILENCE, SILENCE, SILENCE, SILENCE, SILENCE (1/4),
+        LAb3-C#4-F#4 (1/2), SILENCE, SIb3-D#4-sol#4 (1/2), SILENCE (2),
+        C#4-E4-A4 (1/2), SILENCE, B3-D#4-G#4 (1/2), SILENCE (2),
+        A3-C#4-F#4 (1/2), SILENCE, B3-D#4-G#4 (1/2)
+
+// track synth:
+// // SILENCE, SILENCE, SILENCE, SILENCE, SILENCE (1/4),
+// // F#4 (1/4), SILENCE (1/4), SILENCE, G#4 (1/4), SILENCE (1/4), SILENCE (2),
+// // A4 (1/4), SILENCE (1/4), SILENCE, G#4 (1/4), SILENCE (1/4), SILENCE (2),
+// // F#4 (1/4), SILENCE (1/4), SILENCE, G#4 (1/4)
+
 ]
 
 Timeline:
     bar1
-    bar2
-    bar3

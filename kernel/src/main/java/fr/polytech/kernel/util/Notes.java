@@ -14,22 +14,22 @@ public class Notes {
     }
 
     private static void initializeNoteMap() {
-        // English note names and their MIDI values
-        final String[] englishNotes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+        final int midiValueForA4 = 69;
+        final String[] notes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+        final String[] bemolNotes = {"B#", "DB", "D", "EB", "E", "E#", "GB", "G", "AB", "A", "BB", "CB"};
         final String[] latinNotes = {"DO", "DO#", "RE", "RE#", "MI", "FA", "FA#", "SOL", "SOL#", "LA", "LA#", "SI"};
-        final String[] bemolEnglish = {"B#", "DB", "EB", "FB", "E#", "GB", "AB", "BB", "CB", "D#", "EB", "FB"};
-        final String[] bemolLatin = {"SI#", "REB", "MIB", "MI#", "FAB", "SOLB", "LAB", "SIB", "DOB", "FA#", "SOLB", "LAB"};
-
+        final String[] bemolLatin = {"SI#", "REB", "RE", "MIB", "MI", "MI#", "SOLB", "SOL", "LAB", "LA", "SIB", "DOB"};
         for (int octave = 0; octave <= 8; octave++) {
-            for (int i = 0; i < englishNotes.length; i++) {
-                int midiValue = 12 * octave + i;
-                note.put(englishNotes[i] + octave, midiValue);
+            for (int i = 0; i < notes.length; i++) {
+                int midiValue = midiValueForA4 + (octave - 4) * 12 + i - 9;
+                note.put(notes[i] + octave, midiValue);
+                note.put(bemolNotes[i] + octave, midiValue);
                 note.put(latinNotes[i] + octave, midiValue);
-                note.put(bemolEnglish[i] + octave, midiValue);
                 note.put(bemolLatin[i] + octave, midiValue);
             }
         }
     }
+
 
     public static int parseNote(String note) {
         if (note == null) throw new IllegalArgumentException("Note cannot be null");
