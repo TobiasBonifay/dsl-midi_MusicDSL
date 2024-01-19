@@ -38,7 +38,7 @@ trackContent : (percussionSequence | noteSequence);
 noteSequence : (note | silence | chord) (',' (note | silence | chord))*;
 noteDynamic : velocity=VELOCITY_SYMBOL;
 noteDuration : '(' length=(FRACTION | INT) ')';
-note : noteName=NOTE noteDynamic? noteDuration?;
+note : noteName=NOTE noteDuration? noteDynamic?;
 chord : chordName=CHORD noteDynamic? noteDuration?;
 silence : SILENCE noteDuration?;
 
