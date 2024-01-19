@@ -25,11 +25,11 @@ app.post('/convert', (req, res) => {
     //temp files
     const uniqueId = uuidv4();
 
-    const tempFilePath = `${uniqueId}.txt`;
+    const tempFilePath = `${uniqueId}.music`;
     fs.writeFileSync(tempFilePath, text);
 
     //todo: generate unique file name in java
-    const outputPath = `test.midi`;
+    const outputPath = `${uniqueId}.midi`;
 
     exec(`java -jar ${jarPath} ${tempFilePath}`, (error, stdout, stderr) => {
         // delete temp txt file
