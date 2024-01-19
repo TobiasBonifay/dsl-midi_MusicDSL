@@ -107,6 +107,7 @@
         target="_blank">here</a></p>
 <textarea id="textArea" placeholder="Write your music here..."></textarea>
 <button id="sendButton" class="button">Generate midi file</button>
+<button id="showPartition">Show partition</button>
 
 <div class="container" id="loaderContainer">
     <div class="loader"></div>
@@ -185,6 +186,24 @@
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
 <div id="PARTITION-DIV">
     <script>
+        document.getElementById('showPartition').addEventListener('click', function () {
+            fetch('http://localhost:80/getPartition') // todo replace by server ip
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur de réseau: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Traitez les données JSON ici
+                    console.log('Données reçues:', data);
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données:', error);
+                });
+        })
+
+
         // This approach to importing classes works in CJS contexts (i.e., a regular <script src="..."> tag).
         const { Stave, StaveNote, Beam, Formatter, Renderer } = Vex;
 
@@ -223,7 +242,7 @@
 
         // Render beams
         beam1.setContext(context).draw();
-        beam2.setContext(context).draw();
+        //beam2.setContext(context).draw();
 
 
     </script>
