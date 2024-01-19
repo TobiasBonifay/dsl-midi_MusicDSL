@@ -34,7 +34,6 @@ bar [
         E3 (1/2), C#3 (1/2), B2 (1/2), C#3 (1/2)
 
     track synth:
-        SILENCE (1/4),
         C#4-E4-A4 (1/2), SILENCE, B3-D#4-G#4 (1/2), SILENCE (2),
         A3-C#4-F#4 (1/2), SILENCE, B3-D#4-G#4 (1/2), SILENCE (2),
         C#4-E4-A4 (1/2), SILENCE, B3-D#4-G#4 (1/2), SILENCE (2),

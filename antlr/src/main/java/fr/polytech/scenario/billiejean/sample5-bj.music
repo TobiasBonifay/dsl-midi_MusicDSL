@@ -34,7 +34,6 @@ bar [
         E3 (1/2), C#3 (1/2), B2 (1/2), C#3 (1/2)
 
     track synth:
-        SILENCE (1/4),
         C#4-E4-A4 (1/2), SILENCE, B3-D#4-G#4 (1/2), SILENCE (2),
         A3-C#4-F#4 (1/2), SILENCE, B3-D#4-G#4 (1/2), SILENCE (2),
         C#4-E4-A4 (1/2), SILENCE, B3-D#4-G#4 (1/2), SILENCE (2),
@@ -42,7 +41,7 @@ bar [
 
     track voice:
         B3 (1/4), A3 (1/4), C#4, B3, A3 (1/2), G#3 (1/2), F#3, SILENCE, SILENCE, SILENCE,
-        F#3 (1/4), G#3 (1/8), F#3 (1/2), SILENCE, F#3 (1/4), G#3 (1/8), F#3 (1/2), SILENCE, F#3 (1/4), G#3 (1/8), F#3 (1/2)
+        F#3 (1/4), G#3 (1/8), F#3 (1/2), SILENCE, SILENCE (1/8), F#3 (1/4), G#3 (1/8), F#3 (1/2), SILENCE, SILENCE (1/8), F#3 (1/4), G#3 (1/8), F#3 (1/2)
 ]
 
 Timeline:
