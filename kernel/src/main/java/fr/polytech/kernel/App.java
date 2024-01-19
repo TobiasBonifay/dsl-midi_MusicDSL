@@ -22,8 +22,6 @@ import java.util.logging.Logger;
 public class App {
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    private static final String OUTPUT_FOLDER = "out";
-
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
@@ -72,7 +70,7 @@ public class App {
      */
     public void writeMidiFile(String filename) throws IOException {
         String pathName = filename.replaceAll(" ", "_");
-        String fullPath = OUTPUT_FOLDER + "/" + pathName + ".midi";
+        String fullPath = pathName + ".midi";
         LOGGER.info("Writing MIDI file to %s".formatted(fullPath));
         MidiSystem.write(trackManager.getSequence(), 1, new File(fullPath));
     }

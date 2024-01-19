@@ -17,5 +17,3 @@ antlr/src/main/java/fr/polytech/MusicDSL*.tokens
 
 # Node.js runtime environment
 node_modules/
-
-/out/*.midi
