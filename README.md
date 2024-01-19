@@ -33,17 +33,17 @@ different aspect of music generation.
 
 - Java JDK 17 or higher
 - Maven (for building the project)
-- ANTLR 4.8 (for parsing the DSL) //TODO: check version
-
+- ANTLR 4.8 (for parsing the DSL) [for version detail](https://mvnrepository.com/artifact/org.antlr/antlr4-runtime)
+  
 ### Steps
 
 1. Clone the repository:
    ```shell
-   git clone [repository-url]
+   git clone git@github.com:TobiasBonifay/dsl-midi_MusicDSL.git
     ```
 2. Navigate to the project directory:
    ```shell
-   cd music-dsl
+   cd dsl-music
    ```
 3. Build the project:
    ```shell
@@ -108,7 +108,7 @@ java -jar target/music-dsl-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resou
 ```
 // This piece features a simple intro with a piano playing chords and a drum kit on a standard 4/4 time signature at 120 BPM.
 signature 4/4 
-bpm 120 // set the tempo to 120 BPM. Default is 120 or 140 TODO: check
+bpm 120 // set the tempo to 120 BPM. Default 140
 timeshift 1 // The human like error of time in ticks. A quarter note is 120 ticks on 4/4 time signature. Default is 5.
 velocityrandomization 10 // The human like error of velocity. Velocity range is 0-127 depending on the dynamic of the note. Default is 5.
 resolution 100 // To define the resolution to use. Default is 480 Ticks. Please use a positive integer.
@@ -139,7 +139,7 @@ bar [
     track piano:
         // empty
     track drums:
-        LOW_TOM (1/2) LOW_TOM (1/2) COWBELL LOW_CONGA COWBELL 
+        LOW_TOM (1/2), LOW_TOM (1/2), COWBELL, LOW_CONGA, COWBELL 
         // drum patterns can be defined using the following syntax: 'DRUM_NAME (DURATION)'.
         // DURATION is optional and can be defined as a fraction (1/4, 1/2, 1 (default)). Default is one per beat.
         // BE CAREFUL: DRUM_NAME is case sensitive. No coma is needed between drum patterns.
@@ -154,7 +154,7 @@ bar [
     track piano:
         do4 mf, re#4 mf, mib5 ff, REST
     track drums:
-        KICK (1/2) SNARE (1/2) SNARE KICK SNARE
+        KICK (1/2), SNARE (1/2), SNARE, KICK, SNARE
 ]
 
 Timeline: // timeline is needed.
