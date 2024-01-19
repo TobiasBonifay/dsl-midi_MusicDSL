@@ -33,7 +33,7 @@ different aspect of music generation.
 
 - Java JDK 17 or higher
 - Maven (for building the project)
-- ANTLR 4.8 (for parsing the DSL) //TODO: check version
+- ANTLR 4.8 (for parsing the DSL) [for version detail](https://mvnrepository.com/artifact/org.antlr/antlr4-runtime)
 
 ### Steps
 
