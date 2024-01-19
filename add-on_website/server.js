@@ -9,6 +9,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+function fileExists(filePath) {
+    try {
+        fs.accessSync(filePath, fs.constants.F_OK);
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
 //serve unique front file
 app.get('/', (req, res) => {
     const indexPath = path.join(__dirname, 'index.html');
@@ -31,7 +40,7 @@ app.post('/convert', (req, res) => {
     //todo: generate unique file name in java
     const outputPath = `${uniqueId}.midi`;
 
-    exec(`java -jar ${jarPath} ${tempFilePath}`, (error, stdout, stderr) => {
+    exec(`java -jar ${jarPath} ${tempFilePath} --generateJSON`, (error, stdout, stderr) => {
         // delete temp txt file
         fs.unlinkSync(tempFilePath);
 
@@ -46,6 +55,23 @@ app.post('/convert', (req, res) => {
         });
     });
 });
+
+app.get('/getPartition', (req, res) => {
+    console.log('get /getPartition');
+
+    if (fileExists("musicDataAddon.json")) {
+        console.log(`Le fichier existe.`);
+        const jsonData = fs.readFileSync("musicDataAddon.json", 'utf-8');
+        const parsedData = JSON.parse(jsonData);
+
+        // return json
+        res.json(parsedData);
+    } else {
+        console.log(`Le fichier n'existe pas.`);
+
+        return res.status(500).send('Error, generate midi first');
+    }
+})
 
 app.listen(80, () => {
     console.log('Server running on port 80');
