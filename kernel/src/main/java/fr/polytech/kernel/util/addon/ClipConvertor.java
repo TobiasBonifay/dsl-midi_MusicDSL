@@ -14,10 +14,13 @@ import io.cucumber.core.internal.com.fasterxml.jackson.annotation.JsonInclude;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ClipConvertor {
 
-    public void convertClipToJSON(Clip clip, App app) {
+    public String convertClipToJSON(Clip clip, App app) {
         MusicData musicData = new MusicData();
 
         for (Bar bar : clip.getBars()){
@@ -47,9 +50,24 @@ public class ClipConvertor {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         try {
-            String json = objectMapper.writeValueAsString(musicData);
-            System.out.println(json);
+            //System.out.println(json);
+            return objectMapper.writeValueAsString(musicData);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public void writeMusicDataJSON(String jsonString){
+        try {
+            String relativePath = "musicDataAddon.json";
+            Path path = Paths.get(relativePath);
+
+            // Écrivez le JSON dans un fichier
+            Files.write(path, jsonString.getBytes());
+
+            System.out.println("JSON sauvegardé avec succès dans le fichier : " + relativePath);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

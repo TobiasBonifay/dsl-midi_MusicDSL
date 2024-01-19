@@ -1,6 +1,7 @@
 package fr.polytech;
 
 import fr.polytech.kernel.exceptions.MidiGenerationException;
+import fr.polytech.kernel.util.addon.ClipConvertor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -15,11 +16,16 @@ import java.nio.file.Paths;
  */
 public class Main {
 
+    private static boolean generateJSON = false;
+
     public static void main(String[] args) {
         try {
-            if (args.length != 1) {
+            if (args.length == 0 || args.length > 2) {
                 System.err.println("Usage: java Main <path_to_MusicDSL_file>");
                 return;
+            }
+            if (args.length == 2 && args[1].equals("--generateJSON")) {
+                generateJSON = true;
             }
             processMusicFile(args[0]);
         } catch (IOException | MidiGenerationException e) {
@@ -63,6 +69,11 @@ public class Main {
         MidiGeneratorWithKernel visitor = new MidiGeneratorWithKernel();
         visitor.visit(tree);
         visitor.writeMidiFile(fileName);
+        if (generateJSON) { // MusicDATA json generation for Addon
+            ClipConvertor clipConvertor = new ClipConvertor();
+            String json = clipConvertor.convertClipToJSON(visitor.getCurrentClip(), visitor.getApp());
+            clipConvertor.writeMusicDataJSON(json);
+        }
         System.out.println("MIDI file generated");
     }
 }
