@@ -234,7 +234,7 @@ public class MidiGeneratorWithKernel extends MusicDSLBaseVisitor<Void> {
         }
     }
 
-    public void writeMidiFile() throws IOException {
-        app.writeMidiFile("test");
+    public void writeMidiFile(String fileName) throws IOException {
+        app.writeMidiFile(fileName);
     }
 }

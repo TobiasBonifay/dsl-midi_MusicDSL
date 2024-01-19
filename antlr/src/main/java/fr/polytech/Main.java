@@ -44,8 +44,12 @@ public class Main {
         final ParseTree tree = parser.musicComposition();
 
         // System.out.println(tree.toStringTree(parser));
-
-        generateMIDI(tree);
+        String[] path = filePath.split("\\\\");
+        if (path.length == 1) {
+            path = filePath.split("/");
+        }
+        String fileName = path[path.length-1].split("\\.")[0];
+        generateMIDI(tree, fileName);
     }
 
     /**
@@ -55,10 +59,10 @@ public class Main {
      * @throws InvalidMidiDataException When the MIDI data is invalid.
      * @throws IOException              When an I/O error occurs.
      */
-    private static void generateMIDI(ParseTree tree) throws IOException, MidiGenerationException, InvalidMidiDataException {
+    private static void generateMIDI(ParseTree tree, String fileName) throws IOException, MidiGenerationException, InvalidMidiDataException {
         MidiGeneratorWithKernel visitor = new MidiGeneratorWithKernel();
         visitor.visit(tree);
-        visitor.writeMidiFile();
+        visitor.writeMidiFile(fileName);
         System.out.println("MIDI file generated");
     }
 }

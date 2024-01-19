@@ -1,0 +1,33 @@
+signature 4/4
+bpm 116
+resolution 96
+timeshift 0
+velocityrandomization 10
+
+Instruments:
+    fretless_bass FRETLESS_BASS volume 100
+
+clip bar1:
+bar [
+    track hi_hat :
+        CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+        CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+        CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+        CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+        CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+        CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2),
+        CLOSED_HI_HAT (1/2), CLOSED_HI_HAT (1/2)
+
+    track kick_snare :
+        KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE, KICK, SNARE
+
+    track fretless_bass :
+        SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE, SILENCE,
+        F#3 (1/2), C#3 (1/2), E3 (1/2), F#3 (1/2),
+        E3 (1/2), C#3 (1/2), B2 (1/2), C#3 (1/2),
+        F#3 (1/2), C#3 (1/2), E3 (1/2), F#3 (1/2),
+        E3 (1/2), C#3 (1/2), B2 (1/2), C#3 (1/2)
+]
+
+Timeline:
+    bar1
