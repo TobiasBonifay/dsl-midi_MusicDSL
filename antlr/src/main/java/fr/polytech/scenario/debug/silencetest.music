@@ -9,13 +9,13 @@ Instruments:
 clip MAIN:
 bar [
     track bassLine:
-        F#3, REST (1/4), F#3, MUTE, G#3 // Repetitive bassline notes
+        F#3, REST (1/4), F#3, MUTE, G#3 // Repetitive bassline noteDTOS
 
     track drumKit:
         KICK SILENCE KICK SNARE // Basic drum pattern with no comma
 
     track synth:
-        F#5, F#5, A5, G#5 // Repetitive synth notes
+        F#5, F#5, A5, G#5 // Repetitive synth noteDTOS
 ]
 
 Timeline:

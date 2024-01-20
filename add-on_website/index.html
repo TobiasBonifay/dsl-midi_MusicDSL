@@ -107,6 +107,7 @@
         target="_blank">here</a></p>
 <textarea id="textArea" placeholder="Write your music here..."></textarea>
 <button id="sendButton" class="button">Generate midi file</button>
+<button id="showPartition">Show partition</button>
 
 <div class="container" id="loaderContainer">
     <div class="loader"></div>
@@ -185,26 +186,105 @@
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
 <div id="PARTITION-DIV">
     <script>
-        const {Factory, EasyScore, System} = Vex.Flow;
+        const { Stave, StaveNote, Beam, Formatter, Renderer } = Vex;
 
-        const vf = new Factory({
-            renderer: {elementId: 'PARTITION-DIV', width: 500, height: 200},
-        });
+        function getDurationAbbreviation(duration) {
+            switch (duration) {
+                case 'WHOLE':
+                    return 'w'; // Whole note
+                case 'HALF':
+                    return 'h'; // Half note
+                case 'QUARTER':
+                    return 'q'; // Quarter note
+                case 'EIGHTH':
+                    return '8'; // Eighth note
+                case 'SIXTEENTH':
+                    return '16'; // 16th note
+                case 'THIRTY_SECOND':
+                    return '32'; // 32nd note
+                case 'SIXTY_FOURTH':
+                    return '64'; // 64th note
+                default:
+                    return 'q';
+            }
+        }
 
-        const score = vf.EasyScore();
-        const system = vf.System();
+        document.getElementById('showPartition').addEventListener('click', function () {
+            fetch('http://localhost:80/getPartition') // todo replace by server ip
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur de réseau: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Traitez les données JSON ici
+                    console.log('Données reçues:', data);
 
-        system
-            .addStave({
-                voices: [
-                    score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),
-                    score.voice(score.notes('C#4/h, C#4', {stem: 'down'})),
-                ],
-            })
-            .addClef('treble')
-            .addTimeSignature('4/4');
+                    // Extract information from JSON
+                    const bars = data.bars;
+                    const timeSignatureGlobal = data.timeSignatureGlobal;
 
-        vf.draw();
+                    // Create an array to store Vex Flow elements
+                    const vexElements = [];
+
+                    const div = document.getElementById("PARTITION-DIV");
+                    const renderer = new Renderer(div, Renderer.Backends.SVG);
+                    // Configure the rendering context.
+                    renderer.resize(1200, 140);
+                    const context = renderer.getContext();
+
+                    let staves = [];
+                    let i = 0; // counter
+
+                    // Loop through bars
+                    bars.forEach(barData => {
+                        const bar = barData;
+
+                        // Create a stave for each bar
+                        let x = (i === 0) ? 10 : (staves[i-1].width + staves[i-1].x);
+                        const stave = new Vex.Flow.Stave(x, 0, 400);
+                        if (i === 0) {
+                            stave.addTimeSignature(timeSignatureGlobal);
+                            stave.addClef("treble").setContext(context).draw();
+                        } else {
+                            stave.setContext(context).draw();
+                        }
+                        staves.push(stave);
+                        i++;
+
+                        // Loop through tracks
+                        bar.tracks.forEach(track => {
+                            // Create an array to store notes for this track
+                            const notes = [];
+
+                            // Loop through notes in the track
+                            track.notes.forEach(note => {
+                                // Create a new StaveNote for each note in the track
+                                const staveNote = new Vex.Flow.StaveNote({
+                                    keys: [`${note.pitch}/${note.octave}`],
+                                    duration: getDurationAbbreviation(note.duration)
+                                });
+
+                                // Add the note to the array
+                                notes.push(staveNote);
+                            });
+
+                            // Helper function to justify and draw the notes for a track
+                            Formatter.FormatAndDraw(context, stave, notes);
+
+                            // Add the notes to the array of Vex Flow elements
+                            vexElements.push({ stave, notes });
+                            return; //first track only
+                        });
+                    });
+
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données:', error);
+                });
+        })
+
     </script>
 </div>
 </body>

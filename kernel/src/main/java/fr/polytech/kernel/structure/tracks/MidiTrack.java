@@ -11,6 +11,7 @@ import java.util.List;
 public abstract class MidiTrack {
     @Getter
     protected final String name;
+    @Getter
     protected final List<MusicalElement> musicalElements = new ArrayList<>();
     protected int midiChannel;
 
@@ -30,4 +31,5 @@ public abstract class MidiTrack {
                 .mapToLong(element -> element.getDuration(resolution)) //
                 .sum(); //
     }
+
 }

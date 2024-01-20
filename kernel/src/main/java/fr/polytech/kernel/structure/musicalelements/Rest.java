@@ -3,6 +3,7 @@ package fr.polytech.kernel.structure.musicalelements;
 import fr.polytech.kernel.logs.LoggingSetup;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.util.dictionnaries.NoteLength;
+import lombok.Getter;
 
 import javax.sound.midi.MidiEvent;
 import java.util.logging.Logger;
@@ -13,7 +14,7 @@ public class Rest implements MusicalElement {
     static {
         LoggingSetup.setupLogger(LOGGER);
     }
-
+    @Getter
     private final NoteLength duration;
 
     public Rest(NoteLength duration) {

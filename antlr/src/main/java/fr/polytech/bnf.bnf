@@ -13,7 +13,7 @@
 <instrumentDefinition> ::= <instrumentName> <instrumentMidiName> "volume" <volumeInstrument>
 
 <clipSection> ::= <clip>+
-<clip> ::= "clip" <clipName> <defaultDynamic>? ":" <bars>
+<clip> ::= "clip" <clipName> <defaultDynamic>? ":" <barDTOS>
 <defaultDynamic> ::= "<-" <velocity>
 
 <barSequence> ::= "bar" "[" <barContent>* "]"
@@ -46,7 +46,7 @@
 <instrumentMidiName> ::= <INSTRUMENT>
 <volumeInstrument> ::= <INT>
 <clipName> ::= <ID>
-<bars> ::= <barSequence>+
+<barDTOS> ::= <barSequence>+
 <velocity ::= <VELOCITY_SYMBOL>
 <barContent> ::= <tempoChange> | <bpm> | <volumeSetting> | <signature> | <trackSequence> | <emptyBarContent>
 <trackName> ::= <ID>

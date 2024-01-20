@@ -9,14 +9,14 @@ these definitions into MIDI files for playback and further processing.
 ## Overview
 
 The Music DSL project encompasses a parser for the DSL, a MIDI generator, and various utilities for handling musical
-elements like notes, chords, and rhythms. The project is structured into several modules, each responsible for a
+elements like noteDTOS, chords, and rhythms. The project is structured into several modules, each responsible for a
 different aspect of music generation.
 
 ## Features
 
 - **DSL for Music Composition**: Define compositions using a custom language tailored for music.
 - **MIDI Generation**: Convert DSL scripts into MIDI files.
-- **Support for Various Musical Elements**: Handle notes, chords, drum patterns, and more.
+- **Support for Various Musical Elements**: Handle noteDTOS, chords, drum patterns, and more.
 - **Dynamic Composition**: Alter tempo, volume, and other dynamics programmatically.
 
 ## Table of Contents
@@ -97,8 +97,8 @@ java -jar target/music-dsl-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resou
 - The Music DSL syntax is designed to be intuitive for musicians and programmers alike. Here are the key components:
     - **Global Settings**: Define tempo, time signature, and other global aspects.
     - **Instruments Section**: Declare instruments used in the composition. (not drums)
-    - **Clip and Bar Sections**: Structure your composition into clips and bars.
-    - **Tracks**: Assign notes, chords, or percussion elements to specific instruments.
+    - **Clip and Bar Sections**: Structure your composition into clips and barDTOS.
+    - **Tracks**: Assign noteDTOS, chords, or percussion elements to specific instruments.
     - **Timeline**: Define the order of clips in the composition.
 
 ### Example Scripts
@@ -117,7 +117,7 @@ Instruments: // define the instruments used in the piece. Drums should not be de
     piano ACOUSTIC_GRAND_PIANO volume 50 // define the piano instrument with the ACOUSTIC_GRAND_PIANO soundfont and a volume of 50 (0-100).
     trackName VIOLIN volume 100 // define the trackName instrument with the VIOLIN soundfont and a volume of 100.
 
-clip Intro <- ppp: // define the Intro clip with a dynamic of ppp (pianississimo) -> notes are played very softly by default.
+clip Intro <- ppp: // define the Intro clip with a dynamic of ppp (pianississimo) -> noteDTOS are played very softly by default.
 bar [ // define the first bar of the Intro clip. Bar must be defined inside a clip.
     tempo + 100 // increase the tempo by 100 BPM.
     signature 3/4 // change the time signature to 3/4 for this bar only.
@@ -171,7 +171,7 @@ Timeline: // timeline is needed.
 
 - **Parser**: This module uses ANTLR to parse the DSL scripts into an abstract syntax tree (AST).
 - **Midi Generator**: Converts the AST into MIDI format for playback.
-- **Utility Classes**: Includes classes for musical elements like notes, chords, dynamics, etc.
+- **Utility Classes**: Includes classes for musical elements like noteDTOS, chords, dynamics, etc.
 
 ### Additional Modules
 

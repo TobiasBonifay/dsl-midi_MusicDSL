@@ -114,4 +114,8 @@ public class Bar {
                 .max() //
                 .orElse(0);
     }
+
+    public String getTimeSignature() {
+        return timeSignature.toString();
+    }
 }
