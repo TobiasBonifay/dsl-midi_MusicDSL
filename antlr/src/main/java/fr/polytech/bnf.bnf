@@ -1,6 +1,6 @@
-<musicComposition> ::= <globalSettings>* <instrumentsSection> <clipSection> <timelineSection>?
+<musicComposition> ::= <globalSettings>* <instrumentsSection> <clipSection> <timelineSection>
 
-<globalSettings> ::= <signature> | <bpm> | <tempoChange> | <timeshift> | <velocityrandomization> | <resolution>
+<globalSettings> ::= <signature> | <bpm> | <timeshift> | <velocityrandomization> | <resolution>
 
 <signature> ::= "signature" <globalSignatureValue>
 <bpm> ::= "bpm" <globalBpmValue>
@@ -33,7 +33,7 @@
 <timelineSequence> ::= <timelineClip>+
 <timelineClip> ::= <clipName> ("x" <repeatNumber>)?
 
-<percussionSequence> ::= <percussionElement>+
+<percussionSequence> ::= <percussionElement> "," <percussionElement>+
 <percussionElement> ::= <PERCUSSION> <noteDuration>? | <silence>
 
 <globalSignatureValue> ::= <FRACTION>
@@ -47,7 +47,7 @@
 <volumeInstrument> ::= <INT>
 <clipName> ::= <ID>
 <barDTOS> ::= <barSequence>+
-<velocity ::= <VELOCITY_SYMBOL>
+<velocity> ::= <VELOCITY_SYMBOL>
 <barContent> ::= <tempoChange> | <bpm> | <volumeSetting> | <signature> | <trackSequence> | <emptyBarContent>
 <trackName> ::= <ID>
 <trackContent> ::= <noteSequence> | <percussionSequence>
@@ -55,15 +55,86 @@
 <noteDynamic> ::= <VELOCITY_SYMBOL>
 <noteDuration> ::= "(" <length> ")"
 <length> ::= <FRACTION> | <INT>
+<volumeSetting> ::= "volume" <INT>
 <chordName> ::= <CHORD>
 <SILENCE> ::= "SILENCE" | "REST" | "PAUSE" | "SILENT" | "MUTE"
-<PERCUSSION> ::= [liste des éléments de percussion]
 <repeatNumber> ::= <INT>
 <FRACTION> ::= <INT> "/" <INT>
 <VELOCITY_SYMBOL> ::= "ppp" | "pp" | "p" | "mp" | "mf" | "f" | "ff" | "fff"
 <INT> ::= [0-9]+
 <ID> ::= [a-zA-Z_][a-zA-Z0-9_]*
-<INSTRUMENT> ::= [liste des instruments]
 <NOTE> ::= [A-G] ( '#' | 'b' )? [0-9] | <LATIN_NOTE>
 <LATIN_NOTE> ::= ([Dd][Oo] | [Rr][Ee] | [Mm][Ii] | [Ff][Aa] | [Ss][Oo][Ll] | [Ll][Aa] | [Ss][Ii]) ( '#' | 'b' )? [0-9]
 <CHORD> ::= [A-G] ( '#' | 'b' )? [0-9] ('-' [A-G] ( '#' | 'b' )? [0-9])+
+
+<INSTRUMENT> ::= ('ACOUSTIC_GRAND_PIANO' | 'BRIGHT_ACOUSTIC_PIANO' | 'ELECTRIC_GRAND_PIANO' |
+     'HONKY_TONK_PIANO' |  'ELECTRIC_PIANO_1' | 'ELECTRIC_PIANO_2' | 'HARPSICHORD' |
+     'CLAVI' | 'CELESTA' | 'GLOCKENSPIEL' | 'MUSIC_BOX' | 'VIBRAPHONE' | 'MARIMBA' |
+     'XYLOPHONE' | 'TUBULAR_BELLS' | 'DULCIMER' | 'DRAWBAR_ORGAN' | 'PERCUSSIVE_ORGAN' |
+     'ROCK_ORGAN' | 'CHURCH_ORGAN' | 'REED_ORGAN' | 'ACCORDION' | 'HARMONICA' |
+     'TANGO_ACCORDION' | 'ACOUSTIC_GUITAR_NYLON' | 'ACOUSTIC_GUITAR_STEEL' | 'ELECTRIC_GUITAR_JAZZ' |
+     'ELECTRIC_GUITAR_CLEAN' | 'ELECTRIC_GUITAR_MUTED' | 'OVERDRIVEN_GUITAR' | 'DISTORTION_GUITAR' |
+     'GUITAR_HARMONICS' | 'ACOUSTIC_BASS' | 'ELECTRIC_BASS_FINGER' | 'ELECTRIC_BASS_PICK' |
+     'FRETLESS_BASS' | 'SLAP_BASS_1' | 'SLAP_BASS_2' | 'SYNTH_BASS_1' | 'SYNTH_BASS_2' | 'VIOLIN' |
+     'VIOLA' | 'CELLO' | 'CONTRABASS' | 'TREMOLO_STRINGS' | 'PIZZICATO_STRINGS' | 'ORCHESTRAL_HARP' |
+     'TIMPANI' | 'STRING_ENSEMBLE_1' | 'STRING_ENSEMBLE_2' | 'SYNTH_STRINGS_1' | 'SYNTH_STRINGS_2' |
+     'CHOIR_AAHS' | 'VOICE_OOHS' | 'SYNTH_VOICE' | 'ORCHESTRA_HIT' | 'TRUMPET' | 'TROMBONE' |
+     'TUBA' | 'MUTED_TRUMPET' | 'FRENCH_HORN' | 'BRASS_SECTION' | 'SYNTH_BRASS_1' | 'SYNTH_BRASS_2' |
+     'SOPRANO_SAX' | 'ALTO_SAX' | 'TENOR_SAX' | 'BARITONE_SAX' | 'OBOE' | 'ENGLISH_HORN' | 'BASSOON' |
+     'CLARINET' | 'PICCOLO' | 'FLUTE' | 'RECORDER' | 'PAN_FLUTE' | 'BLOWN_BOTTLE' | 'SHAKUHACHI' |
+     'WHISTLE' | 'OCARINA' | 'LEAD_1_SQUARE' | 'LEAD_2_SAWTOOTH' | 'LEAD_3_CALLIOPE' | 'LEAD_4_CHIFF' |
+     'LEAD_5_CHARANG' | 'LEAD_6_VOICE' | 'LEAD_7_FIFTHS' | 'LEAD_8_BASS_LEAD' | 'PAD_1_NEW_AGE' |
+     'PAD_2_WARM' | 'PAD_3_POLYSYNTH' | 'PAD_4_CHOIR' | 'PAD_5_BOWED' | 'PAD_6_METALLIC' |
+     'PAD_7_HALO' | 'PAD_8_SWEEP' | 'FX_1_RAIN' | 'FX_2_SOUNDTRACK' | 'FX_3_CRYSTAL' |
+     'FX_4_ATMOSPHERE' | 'FX_5_BRIGHTNESS0' | 'FX_6_GOBLINS1' | 'FX_7_ECHOES2' | 'FX_8_SCI_FI3' |
+     'SITAR4' | 'BANJO5' | 'SHAMISEN6' | 'KOTO7' | 'KALIMBA8' | 'BAG_PIPE9' | 'FIDDLE0' |
+     'SHANAI1' | 'TINKLE_BELL2' | 'AGOGO3' | 'STEEL_DRUMS4' | 'WOODBLOCK5' | 'TAIKO_DRUM6' |
+     'MELODIC_TOM7' | 'SYNTH_DRUM8' | 'REVERSE_CYMBAL9' | 'GUITAR_FRET_NOISE0' | 'BREATH_NOISE1' |
+     'SEASHORE2' | 'BIRD_TWEET3' | 'TELEPHONE_RING4' | 'HELICOPTER5' | 'APPLAUSE6' | 'GUNSHOT7')
+
+<PERCUSSION> ::= ('ACOUSTIC_SOUND' | 'ACOUSTIC_BASS_DRUM' | 'BASS_DRUM' | 'KICK' | 'KICK_DRUM' | 'BD' // KICK
+                  | 'BASS_DRUM_1' | 'BD_1'
+                  | 'SIDE_STICK' | 'RIMSHOT'
+                  | 'SNARE_DRUM' | 'SNARE' | 'SD'
+                  | 'HAND_CLAP' | 'CLAP'
+                  | 'ELECTRIC_SNARE'
+                  | 'LOW_FLOOR_TOM'
+                  | 'CLOSED_HI_HAT' | 'CLOSED_HIHAT' | 'CH'
+                  | 'HIGH_FLOOR_TOM'
+                  | 'PEDAL_HI_HAT'| 'PEDAL_HIHAT' | 'PH'
+                  | 'LOW_TOM'
+                  | 'OPEN_HI_HAT' | 'OPEN_HIHAT' | 'OH'
+                  | 'CRASH_CYMBAL_1'
+                  | 'CRASH' | 'CRASH_CYMBAL' | 'CC'
+                  | 'HIGH_TOM'
+                  | 'RIDE_CYMBAL_1' | 'RIDE' | 'RIDE_CYMBAL' | 'RC'
+                  | 'CHINESE_CYMBAL'
+                  | 'RIDE_BELL'
+                  | 'TAMBOURINE'
+                  | 'SPLASH_CYMBAL'
+                  | 'COWBELL'
+                  | 'CRASH_CYMBAL_2'
+                  | 'VIBRASLAP'
+                  | 'RIDE_CYMBAL_2'
+                  | 'HI_BONGO' | 'TOM'
+                  | 'LOW_BONGO'
+                  | 'MUTE_HI_CONGA'
+                  | 'OPEN_HI_CONGA'
+                  | 'LOW_CONGA'
+                  | 'HIGH_TIMBALE'
+                  | 'LOW_TIMBALE'
+                  | 'HIGH_AGOGO'
+                  | 'LOW_AGOGO'
+                  | 'CABASA'
+                  | 'MARACAS'
+                  | 'SHORT_WHISTLE'
+                  | 'LONG_WHISTLE'
+                  | 'SHORT_GUIRO'
+                  | 'LONG_GUIRO'
+                  | 'CLAVES'
+                  | 'HI_WOOD_BLOCK'
+                  | 'LOW_WOOD_BLOCK'
+                  | 'MUTE_CUICA'
+                  | 'OPEN_CUICA'
+                  | 'MUTE_TRIANGLE'
+                  | 'OPEN_TRIANGLE')

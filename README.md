@@ -92,6 +92,9 @@ Run the script using the command above to generate a MIDI file named `MyPiece.mi
 java -jar target/music-dsl-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/examples/basic.dsl 
 ```
 
+### BNF
+You can find the BNF of the language in the following file: [antlr/src/main/java/fr/polytech/bnf.bnf](antlr/src/main/java/fr/polytech/bnf.bnf)
+
 ### README Part 3: DSL Syntax and Examples
 
 ## DSL Syntax and Examples

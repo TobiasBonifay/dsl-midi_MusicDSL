@@ -1,7 +1,7 @@
 grammar MusicDSL;
 
 // Parser Rules
-musicComposition : globalSettings instrumentsSection clipSection timelineSection?; // mainSection;
+musicComposition : globalSettings instrumentsSection clipSection timelineSection; // mainSection;
 
 globalSettings : (signature | bpm | timeshift | velocityrandomization | resolution)*;
 
