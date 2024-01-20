@@ -8,30 +8,41 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            height: 100%;
+            margin: auto;
+            align-items: center;
         }
         #textArea {
             width: 100%;
-            height: 400px;
+            height: min(300px, 35vh);
             border: 1px solid #5b5b5b;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             font-size: 1.5em;
             resize: vertical;
         }
-        #loaderContainer, #errorContainer {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
+
+        .container {
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100vh;
-            scroll-behavior: smooth;
-            overflow-y: scroll;
+            position: fixed;
             background-color: rgba(0, 0, 0, 0.85);
             z-index: 1000;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #loaderContainer {
+            display: flex;
+        }
+
+        #errorContainer {
         }
         .loader {
             border: 5px solid #f3f3f3;
@@ -63,8 +74,13 @@
         }
         .error-message {
             color: red;
-            margin: 15px;
             white-space: pre-wrap;
+        }
+
+        /** second error message only using nth-child(2) **/
+        .error-message:nth-child(2) {
+            overflow: scroll;
+            max-width: 90%;
         }
     </style>
 </head>
@@ -75,11 +91,11 @@
 <br>
 <button id="sendButton" class="button">Generate midi file</button>
 
-<div id="loaderContainer">
+<div class="container" id="loaderContainer">
     <div class="loader"></div>
 </div>
 
-<div id="errorContainer" style="display: none;">
+<div class="container" id="errorContainer" style="display: none;">
     <h1 class="error-message">Error when generating midi file</h1>
     <p class="error-message" id="errorMessage"></p>
     <button class=button onclick="document.getElementById('errorContainer').style.display='none'">Close</button>
@@ -135,9 +151,6 @@
             });
     });
 </script>
-</body>
-</html>
-
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
 <div id="PARTITION-DIV">
     <script>
