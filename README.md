@@ -77,6 +77,10 @@ bar [
     track piano:
         C4-E4-G4, C5
 ]
+bar [
+    track piano:
+        C4, C5, C3
+]
 
 Timeline:
     MyPiece x 2
