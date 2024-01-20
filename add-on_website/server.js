@@ -11,7 +11,7 @@ app.use(express.json());
 
 //serve unique front file
 app.get('/', (req, res) => {
-    const indexPath = path.join(__dirname, 'index.html'); // Remplacez 'chemin/vers/index.html' par le chemin réel de votre fichier index.html
+    const indexPath = path.join(__dirname, 'index.html');
     res.sendFile(indexPath);
 });
 
@@ -23,7 +23,7 @@ app.post('/convert', (req, res) => {
     const text = req.body.text;
 
     //temp files
-    const uniqueId = uuidv4();
+    const uniqueId = uuidv4(); //unique id to save and retrieve temp files without overwriting those of other users
 
     const tempFilePath = `${uniqueId}.music`;
     fs.writeFileSync(tempFilePath, text);
@@ -37,7 +37,7 @@ app.post('/convert', (req, res) => {
 
         if (error) {
             console.error(`exec error: ${error}`);
-            return res.status(500).send('Error during file conversion');
+            return res.status(500).send(stderr);
         }
 
         res.download(outputPath, () => {
