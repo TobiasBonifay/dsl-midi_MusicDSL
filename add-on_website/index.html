@@ -187,6 +187,28 @@
 <div id="PARTITION-DIV">
     <script>
         const { Stave, StaveNote, Beam, Formatter, Renderer } = Vex;
+
+        function getDurationAbbreviation(duration) {
+            switch (duration) {
+                case 'WHOLE':
+                    return 'w'; // Whole note
+                case 'HALF':
+                    return 'h'; // Half note
+                case 'QUARTER':
+                    return 'q'; // Quarter note
+                case 'EIGHTH':
+                    return '8'; // Eighth note
+                case 'SIXTEENTH':
+                    return '16'; // 16th note
+                case 'THIRTY_SECOND':
+                    return '32'; // 32nd note
+                case 'SIXTY_FOURTH':
+                    return '64'; // 64th note
+                default:
+                    return 'q';
+            }
+        }
+
         document.getElementById('showPartition').addEventListener('click', function () {
             fetch('http://localhost:80/getPartition') // todo replace by server ip
                 .then(response => {
@@ -236,7 +258,7 @@
                                 // Create a new StaveNote for each note in the track
                                 const staveNote = new Vex.Flow.StaveNote({
                                     keys: [`${note.pitch}/${note.octave}`],
-                                    duration: "q" //note.duration
+                                    duration: getDurationAbbreviation(note.duration)
                                 });
 
                                 // Add the note to the array

@@ -5,6 +5,7 @@ import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.Note;
+import fr.polytech.kernel.structure.tracks.DrumTrack;
 import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.addon.models.BarDTO;
 import fr.polytech.kernel.util.addon.models.MusicData;
@@ -27,6 +28,9 @@ public class ClipConvertor {
             BarDTO barDTO = new BarDTO(bar.getName());
             barDTO.setTimeSignature(bar.getTimeSignature());
             for (MidiTrack track : bar.getTracks()) {
+                if (track instanceof DrumTrack) {
+                    continue;
+                }
                 TrackDTO trackDTO = new TrackDTO();
                 trackDTO.setTrackName(track.getName());
                 for (MusicalElement note : track.getMusicalElements()) {
@@ -34,13 +38,15 @@ public class ClipConvertor {
                     Note n = (Note) note;
                     String pitch = n.pitch();
                     noteDTO.setPitch(pitch.substring(0,1).toLowerCase()); // From C4 to c
-                    noteDTO.setDuration(String.valueOf(n.noteLength().getDuration(1)));
+                    noteDTO.setDuration(String.valueOf(n.noteLength()));
                     noteDTO.setOctave(String.valueOf(pitch.charAt(pitch.length()-1)));
                     trackDTO.getNotes().add(noteDTO);
                 }
                 barDTO.getTracks().add(trackDTO);
             }
-            musicData.getBars().add(barDTO);
+            if (barDTO.getTracks().size() > 0) {
+                musicData.getBars().add(barDTO);
+            }
         }
 
         musicData.setTimeSignatureGlobal(app.getGlobalTimeSignature().toString());
