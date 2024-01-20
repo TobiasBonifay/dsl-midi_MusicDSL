@@ -11,6 +11,7 @@ import java.util.List;
 public abstract class MidiTrack {
     @Getter
     protected final String name;
+    @Getter
     protected final List<MusicalElement> musicalElements = new ArrayList<>();
     protected int midiChannel;
 
@@ -31,7 +32,4 @@ public abstract class MidiTrack {
                 .sum(); //
     }
 
-    public List<MusicalElement> getMusicalElements() {
-        return musicalElements;
-    }
 }
