@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <title>MusicML</title>
     <style>
         body {
@@ -10,40 +10,44 @@
             background-color: #f4f4f4;
             display: flex;
             flex-direction: column;
-            width: 90%;
-            height: 100%;
-            margin: auto;
+            width: 100%;
+            margin: 0;
             align-items: center;
         }
+
+        .body-no-scroll {
+            overflow: hidden;
+            height: 100%;
+        }
+
+
         #textArea {
-            width: 100%;
+            width: 80%;
+            max-width: 800px;
             height: min(300px, 35vh);
             border: 1px solid #5b5b5b;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-size: 1.5em;
             resize: vertical;
+            margin: 20px 0;
         }
 
         .container {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
-            position: fixed;
+            right: 0;
+            bottom: 0;
             background-color: rgba(0, 0, 0, 0.85);
             z-index: 1000;
-            width: 100%;
-            height: 100%;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
-        #loaderContainer {
-            display: flex;
-        }
-
-        #errorContainer {
-        }
         .loader {
             border: 5px solid #f3f3f3;
             border-top: 5px solid #3498db;
@@ -52,112 +56,140 @@
             height: 100px;
             animation: spin 2s linear infinite;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         .button {
             display: block;
-            width: 80%;
+            width: 60%;
+            max-width: 300px;
             padding: 10px 20px;
-            margin: 20px auto;
+            margin: 10px auto;
             background-color: #3498db;
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 1em;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         #sendButton:hover {
             background-color: #2980b9;
         }
+
         .error-message {
             color: red;
             white-space: pre-wrap;
+            max-width: 80%;
+            max-height: 50vh;
+            margin: 10px 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid red;
         }
 
-        /** second error message only using nth-child(2) **/
-        .error-message:nth-child(2) {
-            overflow: auto;
-            max-width: 90%;
-        }
     </style>
 </head>
 <body>
 <h1>Write your music using MusicML language and generate a midi file!</h1>
-<p>Learn how to write using MusicML language <a href="https://github.com/TobiasBonifay/dsl-midi_MusicDSL?tab=readme-ov-file#basic-example" target="_blank">here</a></p>
+<p>Learn how to write using MusicML language <a
+        href="https://github.com/TobiasBonifay/dsl-midi_MusicDSL?tab=readme-ov-file#basic-example"
+        target="_blank">here</a></p>
 <textarea id="textArea" placeholder="Write your music here..."></textarea>
-<br>
 <button id="sendButton" class="button">Generate midi file</button>
 
 <div class="container" id="loaderContainer">
     <div class="loader"></div>
 </div>
 
-<div class="container" id="errorContainer" style="display: none;">
+<div class="container" id="errorContainer">
     <h1 class="error-message">Error when generating midi file</h1>
-    <p class="error-message" id="errorMessage"></p>
-    <button class=button onclick="document.getElementById('errorContainer').style.display='none'">Close</button>
+    <div class="error-message" id="errorMessage" style="border: 1px solid red;"></div>
+    <button class="button button-close-error">Close</button>
 </div>
 
 <script>
-    document.getElementById('sendButton').addEventListener('click', function() {
-        var text = document.getElementById('textArea').value;
-        var loaderContainer = document.getElementById('loaderContainer');
-        var errorContainer = document.getElementById('errorContainer');
-        loaderContainer.style.display = 'flex';
+    document.addEventListener('DOMContentLoaded', function () {
+        function showErrorContainer() {
+            document.getElementById('errorContainer').style.display = 'flex';
+            document.body.classList.add('body-no-scroll');
+        }
 
-        document.addEventListener('keydown', function(event) {
+        function hideErrorContainer() {
+            document.getElementById('errorContainer').style.display = 'none';
+            document.body.classList.remove('body-no-scroll');
+        }
+
+        document.getElementById('sendButton').addEventListener('click', function () {
+            const text = document.getElementById('textArea').value;
+            const loaderContainer = document.getElementById('loaderContainer');
+            loaderContainer.style.display = 'flex';
+
+            const fetchUrl = window.location.hostname === 'localhost' ? 'http://localhost:80' : 'https://musicml.orch-team-d.pns-projects.fr.eu.org';
+
+            fetch(fetchUrl + "/convert", {
+                method: 'POST',
+                body: JSON.stringify({text: text}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw response;
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    loaderContainer.style.display = 'none';
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'converted.midi';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(error => {
+                    error.text().then(errorMessage => {
+                        console.error("Error while retrieving midi file", errorMessage);
+                        document.getElementById('errorMessage').textContent = errorMessage;
+                        showErrorContainer();
+                    });
+                    loaderContainer.style.display = 'none';
+                });
+        });
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Enter' || event.key === 'Escape') {
-                event.preventDefault();
-                errorContainer.style.display = 'none';
+                hideErrorContainer();
             }
         });
-
-        const fetchUrl = window.location.hostname === 'localhost' ? 'http://localhost:80' : 'https://musicml.orch-team-d.pns-projects.fr.eu.org';
-
-        fetch( fetchUrl + "/convert", {
-            method: 'POST',
-            body: JSON.stringify({ text: text }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response =>{
-                if (!response.ok) {
-                    throw response;
-                }
-                return response.blob()
-            })
-            .then(blob => {
-                loaderContainer.style.display = 'none';
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = 'converted.midi';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch(error => {
-                error.text().then(errorMessage => {
-                    console.error("Error while retrieving midi file", errorMessage);
-                    document.getElementById('errorMessage').textContent = errorMessage;
-                    document.getElementById('errorContainer').style.display = 'flex';
-                });
-                loaderContainer.style.display = 'none';
-            });
+        document.querySelector('.button-close-error').addEventListener('click', function () {
+            hideErrorContainer();
+        });
     });
+
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
 <div id="PARTITION-DIV">
     <script>
-        const { Factory, EasyScore, System } = Vex.Flow;
+        const {Factory, EasyScore, System} = Vex.Flow;
 
         const vf = new Factory({
-            renderer: { elementId: 'PARTITION-DIV', width: 500, height: 200 },
+            renderer: {elementId: 'PARTITION-DIV', width: 500, height: 200},
         });
 
         const score = vf.EasyScore();
@@ -166,8 +198,8 @@
         system
             .addStave({
                 voices: [
-                    score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
-                    score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+                    score.voice(score.notes('C#5/q, B4, A4, G#4', {stem: 'up'})),
+                    score.voice(score.notes('C#4/h, C#4', {stem: 'down'})),
                 ],
             })
             .addClef('treble')
@@ -176,6 +208,5 @@
         vf.draw();
     </script>
 </div>
-
 </body>
 </html>
