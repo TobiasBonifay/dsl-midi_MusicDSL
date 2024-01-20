@@ -5,6 +5,7 @@ import fr.polytech.kernel.structure.Bar;
 import fr.polytech.kernel.structure.Clip;
 import fr.polytech.kernel.structure.MusicalElement;
 import fr.polytech.kernel.structure.musicalelements.Note;
+import fr.polytech.kernel.structure.musicalelements.Rest;
 import fr.polytech.kernel.structure.tracks.DrumTrack;
 import fr.polytech.kernel.structure.tracks.MidiTrack;
 import fr.polytech.kernel.util.addon.models.BarDTO;
@@ -35,6 +36,13 @@ public class ClipConvertor {
                 trackDTO.setTrackName(track.getName());
                 for (MusicalElement note : track.getMusicalElements()) {
                     NoteDTO noteDTO = new NoteDTO();
+                    if (note instanceof Rest) { // Silence managing
+                        noteDTO.setPitch("r");
+                        noteDTO.setDuration(String.valueOf(((Rest) note).getDuration()));
+                        noteDTO.setOctave("4");
+                        trackDTO.getNotes().add(noteDTO);
+                        continue;
+                    }
                     Note n = (Note) note;
                     String pitch = n.pitch();
                     noteDTO.setPitch(pitch.substring(0,1).toLowerCase()); // From C4 to c
