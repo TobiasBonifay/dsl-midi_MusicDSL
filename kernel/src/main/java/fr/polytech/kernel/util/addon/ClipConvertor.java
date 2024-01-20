@@ -43,6 +43,9 @@ public class ClipConvertor {
                         trackDTO.getNotes().add(noteDTO);
                         continue;
                     }
+                    if (!(note instanceof Note)) {
+                        continue;
+                    }
                     Note n = (Note) note;
                     String pitch = n.pitch();
                     noteDTO.setPitch(pitch.substring(0,1).toLowerCase()); // From C4 to c
