@@ -211,7 +211,7 @@
         document.getElementById('showPartition').addEventListener('click', function () {
             const fetchUrl = window.location.hostname === 'localhost' ? 'http://localhost:80' : 'https://musicml.orch-team-d.pns-projects.fr.eu.org';
 
-            fetch(fetchUrl)
+            fetch(fetchUrl + "/getPartition")
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Erreur de réseau: ${response.status}`);
