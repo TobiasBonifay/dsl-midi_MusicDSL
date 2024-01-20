@@ -186,6 +186,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
 <div id="PARTITION-DIV">
     <script>
+        const { Stave, StaveNote, Beam, Formatter, Renderer } = Vex;
         document.getElementById('showPartition').addEventListener('click', function () {
             fetch('http://localhost:80/getPartition') // todo replace by server ip
                 .then(response => {
@@ -197,53 +198,71 @@
                 .then(data => {
                     // Traitez les données JSON ici
                     console.log('Données reçues:', data);
+
+                    // Extract information from JSON
+                    const bars = data.bars;
+                    const timeSignatureGlobal = data.timeSignatureGlobal;
+
+                    // Create an array to store Vex Flow elements
+                    const vexElements = [];
+
+                    const div = document.getElementById("PARTITION-DIV");
+                    const renderer = new Renderer(div, Renderer.Backends.SVG);
+                    // Configure the rendering context.
+                    renderer.resize(720, 130);
+                    const context = renderer.getContext();
+
+                    // Loop through bars
+                    bars.forEach(barData => {
+                        const bar = barData;
+
+                        // Create a stave for each bar
+                        const stave = new Vex.Flow.Stave(10, 0, 400);
+
+                        // Add timeSignature if needed
+                        if (barData.timeSignature !== timeSignatureGlobal) {
+                            stave.addTimeSignature(bar.timeSignature);
+                        } else {
+                            stave.addTimeSignature(timeSignatureGlobal);
+                        }
+
+                        // Loop through tracks
+                        bar.tracks.forEach(track => {
+                            // Create an array to store notes for this track
+                            const notes = [];
+
+                            // Loop through notes in the track
+                            track.notes.forEach(note => {
+                                // Create a new StaveNote for each note in the track
+                                const staveNote = new Vex.Flow.StaveNote({
+                                    keys: [`${note.pitch}/${note.octave}`],
+                                    duration: "q" //note.duration
+                                });
+
+                                // Add the note to the array
+                                notes.push(staveNote);
+                            });
+
+                            // Helper function to justify and draw the notes for a track
+                            Formatter.FormatAndDraw(context, stave, notes);
+
+                            // Add the notes to the array of Vex Flow elements
+                            vexElements.push({ stave, notes });
+                        });
+                    });
+
+                    /*
+                    // Render beams if needed (you may need to adapt this part based on your requirements)
+                    vexElements.forEach(element => {
+                        const beam = new Vex.Flow.Beam(element.notes);
+                        beam.setContext(context).draw();
+                    });*/
+
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des données:', error);
                 });
         })
-
-
-        // This approach to importing classes works in CJS contexts (i.e., a regular <script src="..."> tag).
-        const { Stave, StaveNote, Beam, Formatter, Renderer } = Vex;
-
-        // Create an SVG renderer and attach it to the DIV element with id="output".
-        const div = document.getElementById("PARTITION-DIV");
-        const renderer = new Renderer(div, Renderer.Backends.SVG);
-
-        // Configure the rendering context.
-        renderer.resize(720, 130);
-        const context = renderer.getContext();
-
-        // Measure 1
-        const staveMeasure1 = new Stave(10, 0, 300);
-        staveMeasure1.addClef("treble").setContext(context).draw();
-
-        const notesMeasure1 = [new StaveNote({ keys: ["e/4"], duration: "2" }), new StaveNote({ keys: ["d/4"], duration: "q" }), new StaveNote({ keys: ["b/4"], duration: "qr" }), new StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })];
-
-        // Helper function to justify and draw a 4/4 voice
-        Formatter.FormatAndDraw(context, staveMeasure1, notesMeasure1);
-
-        // Measure 2 - second measure is placed adjacent to first measure.
-        const staveMeasure2 = new Stave(staveMeasure1.width + staveMeasure1.x, 0, 400);
-
-        const notesMeasure2_part1 = [new StaveNote({ keys: ["c/4"], duration: "8" }), new StaveNote({ keys: ["d/4"], duration: "8" }), new StaveNote({ keys: ["b/4"], duration: "8" }), new StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "8" })];
-
-        //const notesMeasure2_part2 = [new StaveNote({ keys: ["c/4"], duration: "8" }), new StaveNote({ keys: ["d/4"], duration: "8" }), new StaveNote({ keys: ["b/4"], duration: "8" }), new StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "8" })];
-
-        // Create the beams for 8th notes in second measure.
-        const beam1 = new Beam(notesMeasure2_part1);
-        //const beam2 = new Beam(notesMeasure2_part2);
-
-        //const notesMeasure2 = notesMeasure2_part1.concat(notesMeasure2_part2);
-
-        staveMeasure2.setContext(context).draw();
-        Formatter.FormatAndDraw(context, staveMeasure2, notesMeasure2_part1);
-
-        // Render beams
-        beam1.setContext(context).draw();
-        //beam2.setContext(context).draw();
-
 
     </script>
 </div>
