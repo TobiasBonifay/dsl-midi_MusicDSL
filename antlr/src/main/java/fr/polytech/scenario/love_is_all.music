@@ -1,0 +1,140 @@
+signature 4/4
+bpm 112
+resolution 96
+timeshift 0
+
+Instruments:
+    fretless_bass FRETLESS_BASS volume 100
+    synth SYNTH_STRINGS_1 volume 100
+    voice LEAD_6_VOICE volume 100
+
+clip ref2:
+
+//42
+bar [
+    track kick_snare:
+        KICK, SNARE, KICK, SNARE
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT
+
+    track cymbal:
+        CRASH_CYMBAL_1
+]
+
+//43
+bar [
+    track kick_snare:
+        KICK, SNARE, KICK, SNARE
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT
+
+    track cymbal:
+        CRASH_CYMBAL_1
+]
+
+//44
+bar [
+    track kick_snare:
+        KICK, SNARE, KICK, SNARE
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT
+
+    track cymbal:
+        CRASH_CYMBAL_1
+]
+
+//45
+bar [
+    track kick_snare:
+        KICK, SNARE,
+        //SNARE (1/4), SILENCE (1/8), SNARE (1/4), SILENCE (1/8), SNARE (1/4), SILENCE (1/8), SNARE (1/4), SILENCE (1/8), SNARE (1/4), SILENCE (1/8), SNARE (1/4)
+        SNARE (1/4), SNARE (1/4), SNARE (1/4), SNARE (1/4), SNARE (1/4), SNARE (1/4)
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT
+
+    track cymbal:
+        CRASH_CYMBAL_1
+
+]
+
+//46
+bar [
+    track kick_snare:
+        KICK, SNARE, KICK, SNARE
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT
+
+    track cymbal:
+        CRASH_CYMBAL_1
+]
+
+//47
+bar [
+    track kick_snare:
+        KICK, SNARE, KICK, SNARE
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT
+
+    track cymbal:
+        CRASH_CYMBAL_1
+]
+
+//48
+bar [
+    track kick_snare:
+        KICK, SNARE, KICK, SNARE
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT, CLOSED_HI_HAT
+
+    track cymbal:
+        CRASH_CYMBAL_1
+]
+
+//49
+bar [
+    track kick_snare:
+        KICK, SNARE,
+        SNARE (1/2), SNARE (1/2), SNARE (1/2), SNARE (1/2)
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT
+
+    track cymbal:
+        CRASH_CYMBAL_1
+]
+
+clip speedup:
+
+//50
+bar [
+signature 3/4
+tempo - 37
+
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT (1/2), CLOSED_HI_HAT, CLOSED_HI_HAT (1/2)
+
+    track kick:
+        KICK, REST (1/2), KICK, SILENCE (1/2)
+
+]
+
+bar [
+signature 3/4
+tempo - 42
+    track hi_hat:
+        CLOSED_HI_HAT, CLOSED_HI_HAT (1/2), CLOSED_HI_HAT, CLOSED_HI_HAT (1/2)
+
+    track kick:
+        KICK, SILENCE (1/2), KICK, SILENCE (1/2)
+]
+
+Timeline:
+    //ref2
+    speedup
