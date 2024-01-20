@@ -58,12 +58,13 @@ app.post('/convert', (req, res) => {
 
 app.get('/getPartition', (req, res) => {
     console.log('get /getPartition');
-
-    if (fileExists("musicDataAddon.json")) {
+    let tmpData = "musicDataAddon.json";
+    if (fileExists(tmpData)) {
         console.log(`Le fichier existe.`);
-        const jsonData = fs.readFileSync("musicDataAddon.json", 'utf-8');
+        const jsonData = fs.readFileSync(tmpData, 'utf-8');
         const parsedData = JSON.parse(jsonData);
-
+        // Delete partition file
+        fs.unlinkSync(tmpData);
         // return json
         res.json(parsedData);
     } else {

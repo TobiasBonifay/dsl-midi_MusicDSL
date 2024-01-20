@@ -43,7 +43,8 @@ public class Test {
         app.setGlobalTempo(120);
 
         ClipConvertor clipConvertor = new ClipConvertor();
-        clipConvertor.convertClipToJSON(clip1, app);
+        String result = clipConvertor.convertClipToJSON(clip1, app);
+        System.out.println(result);
     }
 
     private static List<Note> createLeadVoxSequence(){
