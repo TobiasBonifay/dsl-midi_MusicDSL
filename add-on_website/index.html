@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MusicML</title>
     <style>
         body {
@@ -22,11 +23,13 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
+            scroll-behavior: smooth;
+            overflow-y: scroll;
             background-color: rgba(0, 0, 0, 0.85);
             z-index: 1000;
         }
@@ -90,7 +93,7 @@
         loaderContainer.style.display = 'flex';
 
         document.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' || event.key === 'Escape') {
                 event.preventDefault();
                 errorContainer.style.display = 'none';
             }
