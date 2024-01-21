@@ -82,7 +82,7 @@ public class TrackHandler {
         for (ParseTree element : trackContent.percussionSequence().children) {
             if (element instanceof PercussionElementContext percussionElementContext) {
                 if (percussionElementContext.PERCUSSION() == null) {
-                    NoteLength noteLength = percussionElementContext.noteDuration() != null ? parseNoteLength(percussionElementContext.noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
+                    NoteLength noteLength = percussionElementContext.silence().noteDuration() != null ? parseNoteLength(percussionElementContext.silence().noteDuration().length.getText()) : MidiGeneratorWithKernel.DEFAULT_NOTE_LENGTH;
                     Rest rest = new Rest(noteLength);
                     drumTrack.addMusicalElement(rest);
                 } else {
