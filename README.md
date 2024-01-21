@@ -54,7 +54,7 @@ different aspect of music generation.
 
 ### Running the Project
 
-To run the project, use the following command: // TODO: check music jar output
+To run the project, use the following command:
 
 ```shell 
 java -jar target/music-dsl-1.0-SNAPSHOT-jar-with-dependencies.jar [path-to-dsl-script]
@@ -89,7 +89,7 @@ Timeline:
 ### Scenarios
 You can find some scenarios at [antlr/src/main/java/fr/polytech/scenario](antlr/src/main/java/fr/polytech/scenario)
 
-Run the script using the command above to generate a MIDI file named `MyPiece.mid`. //TODO: create the right hierarchie.
+Run the script using the command above to generate a MIDI file named `MyPiece.mid`.
 
 ```
 java -jar target/music-dsl-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/examples/basic.dsl 
