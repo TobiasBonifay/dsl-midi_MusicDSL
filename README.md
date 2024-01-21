@@ -86,6 +86,9 @@ Timeline:
     MyPiece x 2
 ```
 
+### Scenarios
+You can find some scenarios at [antlr/src/main/java/fr/polytech/scenario](antlr/src/main/java/fr/polytech/scenario)
+
 Run the script using the command above to generate a MIDI file named `MyPiece.mid`. //TODO: create the right hierarchie.
 
 ```
