@@ -1,9 +1,6 @@
 /.idea/
 *.iml
 target
-antlr/src/main/java/fr/polytech/MusicDSL*.java
-antlr/src/main/java/fr/polytech/MusicDSL*.interp
-antlr/src/main/java/fr/polytech/MusicDSL*.tokens
 
 .DS_Store
 *.midi
